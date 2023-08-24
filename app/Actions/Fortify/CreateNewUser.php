@@ -41,7 +41,7 @@ class CreateNewUser implements CreatesNewUsers
         if($user->email == 'marlonpadilla1593@gmail.com'){
             $user->roles()->attach(1);//super admin
         }else{
-            $user->roles()->attach(3);//user
+            $user->roles()->attach(2);//user
         }
 
         return $user;

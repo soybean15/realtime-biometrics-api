@@ -43,7 +43,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected $appends = ['roles','isAdmin'];
+    protected $appends = ['roles','admin'];
 
     public function roles(){
         return $this->belongsToMany(Role::class);
@@ -56,7 +56,12 @@ class User extends Authenticatable
     }
 
 
-    public function getIsAdminAttribute(){
+    public function getAdminAttribute(){
+     return $this->isAdmin();
+       
+    }
+
+    public function isAdmin(){
         foreach($this->roles as $role){
             if($role->id == 1 || $role->id == 2){
                 return true;

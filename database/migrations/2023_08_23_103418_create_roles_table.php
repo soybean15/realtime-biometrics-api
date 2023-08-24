@@ -20,9 +20,6 @@ return new class extends Migration {
         \DB::table('roles')->insert(
             array(
                 [
-                    'name' => 'SuperAdmin'
-                ],
-                [
                     'name' => 'Admin'
                 ],
                 [
