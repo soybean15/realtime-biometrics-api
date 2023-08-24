@@ -23,7 +23,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function 
     // Define your admin-specific routes here
 
     // Example admin route
-    Route::prefix('users')->group(function(){
+    Route::prefix('user')->group(function(){
 
         Route::get('/',[UserController::class, 'index']);
 
