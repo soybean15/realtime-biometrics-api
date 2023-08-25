@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\EmployeeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,6 +27,12 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function 
     Route::prefix('user')->group(function(){
 
         Route::get('/',[UserController::class, 'index']);
+
+    });
+
+    Route::prefix('employee')->group(function(){
+
+        Route::get('/',[EmployeeController::class, 'index']);
 
     });
    
