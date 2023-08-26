@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+
 use App\Http\Controllers\Controller;
 use App\Http\Services\EmployeeService;
 use Illuminate\Http\Request;
@@ -25,12 +26,9 @@ class EmployeeController extends Controller
     }
 
     public function store(Request $request){
- // Instantiate the class
 
-        $data = $this->employeeService->store($request->all()); // Call the method
-        return response()->json([
-            'data'=> $data
-        ]);
+        return $this->employeeService->store($request->all()); 
 
+        
     }
 }

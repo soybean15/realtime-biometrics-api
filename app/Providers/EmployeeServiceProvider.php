@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-
-use App\Http\Services\EmployeeService;
 use Illuminate\Support\ServiceProvider;
+use App\Http\Services\EmployeeService;
+use App\Actions\Employee\CreateNewEmployee;
 
 class EmployeeServiceProvider extends ServiceProvider
 {
@@ -13,9 +13,14 @@ class EmployeeServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Bind CreateNewEmployee to the container
+        $this->app->bind(CreateNewEmployee::class, function ($app) {
+            return new CreateNewEmployee();
+        });
+
+        // Bind EmployeeService to the container
         $this->app->bind(EmployeeService::class, function ($app) {
-            return new EmployeeService();
+            return new EmployeeService($app->make(CreateNewEmployee::class));
         });
     }
 
