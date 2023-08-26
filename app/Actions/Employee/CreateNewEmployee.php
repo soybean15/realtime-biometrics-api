@@ -1,17 +1,44 @@
 <?php
 
 namespace App\Actions\Employee;
+use App\Models\Employee;
 
-use App\Contracts\Employee\CreateEmployeeActionContract;
+use Illuminate\Support\Facades\Validator;
 
-class CreateNewEmployee implements \App\Contracts\CreateEmployeeActionContract
+class CreateNewEmployee  
 
 {
 
 
-    public function execute(array $data){
+    public function execute($data){
 
-        //to do
+    
+        $validator = Validator::make($data, [
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'gender' => 'required|in:male,female', // Example validation for gender
+            'birthdate' => 'required|date',
+            // Add more validation rules as needed
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception(json_encode($validator->errors()), 410);
+            //return response(['errors' => $validator->errors()], 403);
+        }
+        
+        $employee = Employee::create([
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'middlename' => $data['middlename'],
+            'gender' => $data['gender'],
+            'birthdate' => $data['birthdate'],
+            'contact_number' => $data['contact_number'],
+            'email' => $data['email'],
+ 
+            'address' => $data['address'],
+        ]);
+
+       return $employee;
     }
 
 }

@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('middlename')->nullable();
+            $table->string('gender');
             $table->date('birthdate');
             $table->string('contact_number')->nullable();
             $table->string('email')->nullable();
             $table->string('image')->nullable();
             $table->string('address');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
