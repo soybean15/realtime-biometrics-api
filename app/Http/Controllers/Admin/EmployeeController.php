@@ -28,7 +28,12 @@ class EmployeeController extends Controller
     public function store(Request $request){
 
         return $this->employeeService->store($request->all()); 
-
         
+    }
+
+    public function delete(Request $request){
+
+        return $this->employeeService->delete($request['id']);
+
     }
 }
