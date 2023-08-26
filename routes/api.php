@@ -33,6 +33,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function 
     Route::prefix('employee')->group(function(){
 
         Route::get('/',[EmployeeController::class, 'index']);
+        Route::post('add',[EmployeeController::class,'store']);
 
     });
    

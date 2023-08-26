@@ -1,17 +1,17 @@
 <?php
 
 namespace App\Actions\Employee;
+use App\Contracts\CreateNewEmployeeContract;
 
-use App\Contracts\Employee\CreateEmployeeActionContract;
 
-class CreateNewEmployee implements \App\Contracts\CreateEmployeeActionContract
+class CreateNewEmployee implements CreateNewEmployeeContract
 
 {
 
 
-    public function execute(array $data){
+    public function execute($data){
 
-        //to do
+       return $data;
     }
 
 }

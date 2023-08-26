@@ -2,14 +2,27 @@
 
 namespace App\Models;
 
+use App\Traits\ImageTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes, ImageTrait;
 
+
+    protected $fillable = [
+        'firstname',
+        'lastname',
+        'middlename',
+        'gender',
+        'birthdate',
+        'contact_number',
+        'email',
+        'image',
+        'address',
+    ];
 
 
 
