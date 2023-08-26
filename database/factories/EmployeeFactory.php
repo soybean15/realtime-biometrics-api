@@ -22,9 +22,10 @@ class EmployeeFactory extends Factory
             'lastname'=>fake()->lastName(),
             'middlename'=>fake()->lastName(),
             'birthdate'=>fake()->dateTimeThisDecade(),
+            'gender'=>fake()->randomElement(['Male', 'Female']),
             'contact_number'=> fake()->phoneNumber(),
             'email'=>fake()->email(),
-            'address'=>fake()->address()
+            'address'=>fake()->address() 
 
 
         ];
