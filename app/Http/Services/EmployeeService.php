@@ -20,20 +20,23 @@ class EmployeeService{
     }
 
 
-    public function store($data){
+    public function store($data,$file){
 
         try{
-            return  $this->createNewEmployee->execute($data);
+            return  $this->createNewEmployee->execute($data,$file);
           
         }catch(\Exception $e) {
-            $errors = json_decode($e->getMessage(), true); 
-            return response()->json(['errors' => $errors], $e->getCode());
+            if($e->getCode()==410){
+                $errors = json_decode($e->getMessage(), true); 
+                return response()->json(['errors' => $errors], $e->getCode());
+            }
+            return response()->json($e->getMessage(), 501);
+          
         }
 
     }
 
     public function delete($employee_id){
-
 
         try{
             return $this->deleteEmployee->execute($employee_id);
@@ -41,11 +44,27 @@ class EmployeeService{
         }catch(\Exception $e) {
           
             return response()->json(['errors' => $e->getMessage()], $e->getCode());
-        }
-       
-          
+        }  
       
 
     }
+
+    public function restore($id){
+
+
+        $employee = \App\Models\Employee::onlyTrashed()->find( $id);
+
+
+       // return response()->json(['employee'=>$employee,'id'=>$id],);
+
+        if ($employee) {
+            $employee->restore(); 
+            return response()->json(['message' => 'Employee Restored','employee'=>$employee]);
+        } else {
+            throw new \Exception('Employee not found in the trash', 404);
+        }
+    }
+
+
     
 }

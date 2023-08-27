@@ -6,7 +6,7 @@ use App\Traits\ImageTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Carbon\Carbon;
 class Employee extends Model
 {
     use HasFactory,SoftDeletes, ImageTrait;
@@ -37,5 +37,9 @@ class Employee extends Model
                 return asset('images/defaults/users/female.png');
             }
         }
+    }
+
+    public function getDeletedAtAttribute($value){
+        return Carbon::parse($value)->diffForHumans();
     }
 }

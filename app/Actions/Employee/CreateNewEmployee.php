@@ -10,13 +10,13 @@ class CreateNewEmployee
 {
 
 
-    public function execute($data){
+    public function execute($data, $file){
 
     
         $validator = Validator::make($data, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-            'gender' => 'required|in:male,female', // Example validation for gender
+            'gender' => 'required|in:Male,Female', // Example validation for gender
             'birthdate' => 'required|date',
             // Add more validation rules as needed
         ]);
@@ -34,9 +34,13 @@ class CreateNewEmployee
             'birthdate' => $data['birthdate'],
             'contact_number' => $data['contact_number'],
             'email' => $data['email'],
- 
             'address' => $data['address'],
         ]);
+
+
+        if ($file) {
+            $employee->storeImage('images/users', $file);
+        }
 
        return $employee;
     }

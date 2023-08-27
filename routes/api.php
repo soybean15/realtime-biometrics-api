@@ -21,9 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function () {
-    // Define your admin-specific routes here
-
-    // Example admin route
+   
     Route::prefix('user')->group(function(){
 
         Route::get('/',[UserController::class, 'index']);
@@ -35,6 +33,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function 
         Route::get('/',[EmployeeController::class, 'index']);
         Route::post('add',[EmployeeController::class,'store']);
         Route::post('delete',[EmployeeController::class,'delete']);
+        Route::post('restore',[EmployeeController::class,'restore']);
 
     });
    
