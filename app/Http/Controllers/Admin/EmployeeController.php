@@ -18,17 +18,30 @@ class EmployeeController extends Controller
         $this->employeeService = $employeeService;
     }
     public function index(){
-        $employees = Employee::paginate(20);
+        $employees = Employee::orderBy('created_at', 'desc')->paginate(20);
+
+        $trashed = Employee::onlyTrashed()->paginate(20);
 
         return response()->json([
-            'employees'=> $employees
+            'employees'=> $employees,
+            'trashed'=>$trashed
         ]);
     }
 
     public function store(Request $request){
-
-        return $this->employeeService->store($request->all()); 
-
+        return $this->employeeService->store($request->all(),$request->file('image')); 
         
     }
+    public function delete(Request $request){
+
+        return $this->employeeService->delete($request['id']);
+
+    }
+
+    public function restore(Request $request){
+        return $this->employeeService->restore($request['id']);
+
+    }
+
+   
 }
