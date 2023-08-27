@@ -40,6 +40,10 @@ class Employee extends Model
     }
 
     public function getDeletedAtAttribute($value){
-        return Carbon::parse($value)->diffForHumans();
+        if($value){
+            return Carbon::parse($value)->diffForHumans();
+        }else return null;
+       
     }
+
 }
