@@ -19,12 +19,12 @@ class EmployeeController extends Controller
     }
     public function index(){
         $employees = Employee::orderBy('created_at', 'desc')->paginate(20);
-
-        $trashed = Employee::onlyTrashed()->paginate(20);
+        $trashed = Employee::onlyTrashed()->paginate(10);
+   
 
         return response()->json([
             'employees'=> $employees,
-            'trashed'=>$trashed
+            'trashed'=>$trashed,
         ]);
     }
 
