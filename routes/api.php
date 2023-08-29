@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\PositionController;
+use App\Models\Department;
+use App\Models\Position;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
@@ -34,6 +38,18 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function 
         Route::post('add',[EmployeeController::class,'store']);
         Route::post('delete',[EmployeeController::class,'delete']);
         Route::post('restore',[EmployeeController::class,'restore']);
+
+    });
+
+    Route::prefix('department')->group(function(){
+
+        Route::get('/',[DepartmentController::class,'index']);
+
+    });
+
+    Route::prefix('position')->group(function(){
+
+        Route::get('/',[PositionController::class,'index']);
 
     });
    
