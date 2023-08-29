@@ -54,12 +54,9 @@ class EmployeeService{
 
         $employee = \App\Models\Employee::onlyTrashed()->find( $id);
 
-
-       // return response()->json(['employee'=>$employee,'id'=>$id],);
-
         if ($employee) {
             $employee->restore(); 
-            
+
             return response()->json(['message' => 'Employee Restored','employee'=>$employee]);
         } else {
             throw new \Exception('Employee not found in the trash', 404);
