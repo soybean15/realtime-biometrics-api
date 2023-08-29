@@ -18,6 +18,7 @@ class EmployeeFactory extends Factory
     {
         return [
             //
+            'employee_id' => date('y') . '-' . str_pad(mt_rand(0, 99999), 5, '0', STR_PAD_LEFT) . '-' . date('m'),
             'firstname'=>fake()->firstName(),
             'lastname'=>fake()->lastName(),
             'middlename'=>fake()->lastName(),
