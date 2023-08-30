@@ -26,6 +26,9 @@ class Employee extends Model
 
 
 
+    protected $appends = ['full_name'];
+
+
     public function getImageAttribute($value)
     {
         if ($value) {
@@ -44,6 +47,19 @@ class Employee extends Model
             return Carbon::parse($value)->diffForHumans();
         }else return null;
        
+    }
+
+    public function getFullNameAttribute(){
+
+        $full_name = $this->firstname . ' ' . $this->lastname;
+
+        if (!empty($this->middlename)) {
+            $full_name .= " " . strtoupper($this->middlename[0])  .'.';
+        }
+        
+        return $full_name;
+        
+
     }
 
 }

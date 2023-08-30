@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Department>
  */
+
+
 class DepartmentFactory extends Factory
 {
     /**
@@ -14,11 +16,40 @@ class DepartmentFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $departmentIndex = 0;
     public function definition(): array
     {
+
+        $departments = [
+            "Computer Science",
+            "Mathematics",
+            "Physics",
+            "Chemistry",
+            "Biology",
+            "English Literature",
+            "History",
+            "Psychology",
+            "Economics",
+            "Political Science",
+            "Sociology",
+            "Business Administration",
+            "Engineering (Mechanical)",
+            "Engineering (Electrical)",
+            "Civil Engineering",
+            "Architecture",
+            "Fine Arts",
+            "Music",
+            "Environmental Science",
+            "Linguistics"
+        ];
+        $currentDepartment = $departments[$this->departmentIndex];
+
+        // Increment the counter and wrap around if it exceeds the department count
+        $this->departmentIndex = ($this->departmentIndex + 1) % count($departments);
+
         return [
-            //
-            'name'=>fake()->word()
+            'name' => $currentDepartment
+            
         ];
     }
 }
