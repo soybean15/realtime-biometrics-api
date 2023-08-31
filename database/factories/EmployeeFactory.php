@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,9 +27,18 @@ class EmployeeFactory extends Factory
             'gender'=>fake()->randomElement(['Male', 'Female']),
             'contact_number'=> fake()->phoneNumber(),
             'email'=>fake()->email(),
-            'address'=>fake()->address() 
+            'address'=>fake()->address() ,
+
 
 
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Employee $employee) {
+          $employee->departments()->attach( mt_rand(1, 20));
+          $employee->positions()->attach( mt_rand(1, 5));
+        });
     }
 }

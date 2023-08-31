@@ -13,6 +13,7 @@ class Employee extends Model
 
 
     protected $fillable = [
+        'employee_id',
         'firstname',
         'lastname',
         'middlename',
@@ -22,6 +23,7 @@ class Employee extends Model
         'email',
         'image',
         'address',
+       
     ];
 
 
@@ -60,6 +62,13 @@ class Employee extends Model
         return $full_name;
         
 
+    }
+
+    public function departments(){
+        return $this->belongsToMany(Department::class);
+    }
+    public function positions(){
+        return $this->belongsToMany(Position::class);
     }
 
 }
