@@ -27,6 +27,7 @@ class CreateNewEmployee
         }
         
         $employee = Employee::create([
+            'employee_id'=>date('y') . '-' . str_pad(mt_rand(0, 99999), 5, '0', STR_PAD_LEFT) . '-' . date('m'),
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
             'middlename' => $data['middlename'],
@@ -37,12 +38,22 @@ class CreateNewEmployee
             'address' => $data['address'],
         ]);
 
-
-        if ($file) {
-            $employee->storeImage('images/users', $file);
+        //attach department
+        foreach($data['departments'] as $department){
+            $employee->departments()->attach($department['id']);
         }
 
-       return $employee;
+        // //attach position
+        foreach($data['positions'] as $position){
+            $employee->positions()->attach($position['id']);
+        }
+
+
+        // if ($file) {
+        //     $employee->storeImage('images/users', $file);
+        // }
+
+       return $data['departments'];
     }
 
 }

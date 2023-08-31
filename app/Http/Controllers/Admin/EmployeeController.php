@@ -18,7 +18,7 @@ class EmployeeController extends Controller
         $this->employeeService = $employeeService;
     }
     public function index(){
-        $employees = Employee::orderBy('created_at', 'desc')->paginate(20);
+        $employees = Employee::with(['departments', 'positions'])->orderBy('created_at', 'desc')->paginate(20);
         $trashed = Employee::onlyTrashed()->paginate(10);
    
 
@@ -29,8 +29,16 @@ class EmployeeController extends Controller
     }
 
     public function store(Request $request){
-        return $this->employeeService->store($request->all(),$request->file('image')); 
+
+
+        //return $this->employeeService->store($request->all(),$request->file('image'));
+
+        return response()->json([
+            'request' => $request->all(),
+            'employee'=>$this->employeeService->store($request->all(),$request->file('image'))
         
+
+        ]);
     }
     public function delete(Request $request){
 
