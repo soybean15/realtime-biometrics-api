@@ -23,6 +23,7 @@ class Employee extends Model
         'email',
         'image',
         'address',
+       
     ];
 
 
