@@ -71,4 +71,20 @@ class Employee extends Model
         return $this->belongsToMany(Position::class);
     }
 
+
+    public function getEmailAttribute($value)
+    {
+        return $value ?? 'N/A';
+    }
+
+    public function getContactNumberAttribute($value)
+    {
+        return $value ?? 'N/A';
+    }
+
+    public function getAddressAttribute($value)
+    {
+        return $value ?? 'N/A';
+    }
+
 }
