@@ -39,21 +39,20 @@ class CreateNewEmployee
         ]);
 
         //attach department
-        foreach($data['departments'] as $department){
-            $employee->departments()->attach($department['id']);
+ 
+             $employee->departments()->attach($data['department_id']);
+        
+
+       
+             $employee->positions()->attach($data['position_id']);
+        
+
+
+        if ($file) {
+            $employee->storeImage('images/users', $file);
         }
 
-        // //attach position
-        foreach($data['positions'] as $position){
-            $employee->positions()->attach($position['id']);
-        }
-
-
-        // if ($file) {
-        //     $employee->storeImage('images/users', $file);
-        // }
-
-       return $data['departments'];
+       return $employee;
     }
 
 }

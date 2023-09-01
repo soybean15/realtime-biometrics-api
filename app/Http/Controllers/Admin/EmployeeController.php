@@ -31,11 +31,13 @@ class EmployeeController extends Controller
     public function store(Request $request){
 
 
-        //return $this->employeeService->store($request->all(),$request->file('image'));
-
+        $id = $this->employeeService->store($request->all(),$request->file('image'))->id;
+        $employee =  Employee::find($id);
+        
+        $employee->load(['departments', 'positions']);
         return response()->json([
-            'request' => $request->all(),
-            'employee'=>$this->employeeService->store($request->all(),$request->file('image'))
+           
+            'employee'=>$employee
         
 
         ]);
