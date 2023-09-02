@@ -18,7 +18,7 @@ class EmployeeController extends Controller
         $this->employeeService = $employeeService;
     }
     public function index(){
-        $employees = Employee::with(['departments', 'positions'])->orderBy('created_at', 'desc')->paginate(20);
+        $employees = Employee::with(['departments', 'positions','user'])->orderBy('created_at', 'desc')->paginate(20);
         $trashed = Employee::onlyTrashed()->paginate(10);
    
 
@@ -34,7 +34,7 @@ class EmployeeController extends Controller
         $id = $this->employeeService->store($request->all(),$request->file('image'))->id;
         $employee =  Employee::find($id);
         
-        $employee->load(['departments', 'positions']);
+        $employee->load(['departments', 'positions','user']);
         return response()->json([
            
             'employee'=>$employee
@@ -42,6 +42,15 @@ class EmployeeController extends Controller
 
         ]);
     }
+
+    public function update(Request $request){
+
+        return response()->json([
+            'request'=> [$request['attribute']=>$request['value']],
+            'employee' => $this->employeeService->update([$request['attribute']=>$request['value']],$request['id'])
+        ]);
+    }
+
     public function delete(Request $request){
 
         return $this->employeeService->delete($request['id']);

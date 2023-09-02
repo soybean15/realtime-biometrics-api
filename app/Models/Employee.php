@@ -23,6 +23,7 @@ class Employee extends Model
         'email',
         'image',
         'address',
+        'user_id'
        
     ];
 
@@ -69,6 +70,10 @@ class Employee extends Model
     }
     public function positions(){
         return $this->belongsToMany(Position::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 
 
