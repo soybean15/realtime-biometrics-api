@@ -23,6 +23,7 @@ class Employee extends Model
         'email',
         'image',
         'address',
+        'user_id'
        
     ];
 
@@ -69,6 +70,26 @@ class Employee extends Model
     }
     public function positions(){
         return $this->belongsToMany(Position::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+
+    public function getEmailAttribute($value)
+    {
+        return $value ?? 'N/A';
+    }
+
+    public function getContactNumberAttribute($value)
+    {
+        return $value ?? 'N/A';
+    }
+
+    public function getAddressAttribute($value)
+    {
+        return $value ?? 'N/A';
     }
 
 }

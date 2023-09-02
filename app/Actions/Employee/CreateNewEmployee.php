@@ -36,6 +36,8 @@ class CreateNewEmployee
             'contact_number' => $data['contact_number'],
             'email' => $data['email'],
             'address' => $data['address'],
+            'user_id'=>$data['user_id']
+            
         ]);
 
         //attach department
