@@ -92,4 +92,8 @@ class Employee extends Model
         return $value ?? 'N/A';
     }
 
+    public function getMiddlenameAttribute($value){
+        return $value ?? 'N/A';
+    }
+
 }
