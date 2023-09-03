@@ -21,6 +21,22 @@ class EmployeeService{
     }
 
 
+    public function getEmployee($id){
+
+
+        try{
+            
+            $employee = Employee::find($id);
+            $employee->load(['departments', 'positions','user']);
+            return response()->json(['employee' => $employee]);
+
+        }catch(\Exception $e){
+            return response()->json(['error' => "Employee Cannot found"], 418);
+        }
+
+    }
+
+
     public function store($data,$file){
 
         try{
@@ -53,7 +69,7 @@ class EmployeeService{
     public function update($attributes,$employee_id ){
         $employee = Employee::find($employee_id);
         if (!$employee) {
-            return null; // or handle the case where the employee is not found
+            return null;// will throw an error
         }
     
         foreach ($attributes as $attribute => $value) {

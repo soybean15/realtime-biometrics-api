@@ -35,6 +35,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function 
     Route::prefix('employee')->group(function(){
 
         Route::get('/',[EmployeeController::class, 'index']);
+        Route::get('/{id}',[EmployeeController::class, 'get']);
         Route::post('add',[EmployeeController::class,'store']);
         Route::post('delete',[EmployeeController::class,'delete']);
         Route::post('update',[EmployeeController::class,'update']);

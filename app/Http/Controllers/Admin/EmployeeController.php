@@ -17,6 +17,8 @@ class EmployeeController extends Controller
     {
         $this->employeeService = $employeeService;
     }
+
+
     public function index(){
         $employees = Employee::with(['departments', 'positions','user'])->orderBy('created_at', 'desc')->paginate(20);
         $trashed = Employee::onlyTrashed()->paginate(10);
@@ -26,6 +28,12 @@ class EmployeeController extends Controller
             'employees'=> $employees,
             'trashed'=>$trashed,
         ]);
+    }
+
+    public function get(String $id){
+
+        return $this->employeeService->getEmployee($id);
+
     }
 
     public function store(Request $request){
