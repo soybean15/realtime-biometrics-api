@@ -97,6 +97,26 @@ class EmployeeService{
         }
     }
 
+    public function upload($id, $file){
+
+        $employee = Employee::find($id);
+
+
+        $employee->load(['departments', 'positions','user']);
+
+
+        if ($file) {
+            $employee->restoreImage('images/users', $file);
+        }
+
+       
+
+        return response()->json([
+            'image'=> $employee->image,
+
+        ]);
+    }
+
 
     
 }

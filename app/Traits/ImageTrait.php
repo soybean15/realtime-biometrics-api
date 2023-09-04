@@ -6,6 +6,9 @@ trait ImageTrait
 {
     public function storeImage($path, $file)
     {
+
+      
+
         $fileExtension = $file->getClientOriginalExtension();
         $fileName = uniqid() . '.' . $fileExtension;
 
