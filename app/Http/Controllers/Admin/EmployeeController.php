@@ -39,7 +39,8 @@ class EmployeeController extends Controller
     public function store(Request $request){
 
 
-        $id = $this->employeeService->store($request->all(),$request->file('image'))->id;
+
+        $id = $this->employeeService->store($request->all(),$request->file('image'))->id;//this returns employee 
         $employee =  Employee::find($id);
         
         $employee->load(['departments', 'positions','user']);
@@ -62,6 +63,25 @@ class EmployeeController extends Controller
     public function delete(Request $request){
 
         return $this->employeeService->delete($request['id']);
+
+    }
+
+    public function updatePhoto(Request $request){
+
+        $employee = Employee::find($request['id']);
+
+        if ($file = $request->file('image')) {
+            $employee->restoreImage('images/users', $file);
+        }
+
+        $employee->load(['departments', 'positions','user']);
+
+        return response()->json([
+            'image'=> $employee->image,
+            
+        ]);
+
+
 
     }
 

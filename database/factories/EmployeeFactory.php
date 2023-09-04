@@ -28,7 +28,7 @@ class EmployeeFactory extends Factory
             'contact_number'=> fake()->phoneNumber(),
             'email'=>fake()->email(),
             'address'=>fake()->address() ,
-
+            'user_id'=>12
 
 
         ];
