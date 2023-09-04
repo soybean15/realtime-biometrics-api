@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Services\EmployeeService;
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use Illuminate\Support\Facades\Validator;
+
 class EmployeeController extends Controller
 {
     //
@@ -19,76 +21,86 @@ class EmployeeController extends Controller
     }
 
 
-    public function index(){
-        $employees = Employee::with(['departments', 'positions','user'])->orderBy('created_at', 'desc')->paginate(20);
+    public function index()
+    {
+        $employees = Employee::with(['departments', 'positions', 'user'])->orderBy('created_at', 'desc')->paginate(20);
         $trashed = Employee::onlyTrashed()->paginate(10);
-   
+
 
         return response()->json([
-            'employees'=> $employees,
-            'trashed'=>$trashed,
+            'employees' => $employees,
+            'trashed' => $trashed,
         ]);
     }
 
-    public function get(String $id){
+    public function get(string $id)
+    {
 
         return $this->employeeService->getEmployee($id);
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
 
 
-        $id = $this->employeeService->store($request->all(),$request->file('image'))->id;//this returns employee 
-        $employee =  Employee::find($id);
-        
-        $employee->load(['departments', 'positions','user']);
+        $id = $this->employeeService->store($request->all(), $request->file('image'))->id; //this returns employee 
+        $employee = Employee::find($id);
+
+        $employee->load(['departments', 'positions', 'user']);
         return response()->json([
-           
-            'employee'=>$employee
-        
+
+            'employee' => $employee
+
 
         ]);
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         return response()->json([
-            'request'=> [$request['attribute']=>$request['value']],
-            'employee' => $this->employeeService->update([$request['attribute']=>$request['value']],$request['id'])
+            'request' => [$request['attribute'] => $request['value']],
+            'employee' => $this->employeeService->update([$request['attribute'] => $request['value']], $request['id'])
         ]);
     }
 
-    public function delete(Request $request){
+    public function delete(Request $request)
+    {
 
         return $this->employeeService->delete($request['id']);
 
     }
 
-    public function updatePhoto(Request $request){
+    public function updatePhoto(Request $request)
+    {
 
-        $employee = Employee::find($request['id']);
 
-        if ($file = $request->file('image')) {
-            $employee->restoreImage('images/users', $file);
+        $validator = Validator::make($request->all(), [
+            'image' => 'image|mimes:jpeg,jpg,png,gif|max:2048', // Example rules
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'errors' => $validator->errors(),
+
+            ],412);
         }
 
-        $employee->load(['departments', 'positions','user']);
+        return $this->employeeService->upload($request['id'], $request->file('image'));
 
-        return response()->json([
-            'image'=> $employee->image,
-            
-        ]);
 
 
 
     }
 
-    public function restore(Request $request){
+    public function restore(Request $request)
+    {
         return $this->employeeService->restore($request['id']);
 
     }
 
-   
+
 }
