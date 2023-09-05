@@ -23,7 +23,8 @@ class Employee extends Model
         'email',
         'image',
         'address',
-        'user_id'
+        'user_id',
+        'biometrics_id'
        
     ];
 

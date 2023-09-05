@@ -15,6 +15,7 @@ class EmployeeFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $id = 1;
     public function definition(): array
     {
         return [
@@ -28,7 +29,8 @@ class EmployeeFactory extends Factory
             'contact_number'=> fake()->phoneNumber(),
             'email'=>fake()->email(),
             'address'=>fake()->address() ,
-            'user_id'=>12
+            'user_id'=>12,
+            'biometrics_id' =>$this->id++
 
 
         ];
