@@ -44,11 +44,12 @@ class EmployeeController extends Controller
     {
 
 
+        $id = $this->employeeService->store($request->all(), $request->file('image'))->id;
 
-        $id = $this->employeeService->store($request->all(), $request->file('image'))->id; //this returns employee 
         $employee = Employee::find($id);
 
-        $employee->load(['departments', 'positions', 'user']);
+        $employee->load(['departments', 'positions','user']);
+        
         return response()->json([
 
             'employee' => $employee

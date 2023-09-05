@@ -15,15 +15,16 @@ class DeleteEmployee
 
 
         if ($employee) {
+         
             $employee->delete(); 
+
+            $employee->biometrics_id = -1;
+            $employee->save();
+    
             return response()->json(['message' => 'Employee Deleted']);
         } else {
             throw new \Exception('Something went wrong', 411);
         }
-
-
-
-
 
 
 

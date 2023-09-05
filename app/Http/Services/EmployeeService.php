@@ -86,10 +86,11 @@ class EmployeeService{
     public function restore($id){
 
 
-        $employee = \App\Models\Employee::onlyTrashed()->find( $id);
+        $employee = Employee::onlyTrashed()->find( $id);
 
         if ($employee) {
             $employee->restore(); 
+            $employee->generateBiometricsId();
 
             return response()->json(['message' => 'Employee Restored','employee'=>$employee]);
         } else {

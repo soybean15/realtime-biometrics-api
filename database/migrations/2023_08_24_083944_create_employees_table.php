@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('image')->nullable();
             $table->string('address');
+            $table->integer('biometrics_id');
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->softDeletes();
