@@ -58,7 +58,8 @@ class Employee extends Model
 
         $full_name = $this->firstname . ' ' . $this->lastname;
 
-        if (!empty($this->middlename)) {
+        //!empty($this->middlename) || 
+        if ($this->middlename != 'N/A' ) {
             $full_name .= " " . strtoupper($this->middlename[0])  .'.';
         }
         

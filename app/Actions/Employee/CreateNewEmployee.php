@@ -42,6 +42,7 @@ class CreateNewEmployee
             'email' => $data['email'],
             'address' => $data['address'],
             'user_id' => $data['user_id'],
+            'biometrics_id'=>-1
        
 
         ]);
