@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\ImageTrait;
+use App\Traits\EmployeeTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 class Employee extends Model
 {
-    use HasFactory,SoftDeletes, ImageTrait;
+    use HasFactory,SoftDeletes, ImageTrait,EmployeeTrait;
 
 
     protected $fillable = [
