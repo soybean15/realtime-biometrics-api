@@ -61,10 +61,7 @@ class EmployeeController extends Controller
     public function update(Request $request)
     {
 
-        return response()->json([
-            'request' => [$request['attribute'] => $request['value']],
-            'employee' => $this->employeeService->update([$request['attribute'] => $request['value']], $request['id'])
-        ]);
+        return $this->employeeService->update([$request['attribute'] => $request['value']], $request['id']);
     }
 
     public function delete(Request $request)
