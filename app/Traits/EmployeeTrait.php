@@ -42,18 +42,22 @@ trait EmployeeTrait
                 case 'contact_number':
                     $validationRules[$attribute] = 'required|regex:/^[0-9]{10}$/';
                     break;
+                
+                case 'birthdate':
+                    $validationRules[$attribute]= 'required|date|before:today|after:1900-01-01';
+                    break;
+
+                
 
                 // Add more cases for other attributes as needed
 
                 default:
-                    // Handle other attributes if needed
-                    break;
+                return true;
+                   
             }
         }
 
         $validator = Validator::make($attributes, $validationRules);
-
-
 
 
 

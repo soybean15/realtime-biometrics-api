@@ -96,7 +96,7 @@ class EmployeeService
                 return response()->json(['errors' => $errors], $e->getCode());
             }
 
-            return response()->json('Something went wrong',409);
+            return response()->json($e->getMessage(),409);
         }
        
 
