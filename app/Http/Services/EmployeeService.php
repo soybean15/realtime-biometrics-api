@@ -44,7 +44,20 @@ class EmployeeService
     {
 
         try {
-            return $this->createNewEmployee->execute($data, $file);
+
+
+            $id = $this->createNewEmployee->execute($data, $file)->id;
+
+            $employee = Employee::find($id);
+
+            $employee->load(['departments', 'positions', 'user']);
+
+            return response()->json([
+
+                'employee' => $employee
+
+
+            ]);
 
         } catch (\Exception $e) {
             if ($e->getCode() == 410) {
@@ -75,16 +88,16 @@ class EmployeeService
     {
         $employee = Employee::find($employee_id);
 
-        try{
-            if($employee->validate($attributes)){
+        try {
+            if ($employee->validate($attributes)) {
 
                 foreach ($attributes as $attribute => $value) {
                     $employee->$attribute = $value;
                 }
-        
+
                 $employee->save();
-        
-        
+
+
                 return response()->json([
                     'employee' => $employee
                 ]);
@@ -96,9 +109,9 @@ class EmployeeService
                 return response()->json(['errors' => $errors], $e->getCode());
             }
 
-            return response()->json($e->getMessage(),409);
+            return response()->json($e->getMessage(), 409);
         }
-       
+
 
 
     }
