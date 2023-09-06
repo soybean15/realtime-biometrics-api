@@ -44,27 +44,14 @@ class EmployeeController extends Controller
     {
 
 
-        $id = $this->employeeService->store($request->all(), $request->file('image'))->id;
+        return $this->employeeService->store($request->all(), $request->file('image'))->id;
 
-        $employee = Employee::find($id);
-
-        $employee->load(['departments', 'positions','user']);
-        
-        return response()->json([
-
-            'employee' => $employee
-
-
-        ]);
     }
 
     public function update(Request $request)
     {
 
-        return response()->json([
-            'request' => [$request['attribute'] => $request['value']],
-            'employee' => $this->employeeService->update([$request['attribute'] => $request['value']], $request['id'])
-        ]);
+        return $this->employeeService->update([$request['attribute'] => $request['value']], $request['id']);
     }
 
     public function delete(Request $request)

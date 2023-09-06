@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('contact_number')->nullable();
             $table->string('email')->nullable();
             $table->string('image')->nullable();
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->integer('biometrics_id');
 
             $table->unsignedBigInteger('user_id')->nullable();
