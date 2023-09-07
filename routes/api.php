@@ -29,6 +29,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function 
     Route::prefix('user')->group(function(){
 
         Route::get('/',[UserController::class, 'index']);
+        Route::post('enable',[UserController::class,'enable']);
 
     });
 
