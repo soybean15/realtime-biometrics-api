@@ -24,6 +24,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
+            'enable'=>false
         ];
     }
 
@@ -32,7 +33,9 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) {
            if ($user->email == 'marlonpadilla1593@gmail.com'){
             $user->roles()->attach(1);
-           }
+            $user->enable = true;
+            $user->save();
+           }else      $user->roles()->attach(2);
         });
     }
 
