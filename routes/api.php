@@ -19,14 +19,14 @@ use App\Http\Controllers\Admin\EmployeeController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['auth:sanctum','isEnable'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
 
-Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function () {
+Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function () {
    
-    Route::prefix('user')->group(function(){
+    Route::prefix('user')->middleware( 'isAdmin')->group(function(){
 
         Route::get('/',[UserController::class, 'index']);
         Route::post('enable',[UserController::class,'enable']);
