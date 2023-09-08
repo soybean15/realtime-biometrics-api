@@ -17,7 +17,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function enableUser(Request $request){
+    public function enable(Request $request){
 
         $user = User::find($request['id']);
 
