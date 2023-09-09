@@ -40,11 +40,15 @@ class EmployeeController extends Controller
 
     }
 
+    public function filter(Request $request){
+        return $this->employeeService->filter($request['attribute'], $request['id']);
+    }
+
     public function store(Request $request)
     {
 
 
-        return $this->employeeService->store($request->all(), $request->file('image'))->id;
+        return $this->employeeService->store($request->all(), $request->file('image'));
 
     }
 

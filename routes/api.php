@@ -37,6 +37,7 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
 
         Route::get('/',[EmployeeController::class, 'index']);
         Route::get('/{id}',[EmployeeController::class, 'get']);
+        Route::post('filter',[EmployeeController::class, 'filter']); 
         Route::post('update-photo',[EmployeeController::class, 'updatePhoto']);        
         Route::post('add',[EmployeeController::class,'store']);
         Route::post('delete',[EmployeeController::class,'delete']);

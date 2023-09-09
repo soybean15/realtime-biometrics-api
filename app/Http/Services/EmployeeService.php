@@ -5,7 +5,7 @@ namespace App\Http\Services;
 use App\Actions\Employee\CreateNewEmployee;
 use App\Actions\Employee\DeleteEmployee;
 use App\Models\Employee;
-
+use Illuminate\Support\Str;
 
 
 
@@ -36,6 +36,23 @@ class EmployeeService
         } catch (\Exception $e) {
             return response()->json(['error' => "Employee Cannot found"], 418);
         }
+
+    }
+
+    public function filter($attribute, $id){
+
+        $employees = Employee::whereHas($attribute,function($query) use ($attribute,$id){
+            $query->where(Str::singular($attribute).'_id',$id);
+        })->paginate(20);
+
+        $employees->load(['departments', 'positions', 'user']);
+
+       return response()->json([
+        'employees'=>$employees,
+        'id'=>$id,
+        'attribute'=>Str::singular($attribute).'_id'
+       ]) ;
+
 
     }
 
