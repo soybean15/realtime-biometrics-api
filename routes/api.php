@@ -30,6 +30,7 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
 
         Route::get('/',[UserController::class, 'index']);
         Route::post('enable',[UserController::class,'enable']);
+        Route::post('search',[UserController::class,'search']);
 
     });
 
@@ -61,3 +62,4 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
    
     // ... other admin routes ...
 });
+Route::get('/test',[EmployeeController::class, 'index']);
