@@ -43,6 +43,7 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
         Route::post('delete',[EmployeeController::class,'delete']);
         Route::post('update',[EmployeeController::class,'update']);
         Route::post('restore',[EmployeeController::class,'restore']);
+        Route::post('search',[EmployeeController::class,'search']);
 
     });
 
