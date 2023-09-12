@@ -171,5 +171,30 @@ class EmployeeService
     }
 
 
+    public function search( $value){
+
+        try{
+
+            $employees=  Employee::where(function ($query) use ($value) {
+                $query->where('firstname', 'LIKE', "%$value%")
+                      ->orWhere('lastname', 'LIKE', "%$value%")
+                      ->orWhere('middlename', 'LIKE', "%$value%")
+                      ->orWhere('employee_id', $value)
+                      ->orWhere('biometrics_id', $value);
+            })->paginate(20);
+    
+            return response()->json([
+                'employees'=>$employees
+            ]);
+        }catch (\Exception $e) {
+          
+
+            return response()->json(['message'=>'No available data'], 411);
+        }
+
+
+    }
+
+
 
 }

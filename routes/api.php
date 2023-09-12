@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Position;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
 
         Route::get('/',[UserController::class, 'index']);
         Route::post('enable',[UserController::class,'enable']);
+        Route::post('search',[UserController::class,'search']);
 
     });
 
@@ -43,6 +45,7 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
         Route::post('delete',[EmployeeController::class,'delete']);
         Route::post('update',[EmployeeController::class,'update']);
         Route::post('restore',[EmployeeController::class,'restore']);
+        Route::post('search',[EmployeeController::class,'search']);
 
     });
 
@@ -60,3 +63,4 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
    
     // ... other admin routes ...
 });
+Route::get('/test',[Controller::class, 'index']);

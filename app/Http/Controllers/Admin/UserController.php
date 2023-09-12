@@ -32,4 +32,19 @@ class UserController extends Controller
 
 
     }
+
+    public function search(Request $request){
+        $users=  User::where(function ($query) use ($request ) {
+            $value = $request->input('value');
+            $query->where('name', 'LIKE', "%$value%")
+                  ->orWhere('email', 'LIKE', "%$value%");
+                
+        })->paginate(20);
+    
+        return response()->json([
+
+            'users'=> $users
+        ]);
+    }
+
 }

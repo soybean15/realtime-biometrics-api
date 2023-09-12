@@ -94,5 +94,13 @@ class EmployeeController extends Controller
 
     }
 
+    public function search(Request $request){
+
+        return $this->employeeService->search($request['value']);
+
+
+
+    }
+
 
 }
