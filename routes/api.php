@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Position;
 use Illuminate\Http\Request;
@@ -62,4 +63,4 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
    
     // ... other admin routes ...
 });
-Route::get('/test',[EmployeeController::class, 'index']);
+Route::get('/test',[Controller::class, 'index']);
