@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SettingsController;
 use App\Models\Department;
 use App\Models\Position;
 use Illuminate\Http\Request;
@@ -24,6 +25,13 @@ Route::middleware(['auth:sanctum','isEnable'])->get('/user', function (Request $
     return $request->user();
 });
 
+
+Route::group([],function(){
+
+    Route::get('/settings',[SettingsController::class,'index']);
+    Route::post('/settings/change-color',[SettingsController::class,'changeColor']);
+
+});
 
 Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function () {
    
