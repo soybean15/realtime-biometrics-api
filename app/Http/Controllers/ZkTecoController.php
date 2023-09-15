@@ -28,4 +28,10 @@ class ZkTecoController extends Controller
 
 
     }
+
+    public function store(Request $request){
+
+        return $this->zk->store($request->all());
+
+    }
 }

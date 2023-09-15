@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('zk_teco_devices', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('ip_address')->default(''); 
+            $table->string('ip_address')->default('192.168.1.201'); 
+            $table->integer('port')->default(4370); 
             $table->timestamps();
         });
     }

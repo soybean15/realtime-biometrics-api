@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Services;
+use App\Models\ZkTecoDevice;
 use Rats\Zkteco\Lib\ZKTeco;
-
+use Illuminate\Support\Facades\Validator;
 
 
 class ZkTecoService
@@ -30,7 +31,7 @@ class ZkTecoService
 
     }
 
-    public function ping(String $ip){
+    public function ping(String $ip,){
 
         try{
             $zk = new ZKTeco($ip);
@@ -55,6 +56,35 @@ class ZkTecoService
 
         }
        // return $ip;
+    }
+
+    public function store($data){
+
+
+        $validator = Validator::make($data, [
+            'name' => 'required|max:50',
+            'ip_address' => 'required',
+            'port' => 'required',
+       
+        ]);
+
+        if ($validator->fails()) {
+        
+            return response(['errors' => $validator->errors()], 403);
+        }
+
+        $zkDevice = ZkTecoDevice::create([
+            'name'=>$data['name'],
+            'ip_address'=>$data['ip_address'],
+            'port'=>$data['port']
+        ]);
+
+        
+        return response()->json([
+            'zkDevice'=>$zkDevice
+        ]);
+
+
     }
 
 
