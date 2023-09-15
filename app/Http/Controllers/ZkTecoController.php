@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Http\Services\ZkTecoService;
+use Illuminate\Http\Request;
+
+class ZkTecoController extends Controller
+{
+    //
+
+    protected ZkTecoService $zk;
+
+    public function __construct(ZkTecoService $zk)
+    {
+
+        $this->zk = $zk;
+
+    }
+
+    public function ping(Request $request){
+
+        //return $request['ip_address']??'192.168.1.201';
+        return $this->zk->ping($request['ip_address']??'192.168.1.201');
+     //   return $this->zk->test();
+
+
+
+    }
+}

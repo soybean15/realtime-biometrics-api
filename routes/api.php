@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\ZkTecoController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SettingsController;
-use App\Models\Department;
-use App\Models\Position;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
@@ -30,6 +30,20 @@ Route::group([],function(){
 
     Route::get('/settings',[SettingsController::class,'index']);
     Route::post('/settings/change-color',[SettingsController::class,'changeColor']);
+
+
+
+});
+
+//route outside Admin
+Route::group(['middleware'=>['auth:sanctum','isEnable']],function(){
+
+
+    Route::prefix('zk')->group(function(){
+        Route::post('/ping',[ZkTecoController::class,'ping']);
+
+    });
+  
 
 });
 

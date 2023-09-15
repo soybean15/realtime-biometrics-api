@@ -30,5 +30,32 @@ class ZkTecoService
 
     }
 
+    public function ping(String $ip){
+
+        try{
+            $zk = new ZKTeco($ip);
+            if($zk->connect()){
+                return response()->json([
+                    'status'=>true,
+                    'message'=>'Device Connected'
+                ]);
+            }else{
+                return response()->json([
+                    'status'=>false,
+                    'message'=>'Failed to connect to the Device'
+                ],405);
+            }
+     
+        }catch(\Exception $ex){
+
+            return response()->json([
+                'status'=>false,
+                'message'=>'Something went wrong, Please Contact the Administrator'
+            ],405);
+
+        }
+       // return $ip;
+    }
+
 
 }
