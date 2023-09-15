@@ -18,15 +18,15 @@ class SettingsController extends Controller
         $primary = $request->input('primary');
        
     
-        $setting = Setting::find(1); // Assuming you've stored a setting with ID 1
+        $setting = Setting::find(1); 
     
-        // Get the existing data attribute as an array
+        
         $data = $setting->data;
     
-        // Update the theme_color -> primary value
+      
         $data['theme']['primary'] = $primary;
     
-        // Update the 'data' attribute of the setting
+        
         $setting->data = $data;
         $setting->save();
 
