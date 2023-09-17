@@ -52,13 +52,15 @@ class CheckAttendance extends Command
 
             // If a record does not exist, insert a new one
             if (!$existingAttendance) {
-                Attendance::create([
+                $attendance = Attendance::create([
                     'serial_number' => $item['uid'],
                     'biometrics_id' => $item['id'],
                     'timestamp' => $item['timestamp'],
                     'state' => $item['state'],
                     'type' => $item['type']
                 ]);
+
+                broadcast(new \App\Events\GetAttendance($attendance))->toOthers();
             }
 
         }

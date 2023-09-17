@@ -39,7 +39,8 @@ class ZkTecoService
                 return response()->json([
                     'status'=>true,
                     'message'=>'Device Connected',
-                    'zk_version'=>   $zk->version()
+                    'zk_version'=>   $zk->version(),
+                    'device_name'=>  $zk->deviceName()
                 ]);
             }else{
                 return response()->json([

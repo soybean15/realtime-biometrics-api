@@ -86,4 +86,13 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
    
     // ... other admin routes ...
 });
-Route::get('/test',[Controller::class, 'index']);
+// Route::get('/test',[Controller::class, 'index']);
+
+Route::post('/test', function (Request $request) {
+    $message = $request->input('message');
+
+    broadcast(new \App\Events\GetAttendance($message))->toOthers();
+   //event(new \App\Events\Hello($message));
+
+    return response()->json(['message' => $message]);
+});
