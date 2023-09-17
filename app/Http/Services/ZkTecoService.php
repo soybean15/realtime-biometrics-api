@@ -31,14 +31,15 @@ class ZkTecoService
 
     }
 
-    public function ping(String $ip,){
+    public function ping(String $ip){
 
         try{
             $zk = new ZKTeco($ip);
             if($zk->connect()){
                 return response()->json([
                     'status'=>true,
-                    'message'=>'Device Connected'
+                    'message'=>'Device Connected',
+                    'zk_version'=>   $zk->version()
                 ]);
             }else{
                 return response()->json([
