@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ZkTecoController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SettingsController;
@@ -96,3 +97,5 @@ Route::post('/test', function (Request $request) {
 
     return response()->json(['message' => $message]);
 });
+
+Route::get('/attendance',[AttendanceController::class, 'index']);

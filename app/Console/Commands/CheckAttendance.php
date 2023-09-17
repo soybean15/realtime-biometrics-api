@@ -60,6 +60,12 @@ class CheckAttendance extends Command
                     'type' => $item['type']
                 ]);
 
+                $attendance->load(['employee']);
+
+                
+
+                
+
                 broadcast(new \App\Events\GetAttendance($attendance))->toOthers();
             }
 
