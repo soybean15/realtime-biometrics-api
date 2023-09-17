@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ZkTecoController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SettingsController;
@@ -86,4 +87,15 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
    
     // ... other admin routes ...
 });
-Route::get('/test',[Controller::class, 'index']);
+// Route::get('/test',[Controller::class, 'index']);
+
+Route::post('/test', function (Request $request) {
+    $message = $request->input('message');
+
+    broadcast(new \App\Events\GetAttendance($message))->toOthers();
+   //event(new \App\Events\Hello($message));
+
+    return response()->json(['message' => $message]);
+});
+
+Route::get('/attendance',[AttendanceController::class, 'index']);
