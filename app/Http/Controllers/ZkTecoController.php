@@ -43,4 +43,9 @@ class ZkTecoController extends Controller
         return $this->zk->store($request->all());
 
     }
+    public function delete(Request $request){
+
+
+        return $this->zk->destroy($request['id']);
+    }
 }
