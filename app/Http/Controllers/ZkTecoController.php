@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\ZkTecoService;
+use App\Models\ZkTecoDevice;
 use Illuminate\Http\Request;
 
 class ZkTecoController extends Controller
@@ -17,6 +18,14 @@ class ZkTecoController extends Controller
 
         $this->zk = $zk;
 
+    }
+
+    public function index(){
+        $devices = ZkTecoDevice::all();
+
+        return response()->json([
+            'devices' => $devices
+        ]);
     }
 
     public function ping(Request $request){
@@ -33,5 +42,10 @@ class ZkTecoController extends Controller
 
         return $this->zk->store($request->all());
 
+    }
+    public function delete(Request $request){
+
+
+        return $this->zk->destroy($request['id']);
     }
 }

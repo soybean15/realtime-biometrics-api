@@ -89,5 +89,24 @@ class ZkTecoService
 
     }
 
+    public function destroy($id){
+
+        $device = ZkTecoDevice::find($id);
+
+        if($device){
+            $device->delete();
+
+            return response()->json([
+                'message'=> "Device Successfully Deleted"
+            ]);
+        }
+        return response()->json([
+            'message'=> "Something went wrong"
+        ],404);
+
+  
+
+    }
+
 
 }

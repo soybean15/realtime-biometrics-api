@@ -41,9 +41,10 @@ Route::group(['middleware'=>['auth:sanctum','isEnable']],function(){
 
 
     Route::prefix('zk')->group(function(){
+        Route::get('/',[ZkTecoController::class,'index']);
         Route::post('/ping',[ZkTecoController::class,'ping']);
         Route::post('/store',[ZkTecoController::class,'store']);
-
+        ROute::post('delete',[ZkTecoController::class,'delete']);
     });
   
 
