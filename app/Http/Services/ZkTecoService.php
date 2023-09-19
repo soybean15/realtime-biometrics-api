@@ -49,7 +49,7 @@ class ZkTecoService
        
     {
 
-        return $this->pingDevice->execute();
+        return $this->pingDevice->execute($ip);
     }
 
 

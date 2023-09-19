@@ -2,19 +2,17 @@
 
 namespace App\Actions\ZkTeco;
 
+use App\Models\Setting;
+use App\Models\ZkTecoDevice;
 use Rats\Zkteco\Lib\ZKTeco;
 class PingDevice{
 
+    use IpValidation;
     public function execute($ip =null){
 
-        
-
-        if (!$ip) {
-            
-
-        } 
+       //return $this->validate($ip);
             try {
-                $zk = new ZKTeco($ip);
+                $zk = new ZKTeco($this->validate($ip));
                 if ($zk->connect()) {
                     return response()->json([
                         'status' => true,
