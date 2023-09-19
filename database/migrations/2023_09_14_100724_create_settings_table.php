@@ -24,7 +24,9 @@ return new class extends Migration
             'theme'=>[
                 'primary'=>'#49b265',
                 'secondary'=>'#26A69A'
-            ]
+            ],
+            'zkteco'=>0,
+            'live_update'=>false
 
         ];
     

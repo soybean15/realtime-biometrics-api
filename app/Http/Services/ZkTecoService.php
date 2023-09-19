@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Services;
+
+use App\Actions\ZkTeco\PingDevice;
 use App\Models\ZkTecoDevice;
 use Rats\Zkteco\Lib\ZKTeco;
 use Illuminate\Support\Facades\Validator;
@@ -9,21 +11,32 @@ use Illuminate\Support\Facades\Validator;
 class ZkTecoService
 {
 
-    public function test(){
+    protected PingDevice $pingDevice;
+
+    public function __construct(PingDevice $pingDevice)
+    {
+
+        $this->pingDevice = $pingDevice;
+
+    }
+
+    public function test()
+    {
         return "test";
     }
 
-    public function getAttendance(){
+    public function getAttendance()
+    {
 
 
-        try{
+        try {
             $zk = new ZKTeco('192.168.1.201');
-            $zk->connect();   
-            if($zk){
-             return    $zk->getAttendance(); 
+            $zk->connect();
+            if ($zk) {
+                return $zk->getAttendance();
             }
             return "disconnected";
-        }catch(\Exception $ex){
+        } catch (\Exception $ex) {
 
             return "error";
 
@@ -31,80 +44,68 @@ class ZkTecoService
 
     }
 
-    public function ping(String $ip){
+    public function ping($ip = null)
 
-        try{
-            $zk = new ZKTeco($ip);
-            if($zk->connect()){
-                return response()->json([
-                    'status'=>true,
-                    'message'=>'Device Connected',
-                    'zk_version'=>   $zk->version(),
-                    'device_name'=>  $zk->deviceName()
-                ]);
-            }else{
-                return response()->json([
-                    'status'=>false,
-                    'message'=>'Failed to connect to the Device'
-                ],405);
-            }
-     
-        }catch(\Exception $ex){
+       
+    {
 
-            return response()->json([
-                'status'=>false,
-                'message'=>'Something went wrong, Please Contact the Administrator'
-            ],405);
-
-        }
-       // return $ip;
+        return $this->pingDevice->execute($ip);
     }
 
-    public function store($data){
+
+    
+
+
+
+
+
+    public function store($data)
+    {
 
 
         $validator = Validator::make($data, [
             'name' => 'required|max:50',
             'ip_address' => 'required',
             'port' => 'required',
-       
+
         ]);
 
         if ($validator->fails()) {
-        
+
             return response(['errors' => $validator->errors()], 403);
         }
 
         $zkDevice = ZkTecoDevice::create([
-            'name'=>$data['name'],
-            'ip_address'=>$data['ip_address'],
-            'port'=>$data['port']
+            'name' => $data['name'],
+            'ip_address' => $data['ip_address'],
+            'port' => $data['port']
         ]);
 
-        
+
         return response()->json([
-            'zkDevice'=>$zkDevice
+            'zkDevice' => $zkDevice
         ]);
 
 
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
 
         $device = ZkTecoDevice::find($id);
 
-        if($device){
+        if ($device) {
             $device->delete();
 
             return response()->json([
-                'message'=> "Device Successfully Deleted"
+                'message' => "Device Successfully Deleted"
             ]);
         }
         return response()->json([
-            'message'=> "Something went wrong"
-        ],404);
+            'message' => "Something went wrong"
+        ], 404);
 
-  
+
 
     }
 

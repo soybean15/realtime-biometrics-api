@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Actions\ZkTeco\PingDevice;
 use App\Console\Commands\CheckAttendance;
 use App\Http\Controllers\ZkTecoController;
 use App\Http\Services\ZkTecoService;
@@ -16,9 +17,15 @@ class ZkTekoServiceProvider extends ServiceProvider
     {
         //
 
-        $this->app->bind(ZkTecoService::class, function ($app) {
-            return new ZkTecoService();
+
+        $this->app->bind(PingDevice::class, function ($app) {
+            return new PingDevice();
         });
+
+        $this->app->bind(ZkTecoService::class, function ($app) {
+            return new ZkTecoService($app->make(PingDevice::class));
+        });
+
 
         // Bind EmployeeService to the container
         $this->app->bind(CheckAttendance::class, function ($app) {
