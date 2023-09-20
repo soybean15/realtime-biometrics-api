@@ -7,6 +7,7 @@ use App\Http\Controllers\ZkTecoController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SettingsController;
 
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
@@ -99,4 +100,16 @@ Route::post('/test', function (Request $request) {
     return response()->json(['message' => $message]);
 });
 
+Route::get('test',function(){
+    $settings = Setting::find(1);
+
+    $isLive = $settings->data['live_update'];
+
+    return response()->json([
+        $isLive
+    ]);
+});
+
 Route::get('/attendance',[AttendanceController::class, 'index']);
+
+

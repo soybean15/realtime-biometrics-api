@@ -6,11 +6,13 @@ use App\Actions\ZkTeco\PingDevice;
 use App\Models\ZkTecoDevice;
 use Rats\Zkteco\Lib\ZKTeco;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\RealtimeUpdateTrait;
 
 
 class ZkTecoService
 {
 
+    use RealtimeUpdateTrait;
     protected PingDevice $pingDevice;
 
     public function __construct(PingDevice $pingDevice)
@@ -27,22 +29,23 @@ class ZkTecoService
 
     public function getAttendance()
     {
-
-
         try {
             $zk = new ZKTeco('192.168.1.201');
             $zk->connect();
-            if ($zk) {
-                return $zk->getAttendance();
+    
+            if (!$zk) {
+                $this->disableRealtimeUpdate();
+                return false;
             }
-            return "disconnected";
+    
+            $this->enableRealtimeUpdate();
+            return $zk->getAttendance();
         } catch (\Exception $ex) {
-
-            return "error";
-
+            $this->disableRealtimeUpdate();
+            return false;
         }
-
     }
+    
 
     public function ping($ip = null)
 
@@ -107,6 +110,19 @@ class ZkTecoService
 
 
 
+    }
+
+    public function isLive(){
+        
+        return $this->liveUpdate();
+    
+    }
+    public function disable(){
+        $this->disableRealtimeUpdate();
+    }
+
+    public function getActiveDevice(){
+        return $this->activeDevice();
     }
 
 
