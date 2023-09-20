@@ -19,12 +19,15 @@ class Kernel extends ConsoleKernel
     ];
     protected function schedule(Schedule $schedule): void
     {
-         $settings = Setting::find(1);
-         $enable = $settings->data['live_update'];
-         if ($enable) {
-            $schedule->command('check:attendance')->everySecond();
+        $settings = Setting::find(1);
+        $enable = $settings->data['live_update'];
+        if ($enable) {
+            //$schedule->command('check:attendance')->everySecond();
         }
-        
+
+        $schedule->command('check:isLive')->everySecond();
+
+
     }
 
     /**
@@ -32,7 +35,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

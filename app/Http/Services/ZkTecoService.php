@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Actions\ZkTeco\PingDevice;
+use App\Models\Setting;
 use App\Models\ZkTecoDevice;
 use Rats\Zkteco\Lib\ZKTeco;
 use Illuminate\Support\Facades\Validator;
@@ -107,6 +108,16 @@ class ZkTecoService
 
 
 
+    }
+
+    public function isLive(){
+        $settings = Setting::find(1);
+
+        $isLive = $settings->data['live_update'];
+
+        return response()->json([
+            $isLive
+        ]);
     }
 
 
