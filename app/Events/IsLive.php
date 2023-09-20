@@ -18,12 +18,12 @@ class IsLive implements ShouldBroadcast
      * Create a new event instance.
      */
 
-     public  $isLive;
+     public  $device;
 
-    public function __construct($isLive)
+    public function __construct($device)
     {
         //
-        $this->isLive = $isLive;
+        $this->device = $device;
     }
 
     /**

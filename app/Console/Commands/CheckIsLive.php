@@ -40,8 +40,9 @@ class CheckIsLive extends Command
         //
 
        $isLive = $this->zk->isLive();
+       $device =['device'=>$this->zk->getActiveDevice(),'isLive'=>$isLive];
 
-        broadcast(new \App\Events\IsLive(  $isLive ))->toOthers();
+        broadcast(new \App\Events\IsLive(  $device ))->toOthers();
 
         $this->info('Live data is ' . ($isLive ? 'On' : 'Off'));
 

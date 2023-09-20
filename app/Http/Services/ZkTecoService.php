@@ -121,5 +121,9 @@ class ZkTecoService
         $this->disableRealtimeUpdate();
     }
 
+    public function getActiveDevice(){
+        return $this->activeDevice();
+    }
+
 
 }
