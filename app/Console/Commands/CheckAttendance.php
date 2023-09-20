@@ -46,28 +46,34 @@ class CheckAttendance extends Command
 
         $attendance = $this->zk->getAttendance();
 
-        foreach ($attendance as $item) {
+        if($attendance){
+            foreach ($attendance as $item) {
 
-            $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
-
-            // If a record does not exist, insert a new one
-            if (!$existingAttendance) {
-                $attendance = Attendance::create([
-                    'serial_number' => $item['uid'],
-                    'biometrics_id' => $item['id'],
-                    'timestamp' => $item['timestamp'],
-                    'state' => $item['state'],
-                    'type' => $item['type']
-                ]);
-
-                $attendance->load(['employee']);
-
-                             
-
-                broadcast(new \App\Events\GetAttendance($attendance))->toOthers();
+                $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
+    
+                // If a record does not exist, insert a new one
+                if (!$existingAttendance) {
+                    $attendance = Attendance::create([
+                        'serial_number' => $item['uid'],
+                        'biometrics_id' => $item['id'],
+                        'timestamp' => $item['timestamp'],
+                        'state' => $item['state'],
+                        'type' => $item['type']
+                    ]);
+    
+                    $attendance->load(['employee']);
+    
+                                 
+    
+                    broadcast(new \App\Events\GetAttendance($attendance))->toOthers();
+                }
+    
             }
-
+    
         }
+
+
+      //  $this->zk->disable();
 
 
 

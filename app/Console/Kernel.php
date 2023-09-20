@@ -21,11 +21,12 @@ class Kernel extends ConsoleKernel
     {
         $settings = Setting::find(1);
         $enable = $settings->data['live_update'];
+        $schedule->command('check:isLive')->everySecond();
         if ($enable) {
-            //$schedule->command('check:attendance')->everySecond();
+            $schedule->command('check:attendance')->everySecond();
         }
 
-        $schedule->command('check:isLive')->everySecond();
+       
 
 
     }
