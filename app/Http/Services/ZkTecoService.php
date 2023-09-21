@@ -117,8 +117,12 @@ class ZkTecoService
         return $this->liveUpdate();
     
     }
-    public function disable(){
+    public function disableLiveUpdate(){
         $this->disableRealtimeUpdate();
+    }
+
+    public function enableLiveUpdate(){
+        $this->enableRealtimeUpdate();
     }
 
     public function getActiveDevice(){

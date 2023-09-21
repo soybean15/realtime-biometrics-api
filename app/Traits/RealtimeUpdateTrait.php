@@ -61,6 +61,7 @@ trait RealtimeUpdateTrait
         $data['live_update'] = true;
         $settings->data = $data;
         $settings->save();
+        //return $settings;
     }
 
     public function disableRealtimeUpdate()
@@ -69,6 +70,9 @@ trait RealtimeUpdateTrait
         $data= $settings->data;
         $data['live_update'] = false;
         $settings->data = $data;
-        $settings->save();;
+        $settings->save(); 
+
+     //   return $settings;
+
     }
 }
