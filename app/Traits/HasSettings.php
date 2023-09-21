@@ -35,6 +35,20 @@ trait HasSettings
         return $default;
     }
 
+    public function updateSetting($key, $newValue=null){
+
+        $settings = $this->getSettings();
+        $data = $settings->data;
+    
+        if (!array_key_exists($key, $data)) {
+            throw new \InvalidArgumentException("Invalid setting key: $key");
+        }
+    
+        $data[$key] = $newValue;
+        $settings->data = $data;
+        $settings->save();
+    }
+
     protected function getIpAddress($id)
     {
 
@@ -48,6 +62,8 @@ trait HasSettings
     
         return $device ? $device['ip_address'] : '192.168.1.201';
     }
+
+    
     
     
 }

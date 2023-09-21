@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
+use App\Traits\HasSettings;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
-    //
+    use HasSettings;
     public function index(){
         $retrievedSetting = Setting::find(1); // Assuming you've stored a setting with ID 1
         $retrievedData = $retrievedSetting->data;
@@ -33,5 +34,9 @@ class SettingsController extends Controller
         return  $setting->data;
 
         
+    }
+
+    public function updateSettings(Request $request){
+        return $this->updateSetting($request['key'], $request['value']);
     }
 }
