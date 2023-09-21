@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Actions\ZkTeco\PingDevice;
 use App\Models\ZkTecoDevice;
+use App\Traits\HasSettings;
 use Rats\Zkteco\Lib\ZKTeco;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\RealtimeUpdateTrait;
@@ -12,13 +13,13 @@ use App\Traits\RealtimeUpdateTrait;
 class ZkTecoService
 {
 
-    use RealtimeUpdateTrait;
+    use RealtimeUpdateTrait,HasSettings;
     protected PingDevice $pingDevice;
 
-    public function __construct(PingDevice $pingDevice)
+    public function __construct()
     {
 
-        $this->pingDevice = $pingDevice;
+        //$this->pingDevice = $pingDevice;
 
     }
 
@@ -117,6 +118,8 @@ class ZkTecoService
         return $this->liveUpdate();
     
     }
+
+   
     public function disableLiveUpdate(){
         $this->disableRealtimeUpdate();
     }
@@ -130,4 +133,15 @@ class ZkTecoService
     }
 
 
+
+
+    public function getConfig($key, $default=null ){
+
+        return $this->getSetting($key,$default);
+
+        
+
+
+
+    }
 }
