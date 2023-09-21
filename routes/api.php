@@ -27,11 +27,13 @@ Route::middleware(['auth:sanctum','isEnable'])->get('/user', function (Request $
     return $request->user();
 });
 
-
+//routes without middleware
 Route::group([],function(){
 
     Route::get('/settings',[SettingsController::class,'index']);
     Route::post('/settings/change-color',[SettingsController::class,'changeColor']);
+
+    Route::post('/zk/on-off',[ZkTecoController::class,'disableEnableRealtimeUpdate']);
 
 
 

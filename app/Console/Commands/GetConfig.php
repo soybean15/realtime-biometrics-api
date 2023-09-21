@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use App\Http\Services\ZkTecoService;
 use Illuminate\Console\Command;
 
-class CheckIsLive extends Command
+class GetConfig extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'check:isLive';
+    protected $signature = 'get:config';
 
     protected ZkTecoService $zk;
 
@@ -39,10 +39,11 @@ class CheckIsLive extends Command
     {
         //
 
-       $isLive = $this->zk->isLive();
-       $device =['device'=>$this->zk->getActiveDevice(),'isLive'=>$isLive];
+       $isLive = $this->zk->getSetting('live_update');
+       $is24hrs =  $this->zk->getSetting('24hrs_format');
+       $config =['device'=>$this->zk->getActiveDevice(),'isLive'=>$isLive,'is24hrs'=>$is24hrs];
 
-        broadcast(new \App\Events\IsLive(  $device ))->toOthers();
+        broadcast(new \App\Events\Config(  $config ))->toOthers();
 
         $this->info('Live data is ' . ($isLive ? 'On' : 'Off'));
 

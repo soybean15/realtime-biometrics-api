@@ -26,7 +26,8 @@ return new class extends Migration
                 'secondary'=>'#26A69A'
             ],
             'zkteco'=>0,
-            'live_update'=>false
+            'live_update'=>false,
+            '24hrs_format'=>false
 
         ];
     

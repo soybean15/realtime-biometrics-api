@@ -7,16 +7,8 @@ use App\Models\ZkTecoDevice;
 
 trait RealtimeUpdateTrait
 {
-    protected $settings;
 
-    protected function getSettings()
-    {
-        if (!$this->settings) {
-            $this->settings = Setting::find(1);
-        }
-
-        return $this->settings;
-    }
+    use HasSettings;
 
     public function activeDevice(){
         $settings = $this->getSettings();
@@ -48,12 +40,7 @@ trait RealtimeUpdateTrait
 
     }
 
-    public function liveUpdate()
-    {
-        $settings = $this->getSettings();
-        return $settings->data['live_update'];
-    }
-
+  
     public function enableRealtimeUpdate()
     {
         $settings = $this->getSettings();
@@ -61,6 +48,7 @@ trait RealtimeUpdateTrait
         $data['live_update'] = true;
         $settings->data = $data;
         $settings->save();
+        //return $settings;
     }
 
     public function disableRealtimeUpdate()
@@ -69,6 +57,9 @@ trait RealtimeUpdateTrait
         $data= $settings->data;
         $data['live_update'] = false;
         $settings->data = $data;
-        $settings->save();;
+        $settings->save(); 
+
+     //   return $settings;
+
     }
 }
