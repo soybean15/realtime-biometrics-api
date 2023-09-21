@@ -14,26 +14,26 @@ class SettingsTest extends TestCase
      * A basic feature test example.
      */
 
-     public function test_if_24hrs_is_false(): void
+     public function test_if_24hrs_format_returns_false(): void
      {
  
          $zk = new ZkTecoService();
-         $response = $zk->getConfig('24hrs_format');
+         $response = $zk->getSetting('24hrs_format');
  
          $this->assertEquals(false,$response);
      }
 
-     public function test_if_live_update_is_false(){
+     public function test_if_live_update_returns_false(){
         $zk = new ZkTecoService();
-        $response = $zk->getConfig('live_update');
+        $response = $zk->getSetting('live_update');
 
         $this->assertEquals(false,$response);
      }
 
 
-     public function test_if_ip_address_is_exist(){
+     public function test_if_ip_address_exist(){
         $zk = new ZkTecoService();
-        $response = $zk->getConfig('zkteco');
+        $response = $zk->getSetting('zkteco');
 
         $this->assertEquals('111.111.1.111',$response);
 
@@ -43,16 +43,18 @@ class SettingsTest extends TestCase
 
      public function test_if_primary_color_is_correct (){
         $zk = new ZkTecoService();
-        $response = $zk->getConfig('primary');
+        $response = $zk->getSetting('primary');
 
         $this->assertEquals('#49b265',$response);
 
      }
      public function test_if_secondary_color_is_correct (){
         $zk = new ZkTecoService();
-        $response = $zk->getConfig('secondary');
+        $response = $zk->getSetting('secondary');
 
         $this->assertEquals('#26A69A',$response);
 
      }
+
+  
 }

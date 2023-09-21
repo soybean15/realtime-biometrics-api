@@ -113,13 +113,7 @@ class ZkTecoService
 
     }
 
-    public function isLive(){
-        
-        return $this->getSetting('live_update',false);
-    
-    }
 
-   
     public function disableLiveUpdate(){
         $this->disableRealtimeUpdate();
     }
@@ -132,14 +126,9 @@ class ZkTecoService
         return $this->activeDevice();
     }
 
-
-
-
-
-    //for testing purpose
-    public function getConfig($key, $default=null ){
-
-        return $this->getSetting($key,$default);
-
+    public function setTimeFormat(){
+        
     }
+
+
 }
