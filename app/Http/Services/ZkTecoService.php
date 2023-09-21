@@ -115,7 +115,7 @@ class ZkTecoService
 
     public function isLive(){
         
-        return $this->liveUpdate();
+        return $this->getSetting('live_update',false);
     
     }
 
@@ -135,13 +135,11 @@ class ZkTecoService
 
 
 
+
+    //for testing purpose
     public function getConfig($key, $default=null ){
 
         return $this->getSetting($key,$default);
-
-        
-
-
 
     }
 }

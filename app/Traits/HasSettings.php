@@ -6,6 +6,11 @@ use App\Models\ZkTecoDevice;
 
 trait HasSettings
 {
+
+    public function getSettings(){
+
+        return Setting::find(1); 
+    }
     public function getSetting($key, $default = null)
     {
         // Assuming you have a Setting model

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class IsLive implements ShouldBroadcast
+class Config implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -18,12 +18,12 @@ class IsLive implements ShouldBroadcast
      * Create a new event instance.
      */
 
-     public  $device;
+     public  $config;
 
-    public function __construct($device)
+    public function __construct($config)
     {
         //
-        $this->device = $device;
+        $this->config = $config;
     }
 
     /**
@@ -34,12 +34,12 @@ class IsLive implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('live_update'),
+            new Channel('config'),
         ];
     }
 
     public function broadcastAs() : string
     {
-        return 'get.live_update';
+        return 'get.config';
     }
 }
