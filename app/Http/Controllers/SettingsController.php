@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Traits\HasSettings;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 class SettingsController extends Controller
 {
     use HasSettings;
@@ -38,5 +38,31 @@ class SettingsController extends Controller
 
     public function updateSettings(Request $request){
         return $this->updateSetting($request['key'], $request['value']);
+    }
+
+    // public function updateTimeFormat(Request $request){
+    //     $this->updateSetting('24hrs_format', $request['value']);
+    // }
+    // }
+
+
+    public function getCurrentDateTime(){
+
+
+  
+        $currentTime = Carbon::now();
+        $formattedTime = $currentTime->format('H:i:s');
+        $formattedDate = $currentTime->format('M, j Y, D');
+
+        $amPm = $currentTime->format('A');
+
+        return response()->json([
+            'time'=>  $formattedTime,
+            'date'=>$formattedDate,
+            'time_format'=>$this->getSetting('time_format'),
+            'amPm'=>$amPm
+        ]);
+
+
     }
 }

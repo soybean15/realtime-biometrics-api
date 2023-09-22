@@ -40,8 +40,8 @@ class GetConfig extends Command
         //
 
        $isLive = $this->zk->getSetting('live_update');
-       $is24hrs =  $this->zk->getSetting('24hrs_format');
-       $config =['device'=>$this->zk->getActiveDevice(),'isLive'=>$isLive,'is24hrs'=>$is24hrs];
+       $timeFormat =  $this->zk->getSetting('time_format');
+       $config =['device'=>$this->zk->getActiveDevice(),'isLive'=>$isLive,'time_format'=>$timeFormat];
 
         broadcast(new \App\Events\Config(  $config ))->toOthers();
 

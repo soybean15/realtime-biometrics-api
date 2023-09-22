@@ -25,30 +25,7 @@ class Controller extends BaseController
     public function index(){
         return $this->zk->getAttendance();
     }
-    public function getCurrentTime(){
-
-
-  
-        $currentTime = Carbon::now();
-        $formattedDate = $currentTime->format('M, j Y, D');
-     
-        if ( $this->getSetting('24hrs_format')) {
-            // Format the time as "9:00AM" (12-hour format)
-            $formattedTime = $currentTime->format('H:i');
-            
-        } else {
-            // Format the time as "09:00" (24-hour format)
-            $formattedTime = $currentTime->format('h:iA');
-        }
-    
-
-        return response()->json([
-            'time'=>  $formattedTime,
-            'date'=>$formattedDate
-        ]);
-
-
-    }
+   
 
     
 }

@@ -61,8 +61,6 @@ class ZkTecoService
 
 
 
-
-
     public function store($data)
     {
 

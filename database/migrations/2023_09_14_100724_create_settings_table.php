@@ -27,7 +27,7 @@ return new class extends Migration
             ],
             'zkteco'=>0,
             'live_update'=>false,
-            '24hrs_format'=>false
+            'time_format'=>'12hrs'
 
         ];
     

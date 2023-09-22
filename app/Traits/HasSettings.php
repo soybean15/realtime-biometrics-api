@@ -47,6 +47,9 @@ trait HasSettings
         $data[$key] = $newValue;
         $settings->data = $data;
         $settings->save();
+
+        return json_encode([$key => $newValue]);
+    
     }
 
     protected function getIpAddress($id)
