@@ -36,7 +36,7 @@ Route::group([],function(){
         Route::get('date-time',[SettingsController::class,'getCurrentDateTime']);
         Route::post('/change-color',[SettingsController::class,'changeColor']);
         Route::post('/change-setting',[SettingsController::class,'updateSettings']);
-
+     
     });
 
    
