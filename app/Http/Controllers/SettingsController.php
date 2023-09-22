@@ -54,11 +54,13 @@ class SettingsController extends Controller
         $formattedTime = $currentTime->format('H:i:s');
         $formattedDate = $currentTime->format('M, j Y, D');
 
-
+        $amPm = $currentTime->format('A');
 
         return response()->json([
             'time'=>  $formattedTime,
-            'date'=>$formattedDate
+            'date'=>$formattedDate,
+            'time_format'=>$this->getSetting('time_format'),
+            'amPm'=>$amPm
         ]);
 
 
