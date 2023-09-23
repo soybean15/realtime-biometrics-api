@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         if ($enable) {
             $schedule->command('check:attendance')->everySecond();
         }
+        $schedule->command('check:attendance')->daily();
 
        
 
