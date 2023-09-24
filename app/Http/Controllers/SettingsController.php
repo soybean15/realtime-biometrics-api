@@ -16,7 +16,8 @@ class SettingsController extends Controller
         return  $retrievedData;
     }
     public function changeColor(Request $request){
-        $primary = $request->input('primary');
+        $value = $request->input('value');
+        $key = $request->input('key');
        
     
         $setting = Setting::find(1); 
@@ -25,7 +26,7 @@ class SettingsController extends Controller
         $data = $setting->data;
     
       
-        $data['theme']['primary'] = $primary;
+        $data['theme'][$key] = $value;
     
         
         $setting->data = $data;
