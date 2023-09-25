@@ -75,6 +75,16 @@ class Employee extends Model
         return $this->belongsToMany(Position::class);
     }
 
+    public function attendance(){
+        return $this->hasMany(Attendance::class);
+    }
+
+
+    public function attendanceToday(){
+        return $this->attendance()->whereDate('created_at', now()->toDateString());
+    }
+
+
     public function user(){
         return $this->belongsTo(User::class);
     }

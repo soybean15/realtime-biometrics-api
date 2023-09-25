@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\Employee\CreateAttendance;
 use App\Http\Services\ZkTecoService;
 use App\Models\Attendance;
 use App\Models\Employee;
@@ -47,48 +48,39 @@ class CheckAttendance extends Command
         //* * * * * cd   /home/soybean15/capstone/marlon/api && php artisan schedule:run >> /dev/null 2>&1
 
 
-        $attendance = $this->zk->getAttendance();
+        try {
+            // Your code here
 
+            $attendance = $this->zk->getAttendance();
 
+            if ($attendance) {
+                foreach ($attendance as $item) {
 
-        if ($attendance) {
-            foreach ($attendance as $item) {
+                    $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
 
-                $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
+                    // If a record does not exist, insert a new one
+                    if (!$existingAttendance) {
 
-                // If a record does not exist, insert a new one
-                if (!$existingAttendance) {
-                    $_attendance = Attendance::create([
-                        'serial_number' => $item['uid'],
-                        'biometrics_id' => $item['id'],
-                        'timestamp' => $item['timestamp'],
-                        'state' => $item['state'],
-                        'type' => $item['type']
-                    ]);
+                        $createAttendance = new CreateAttendance();
 
-                   
-                    $_attendance->load('employee.positions', 'employee.departments');
-                    // $_attendance->load('employee.positions.departments');
+                        $_attendance = $createAttendance->execute($item);
 
-                 
+                        $_attendance->load('employee.positions', 'employee.departments');
 
-                    if ($this->getSetting('live_update')) {
-                        broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
+                        if ($this->getSetting('live_update')) {
+                            broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
+                        }
                     }
-
-
                 }
-
             }
 
+            $this->info('Attendance Created' . $this->getSetting('live_update'));
+
+        } catch (\Exception $e) {
+            // Handle the exception here
+            \Log::error('Error in schedule: ' . $e->getMessage());
+            // You can also send an email, log the error, or take other actions as needed.
         }
-
-
-        //  $this->zk->disable();
-
-
-
-        $this->info(' Attedance Created' . $this->getSetting('live_update'));
 
     }
 }

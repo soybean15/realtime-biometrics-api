@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Attendance;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use Carbon\Carbon;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employee>
  */
@@ -16,6 +17,7 @@ class EmployeeFactory extends Factory
      * @return array<string, mixed>
      */
     protected $id = 1;
+ 
     public function definition(): array
     {
         return [
@@ -41,6 +43,47 @@ class EmployeeFactory extends Factory
         return $this->afterCreating(function (Employee $employee) {
           $employee->departments()->attach( mt_rand(1, 20));
           $employee->positions()->attach( mt_rand(1, 5));
+       
+          // ...
+          
+          Attendance::create([
+              'serial_number' => fake()->uuid(),
+              'employee_id' => $employee->id,
+              'timestamp' => Carbon::now()->setTime(8, 0), // Set the time to 8:00
+              'state' => 1,
+              'type' => 255
+          ]);
+          
+          Attendance::create([
+              'serial_number' => fake()->uuid(),
+              'employee_id' => $employee->id,
+              'timestamp' => Carbon::now()->setTime(12, 0), // Set the time to 12:00
+              'state' => 1,
+              'type' => 255
+          ]);
+          
+          Attendance::create([
+              'serial_number' => fake()->uuid(),
+              'employee_id' => $employee->id,
+              'timestamp' => Carbon::now()->setTime(13, 0), // Set the time to 13:00
+              'state' => 1,
+              'type' => 255
+          ]);
+          
+          Attendance::create([
+              'serial_number' => fake()->uuid(),
+              'employee_id' => $employee->id,
+              'timestamp' => Carbon::now()->setTime(17, 0), // Set the time to 17:00
+              'state' => 1,
+              'type' => 255
+          ]);
+          
+
+
+
+
+
+          
         });
     }
 }
