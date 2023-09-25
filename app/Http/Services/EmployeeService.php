@@ -30,7 +30,7 @@ class EmployeeService
         try {
 
             $employee = Employee::find($id);
-            $employee->load(['departments', 'positions', 'user']);
+            $employee->load(['departments', 'positions', 'user','attendanceToday']);
             return response()->json(['employee' => $employee]);
 
         } catch (\Exception $e) {

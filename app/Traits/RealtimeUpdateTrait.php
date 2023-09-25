@@ -40,26 +40,5 @@ trait RealtimeUpdateTrait
 
     }
 
-  
-    public function enableRealtimeUpdate()
-    {
-        $settings = $this->getSettings();
-        $data= $settings->data;
-        $data['live_update'] = true;
-        $settings->data = $data;
-        $settings->save();
-        //return $settings;
-    }
 
-    public function disableRealtimeUpdate()
-    {
-        $settings = $this->getSettings();
-        $data= $settings->data;
-        $data['live_update'] = false;
-        $settings->data = $data;
-        $settings->save(); 
-
-     //   return $settings;
-
-    }
 }

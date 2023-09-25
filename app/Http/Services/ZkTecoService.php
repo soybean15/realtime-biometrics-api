@@ -35,14 +35,14 @@ class ZkTecoService
             $zk->connect();
     
             if (!$zk) {
-                $this->disableRealtimeUpdate();
+                $this->updateSetting('live_update',false);
                 return false;
             }
     
-            $this->enableRealtimeUpdate();
+        //    $this->enableRealtimeUpdate();
             return $zk->getAttendance();
         } catch (\Exception $ex) {
-            $this->disableRealtimeUpdate();
+            $this->updateSetting('live_update',false);
             return false;
         }
     }
@@ -112,20 +112,10 @@ class ZkTecoService
     }
 
 
-    public function disableLiveUpdate(){
-        $this->disableRealtimeUpdate();
-    }
 
-    public function enableLiveUpdate(){
-        $this->enableRealtimeUpdate();
-    }
 
     public function getActiveDevice(){
         return $this->activeDevice();
-    }
-
-    public function setTimeFormat(){
-        
     }
 
 

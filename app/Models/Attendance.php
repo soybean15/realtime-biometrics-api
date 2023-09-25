@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,7 +20,11 @@ class Attendance extends Model
     ];
 
     public function employee(){
-        return $this->belongsTo(Employee::class,'biometrics_id');
+        return $this->belongsTo(Employee::class);
     }
-
+    public function today(Builder $query)
+    {
+        return $query->whereDate('created_at', now()->toDateString());
+    }
 }
+    

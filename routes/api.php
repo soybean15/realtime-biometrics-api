@@ -119,6 +119,16 @@ Route::get('test',function(){
     ]);
 });
 
+
+Route::get('test-attendance/{id}',function($id){
+   $attendance = \App\Models\Attendance::find($id);
+
+   $attendance->load('employee.positions', 'employee.departments');
+
+   return $attendance;
+   
+});
+
 Route::get('/attendance',[AttendanceController::class, 'index']);
 
 
