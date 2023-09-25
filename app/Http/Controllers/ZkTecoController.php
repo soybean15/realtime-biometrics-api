@@ -51,18 +51,30 @@ class ZkTecoController extends Controller
 
     public function disableEnableRealtimeUpdate(Request $request){
 
+         return $this->zk->updateSetting('live_update',!$request['isLive']);
+        // if($request['isLive']){
+        //    return  $this->zk->updateSetting('live_update',!$request['isLive']);
 
-        if($request['isLive']){
-            return $this->zk->disableLiveUpdate();
-        }else{
+        // // return response()->json([
+        // //     'action'=>'off',
+        // //     'isLive'=>$request['isLive']
+        // // ]);
+     
+        // }else{
             
-        return $this->zk->enableLiveUpdate();
-        }
+        // return $this->zk->enableLiveUpdate();
+
+        // // return response()->json([
+        // //     'action'=>'on',
+        // //     'isLive'=>$request['isLive']
+        // // ]);
+     
+        // }
 
 
-        // return response()->json([
-        //     'isLive'=>$request['isLive']
-        // ]);
+        return response()->json([
+            'isLive'=>$request['isLive']
+        ]);
      
 
     }

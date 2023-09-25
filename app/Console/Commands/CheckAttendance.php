@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Services\ZkTecoService;
 use App\Models\Attendance;
 use App\Models\Employee;
+use App\Traits\HasSettings;
 use Illuminate\Console\Command;
 
 class CheckAttendance extends Command
@@ -14,6 +15,8 @@ class CheckAttendance extends Command
      *
      * @var string
      */
+
+    use HasSettings;
     protected $signature = 'check:attendance';
     protected ZkTecoService $zk;
 
@@ -46,38 +49,46 @@ class CheckAttendance extends Command
 
         $attendance = $this->zk->getAttendance();
 
-        if($attendance){
+
+
+        if ($attendance) {
             foreach ($attendance as $item) {
 
                 $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
-    
+
                 // If a record does not exist, insert a new one
                 if (!$existingAttendance) {
-                    $attendance = Attendance::create([
+                    $_attendance = Attendance::create([
                         'serial_number' => $item['uid'],
                         'biometrics_id' => $item['id'],
                         'timestamp' => $item['timestamp'],
                         'state' => $item['state'],
                         'type' => $item['type']
                     ]);
-    
-                    $attendance->load(['employee']);
-    
-                                 
-    
-                    broadcast(new \App\Events\GetAttendance($attendance))->toOthers();
+
+                   
+                    $_attendance->load('employee.positions', 'employee.departments');
+                    // $_attendance->load('employee.positions.departments');
+
+                 
+
+                    if ($this->getSetting('live_update')) {
+                        broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
+                    }
+
+
                 }
-    
+
             }
-    
+
         }
 
 
-      //  $this->zk->disable();
+        //  $this->zk->disable();
 
 
 
-        $this->info(' Attedance Created');
+        $this->info(' Attedance Created' . $this->getSetting('live_update'));
 
     }
 }

@@ -19,14 +19,12 @@ class Kernel extends ConsoleKernel
     ];
     protected function schedule(Schedule $schedule): void
     {
-        $settings = Setting::find(1);
-        $enable = $settings->data['live_update'];
+ 
         $schedule->command('get:config')->everySecond();
-        if ($enable) {
-            $schedule->command('check:attendance')->everySecond();
-        }
-        $schedule->command('check:attendance')->daily();
-
+      
+        $schedule->command('check:attendance')->everySecond();
+        
+     
        
 
 
