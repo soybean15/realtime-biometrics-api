@@ -112,20 +112,10 @@ class ZkTecoService
     }
 
 
-    // public function disableLiveUpdate(){
-    //    return $this->disableRealtimeUpdate();
-    // }
 
-    // public function enableLiveUpdate(){
-    //    return  $this->enableRealtimeUpdate();
-    // }
 
     public function getActiveDevice(){
         return $this->activeDevice();
-    }
-
-    public function setTimeFormat(){
-        
     }
 
 
