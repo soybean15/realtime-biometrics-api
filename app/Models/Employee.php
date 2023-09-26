@@ -80,6 +80,10 @@ class Employee extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    public function dailyReport(){
+        return $this->hasMany(DailyReport::class);
+    }
+
 
     public function attendanceToday(){
         return $this->attendance()->whereDate('created_at', now()->toDateString());

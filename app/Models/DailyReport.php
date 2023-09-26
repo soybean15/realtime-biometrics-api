@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class DailyReport extends Model
 {
     use HasFactory;
+
+
+    public function employee(){
+        return $this->belongsTo(Employee::class);
+    }
 }

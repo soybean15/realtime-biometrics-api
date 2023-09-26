@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('daily_reports', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('employee_id');
+            $table->bigInteger('employee_id')->unsigned();
             $table->date('date');
             $table->string('remarks');
             $table->timestamps();
+
+
+
+            $table->foreign('employee_id')
+            ->references('id')
+            ->on('employees')
+            ->onDelete('cascade'); // Optional: Specify the on delete action (e.g., cascade)
         });
     }
 
