@@ -47,40 +47,52 @@ class CheckAttendance extends Command
 
         //* * * * * cd   /home/soybean15/capstone/marlon/api && php artisan schedule:run >> /dev/null 2>&1
 
+        $data = [
+            'uid' => '12345',            // Replace with a valid serial_number
+            'id' => 1,          // Replace with a valid employee_id
+            'timestamp' => '17:00:00', // Replace with a valid timestamp
+            'state' => 'present',        // Replace with a valid state
+            'type' => 'Time in',        // Replace with a valid type
+        ];
 
-        try {
-            // Your code here
+        $createAttendance = new CreateAttendance();
+         $type = $createAttendance->execute($data);
+         $this->info('Type is ' . $type);
 
-            $attendance = $this->zk->getAttendance();
 
-            if ($attendance) {
-                foreach ($attendance as $item) {
+        // try {
+        //     // Your code here
 
-                    $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
+        //     $attendance = $this->zk->getAttendance();
 
-                    // If a record does not exist, insert a new one
-                    if (!$existingAttendance) {
+        //     if ($attendance) {
+        //         foreach ($attendance as $item) {
 
-                        $createAttendance = new CreateAttendance();
+        //             $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
 
-                        $_attendance = $createAttendance->execute($item);
+        //             // If a record does not exist, insert a new one
+        //             if (!$existingAttendance) {
 
-                        $_attendance->load('employee.positions', 'employee.departments');
+        //                 $createAttendance = new CreateAttendance();
 
-                        if ($this->getSetting('live_update')) {
-                            broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
-                        }
-                    }
-                }
-            }
+        //                 $_attendance = $createAttendance->execute($item);
 
-            $this->info('Attendance Created' . $this->getSetting('live_update'));
+        //                 $_attendance->load('employee.positions', 'employee.departments');
 
-        } catch (\Exception $e) {
-            // Handle the exception here
-            \Log::error('Error in schedule: ' . $e->getMessage());
-            // You can also send an email, log the error, or take other actions as needed.
-        }
+        //                 if ($this->getSetting('live_update')) {
+        //                     broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     $this->info('Attendance Created' . $this->getSetting('live_update'));
+
+        // } catch (\Exception $e) {
+        //     // Handle the exception here
+        //     \Log::error('Error in schedule: ' . $e->getMessage());
+        //     // You can also send an email, log the error, or take other actions as needed.
+        // }
 
     }
 }

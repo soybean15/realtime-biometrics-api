@@ -45,6 +45,10 @@ class EmployeeFactory extends Factory
           $employee->positions()->attach( mt_rand(1, 5));
        
           // ...
+
+          if( $employee->id ==1){
+            return;
+          }
           
           Attendance::create([
               'serial_number' => fake()->uuid(),

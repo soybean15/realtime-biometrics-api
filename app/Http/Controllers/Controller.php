@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\ZkTecoService;
-use App\Models\Setting;
+
 use App\Traits\HasSettings;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
