@@ -9,6 +9,7 @@ use App\Models\Employee;
 class CreateAttendance
 {
 
+    use AttendanceType;
 
     public function execute($data)
     {
@@ -19,17 +20,19 @@ class CreateAttendance
                 abort(404, 'Employee not found');
             }
 
-            return Attendance::create([
+            $time = \Carbon\Carbon::parse($data['timestamp']);
+           // $time = $carbonDateTime->format('h:i A');
+            $type =  $this->getType($employee ,$time);
+             Attendance::create([
                 'serial_number' => $data['uid'],
                 'employee_id' => $employee->id,
-                'timestamp' => $data['timestamp'],
+                'timestamp' =>\Carbon\Carbon::parse($data['timestamp']) ,
                 'state' => $data['state'],
-                'type' => $data['type']
+                'type' =>$type 
             ]);
-     
 
-
-
+            return $type;
+    
 
 
     }

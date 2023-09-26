@@ -29,7 +29,7 @@ return new class extends Migration
             'live_update'=>false,
             'time_format'=>'12hrs',
             'start_time'=>'08:00',
-            'end_time'=>'05:00'
+            'end_time'=>'17:00'
 
         ];
     

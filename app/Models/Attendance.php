@@ -12,7 +12,7 @@ class Attendance extends Model
     protected $fillable = [
 
         'serial_number',
-        'biometrics_id',
+        'employee_id',
         'timestamp',
         'state',
         'type'
@@ -22,9 +22,6 @@ class Attendance extends Model
     public function employee(){
         return $this->belongsTo(Employee::class);
     }
-    public function today(Builder $query)
-    {
-        return $query->whereDate('created_at', now()->toDateString());
-    }
+
 }
     
