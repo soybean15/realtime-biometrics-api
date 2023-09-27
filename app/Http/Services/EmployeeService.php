@@ -220,6 +220,8 @@ class EmployeeService
                 'day' => $timestamp->day,                 // Day of the month
                 'duration'=>60,
                 'bgcolor'=> 'teal-2',
+                'title'=>$record->type,
+                'details'=> 'Teaching Javascript 101',
               
             ];
         }
