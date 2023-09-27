@@ -25,8 +25,8 @@ class Attendance extends Model
 
     public function scopeByMonth(Builder $query, $year, $month)
     {
-        return $query->whereYear('created_at', $year)
-                     ->whereMonth('created_at', $month);
+        return $query->whereYear('created_at', $year);
+                     
     }
 
 }

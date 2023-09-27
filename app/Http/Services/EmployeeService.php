@@ -201,22 +201,32 @@ class EmployeeService
     public function getAttendance($id)
     {
         $year = date('Y'); // Get the current year (e.g., 2023)
-        $currentMonth = date('n'); // Get the current month without leading zeros (e.g., 9)
+        $month = date('n'); // Get the current month without leading zeros (e.g., 9)
 
         // Subtract 3 months from the current month
-        $month -= 3;
-
-        // If the result is less than 1, subtract it from the current year
-        if ($currentMonth < 1) {
-            $year--;
-            $month += 12;
-        }
 
         $employee = Employee::find($id);
         $attendance = $employee->attendanceByMonth($year, $month);
+        $transformedAttendance = [];
 
+
+        foreach ($attendance as $record) {
+            $timestamp = \Carbon\Carbon::parse($record->timestamp);
+            $transformedAttendance[] = [
+                'date' => $timestamp->format('Y-m-d'), // Format as "YYYY-MM-DD HH:MM:SS"
+                'time' => $timestamp->format('H:i:s'),
+                'year' => $timestamp->year,  
+                'month' => $timestamp->month,             // Month (1 to 12)
+                'day' => $timestamp->day,                 // Day of the month
+                'duration'=>60,
+                'bgcolor'=> 'teal-2',
+              
+            ];
+        }
         return response()->json([
-            'attendance'=>$attendance
+            'attendance'=>$transformedAttendance,
+            'month'=>$month,
+            'year'=>$year
         ]);
 
 
