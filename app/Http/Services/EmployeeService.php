@@ -30,7 +30,7 @@ class EmployeeService
         try {
 
             $employee = Employee::find($id);
-            $employee->load(['departments', 'positions', 'user','attendanceToday']);
+            $employee->load(['departments', 'positions', 'user', 'attendanceToday']);
             return response()->json(['employee' => $employee]);
 
         } catch (\Exception $e) {
@@ -39,19 +39,20 @@ class EmployeeService
 
     }
 
-    public function filter($attribute, $id){
+    public function filter($attribute, $id)
+    {
 
-        $employees = Employee::whereHas($attribute,function($query) use ($attribute,$id){
-            $query->where(Str::singular($attribute).'_id',$id);
+        $employees = Employee::whereHas($attribute, function ($query) use ($attribute, $id) {
+            $query->where(Str::singular($attribute) . '_id', $id);
         })->paginate(20);
 
         $employees->load(['departments', 'positions', 'user']);
 
-       return response()->json([
-        'employees'=>$employees,
-        'id'=>$id,
-        'attribute'=>Str::singular($attribute).'_id'
-       ]) ;
+        return response()->json([
+            'employees' => $employees,
+            'id' => $id,
+            'attribute' => Str::singular($attribute) . '_id'
+        ]);
 
 
     }
@@ -171,26 +172,55 @@ class EmployeeService
     }
 
 
-    public function search( $value){
+    public function search($value)
+    {
 
-        try{
+        try {
 
-            $employees=  Employee::where(function ($query) use ($value) {
+            $employees = Employee::where(function ($query) use ($value) {
                 $query->where('firstname', 'LIKE', "%$value%")
-                      ->orWhere('lastname', 'LIKE', "%$value%")
-                      ->orWhere('middlename', 'LIKE', "%$value%")
-                      ->orWhere('employee_id', $value)
-                      ->orWhere('biometrics_id', $value);
+                    ->orWhere('lastname', 'LIKE', "%$value%")
+                    ->orWhere('middlename', 'LIKE', "%$value%")
+                    ->orWhere('employee_id', $value)
+                    ->orWhere('biometrics_id', $value);
             })->paginate(20);
-    
-            return response()->json([
-                'employees'=>$employees
-            ]);
-        }catch (\Exception $e) {
-          
 
-            return response()->json(['message'=>'No available data'], 411);
+            return response()->json([
+                'employees' => $employees
+            ]);
+        } catch (\Exception $e) {
+
+
+            return response()->json(['message' => 'No available data'], 411);
         }
+
+
+    }
+
+
+    public function getAttendance($id)
+    {
+        $year = date('Y'); // Get the current year (e.g., 2023)
+        $currentMonth = date('n'); // Get the current month without leading zeros (e.g., 9)
+
+        // Subtract 3 months from the current month
+        $month -= 3;
+
+        // If the result is less than 1, subtract it from the current year
+        if ($currentMonth < 1) {
+            $year--;
+            $month += 12;
+        }
+
+        $employee = Employee::find($id);
+        $attendance = $employee->attendanceByMonth($year, $month);
+
+        return response()->json([
+            'attendance'=>$attendance
+        ]);
+
+
+        // Now, $currentYear and $currentMonth contain the desired values
 
 
     }

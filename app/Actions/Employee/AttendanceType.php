@@ -15,6 +15,7 @@ trait AttendanceType
         $attendance = $employee->attendanceToday()->get();
 
 
+       // return $time;
         if ($attendance->isEmpty()) {
             return "Time in"; 
         }
