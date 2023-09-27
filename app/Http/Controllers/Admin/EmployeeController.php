@@ -102,5 +102,9 @@ class EmployeeController extends Controller
 
     }
 
+    public function getAttendance(String $id){
+        return $this->employeeService->getAttendance($id);
+    }
+
 
 }

@@ -23,5 +23,11 @@ class Attendance extends Model
         return $this->belongsTo(Employee::class);
     }
 
+    public function scopeByMonth(Builder $query, $year, $month)
+    {
+        return $query->whereYear('created_at', $year);
+                     
+    }
+
 }
     

@@ -89,6 +89,12 @@ class Employee extends Model
         return $this->attendance()->whereDate('created_at', now()->toDateString());
     }
 
+    public function attendanceByMonth($year, $month)
+    {
+        return $this->attendance()
+            ->byMonth($year, $month)
+            ->get();
+    }
 
     public function user(){
         return $this->belongsTo(User::class);
