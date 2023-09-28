@@ -219,7 +219,7 @@ class EmployeeService
                 'month' => $timestamp->month,             // Month (1 to 12)
                 'day' => $timestamp->day,                 // Day of the month
                 'duration'=>$record->duration(),
-                'bgcolor'=> 'teal-2',
+                'bgcolor'=> 'blue-7',
                 'title'=>$record->type,
                 'details'=> 'Teaching Javascript 101',
               
