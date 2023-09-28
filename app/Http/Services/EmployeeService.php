@@ -213,12 +213,12 @@ class EmployeeService
         foreach ($attendance as $record) {
             $timestamp = \Carbon\Carbon::parse($record->timestamp);
             $transformedAttendance[] = [
-                'date' => $timestamp->format('Y-m-d'), // Format as "YYYY-MM-DD HH:MM:SS"
+                'date' => $timestamp->format('Y-m-d'), //YYYY-MM-DD HH:MM:SS"
                 'time' => $timestamp->format('H:i:s'),
                 'year' => $timestamp->year,  
                 'month' => $timestamp->month,             // Month (1 to 12)
                 'day' => $timestamp->day,                 // Day of the month
-                'duration'=>60,
+                'duration'=>$record->duration(),
                 'bgcolor'=> 'teal-2',
                 'title'=>$record->type,
                 'details'=> 'Teaching Javascript 101',
