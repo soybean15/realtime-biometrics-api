@@ -96,7 +96,9 @@ class Employee extends Model
 
     public function attendanceToday()
     {
-        return $this->attendance()->whereDate('timestamp', now()->toDateString());
+        return $this->attendance()
+        ->whereDate('timestamp', now()->toDateString())
+        ->where('type','!=','Unknown');
     }
 
     public function attendanceByMonth($year, $month)
