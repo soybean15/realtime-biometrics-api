@@ -49,15 +49,15 @@ class CheckAttendance extends Command
 
         $data = [
             'uid' => '12345',            // Replace with a valid serial_number
-            'id' => 1,          // Replace with a valid employee_id
-            'timestamp' => '12:00:00', // Replace with a valid timestamp
+            'id' =>2,          // Replace with a valid employee_id
+            'timestamp' => '17:00:00', // Replace with a valid timestamp
             'state' => 'present',        // Replace with a valid state
-            'type' => 'Time in',        // Replace with a valid type
+            'type' => 'Time out',        // Replace with a valid type
         ];
 
         $createAttendance = new CreateAttendance();
-         $type = $createAttendance->execute($data);
-         $this->info('Type is ' . $type);
+          $type=  $createAttendance->execute($data);
+     $this->info('attendamce added ' .$type);
 
 
         // try {

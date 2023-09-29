@@ -31,7 +31,7 @@ trait AttendanceType
             if ($attendanceDuringBreak->isNotEmpty()) {
                 return "Break in"; // Attendance exists during the break time, return "Break in"
             }
-            return 'Break Out';
+            return 'Break out';
 
         } elseif ($time >= $this->carbonParse($this->getSetting('end_time'))) {
             return "Time out"; // Punch-in time is after the end time, return "Time out"

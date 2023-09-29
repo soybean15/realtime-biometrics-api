@@ -65,13 +65,19 @@ class Attendance extends Model
     public function duration()
     {
         $durationInMinutes = 0;
-        if ($this->type == 'Time in') {
-            $attendance = Attendance::whereDate('timestamp', '=', \Carbon\Carbon::parse($this->timestamp))->get();
+        if ($this->type == 'Time in' || $this->type == 'Break in' ) {
+            $attendance = Attendance::whereDate('timestamp', '=', Carbon::parse($this->timestamp))->get();
 
             foreach ($attendance as $record) {
-                $timeIn = \Carbon\Carbon::parse($this->timestamp, 'UTC');
-                $timeOut = \Carbon\Carbon::parse($record->timestamp, 'UTC');
-                if ($record->type == 'Time out') {
+                $timeIn = Carbon::parse($this->timestamp, 'UTC');
+                $timeOut = Carbon::parse($record->timestamp, 'UTC');
+                if ($this->type == 'Time in' &&  $record->type == 'Break out' ) {
+
+                    $durationInMinutes = $timeIn->diffInMinutes($timeOut);
+                    break;
+                }
+
+                if ($this->type == 'Break in' && $record->type == 'Time out' ) {
 
                     $durationInMinutes = $timeIn->diffInMinutes($timeOut);
                     break;
@@ -79,7 +85,7 @@ class Attendance extends Model
                 $endTimeString = $this->getSetting('end_time');
 
                 $timestamp = $timeIn->format('Y-m-d') . ' ' . $endTimeString;
-                $timestamp = \Carbon\Carbon::parse($timestamp, 'UTC');
+                $timestamp =Carbon::parse($timestamp, 'UTC');
 
                 if ($timeIn < $timestamp) {
                     $durationInMinutes = $timeIn->diffInMinutes($timestamp);
