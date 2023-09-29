@@ -96,6 +96,14 @@ class Employee extends Model
             ->get();
     }
 
+    public function attendanceByCutOff(){
+        $attendance = $this->attendance()->byCutOff()->get();
+
+        return $attendance;
+       
+    }
+
+
     public function user(){
         return $this->belongsTo(User::class);
     }

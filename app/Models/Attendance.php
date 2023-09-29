@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasSettings;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,6 +32,36 @@ class Attendance extends Model
 
     }
 
+    public function scopeByCutOff(Builder $query)
+{
+      // Set the timezone to your application's timezone
+  //    $timezone = config('app.timezone');
+     // $currentDate = Carbon::parse('2023-09-01');
+     $currentDate = Carbon::now();
+      // Create separate Carbon instances for start and end dates
+      $startDate = $currentDate->copy();
+      $endDate = $currentDate->copy();
+  
+      if ($currentDate->day > 15) {
+          // If it's after the 15th, get data from the current month
+          $startDate->startOfMonth()->day(16);
+          $endDate->endOfMonth();
+      } else {
+          // If it's on or before the 15th, get data from the previous month
+          $startDate->subMonth();
+          $endDate->subMonth()->endOfMonth()->day(15);
+      }
+  
+
+    // return response()->json([
+    //     'current' => $currentDate->toDateTimeString(),
+    //     'start' => $startDate->toDateTimeString(),
+    //     'end' => $endDate->toDateTimeString(),
+    // ]);
+     return $query->whereBetween('created_at', [$startDate, $endDate]);
+}
+
+
     public function duration()
     {
         $durationInMinutes = 0;
@@ -38,40 +69,28 @@ class Attendance extends Model
             $attendance = Attendance::whereDate('timestamp', '=', \Carbon\Carbon::parse($this->timestamp))->get();
 
             foreach ($attendance as $record) {
-                $timeIn = \Carbon\Carbon::parse($this->timestamp,'UTC');
-                $timeOut = \Carbon\Carbon::parse($record->timestamp ,'UTC'); // Assuming 'time_out' is the column name
+                $timeIn = \Carbon\Carbon::parse($this->timestamp, 'UTC');
+                $timeOut = \Carbon\Carbon::parse($record->timestamp, 'UTC');
                 if ($record->type == 'Time out') {
 
                     $durationInMinutes = $timeIn->diffInMinutes($timeOut);
                     break;
-
-                    // Do something with $durationInMinutes
                 }
-                $endTimeString = $this->getSetting('end_time'); // Assuming it returns "17:00"
-                // Concatenate the date part and time part, and then format it as a timestamp
+                $endTimeString = $this->getSetting('end_time');
+
                 $timestamp = $timeIn->format('Y-m-d') . ' ' . $endTimeString;
                 $timestamp = \Carbon\Carbon::parse($timestamp, 'UTC');
 
-        
-
-
-                // Combine the date from $timeIn with the time from $endTime     $combinedDateTime = $timeIn->setTime($endTime->hour, $endTime->minute, 0);
                 if ($timeIn < $timestamp) {
                     $durationInMinutes = $timeIn->diffInMinutes($timestamp);
                 } else {
-                    $durationInMinutes = 0; // Set the duration to 0 if $timeIn is later than $timestamp
+                    $durationInMinutes = 0;
                 }
-                
-                // Do something with $durationInMinutes
-
 
             }
         }
 
-           return $durationInMinutes ==0?10:$durationInMinutes;
-
-        return 'time in:'. $timeIn .'  '. 'timestamp:' . $timestamp;
-
+        return $durationInMinutes == 0 ? 10 : $durationInMinutes;
 
     }
 

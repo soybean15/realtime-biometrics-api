@@ -55,7 +55,7 @@ class EmployeeFactory extends Factory
               'employee_id' => $employee->id,
               'timestamp' => Carbon::now()->setTime(8, 0), // Set the time to 8:00
               'state' => 1,
-              'type' => 255
+              'type' => 'Time in'
           ]);
           
           Attendance::create([
@@ -63,7 +63,7 @@ class EmployeeFactory extends Factory
               'employee_id' => $employee->id,
               'timestamp' => Carbon::now()->setTime(12, 0), // Set the time to 12:00
               'state' => 1,
-              'type' => 255
+              'type' => 'Break out'
           ]);
           
           Attendance::create([
@@ -71,7 +71,7 @@ class EmployeeFactory extends Factory
               'employee_id' => $employee->id,
               'timestamp' => Carbon::now()->setTime(13, 0), // Set the time to 13:00
               'state' => 1,
-              'type' => 255
+              'type' => 'Break in'
           ]);
           
           Attendance::create([
@@ -79,7 +79,7 @@ class EmployeeFactory extends Factory
               'employee_id' => $employee->id,
               'timestamp' => Carbon::now()->setTime(17, 0), // Set the time to 17:00
               'state' => 1,
-              'type' => 255
+              'type' => 'Time out'
           ]);
           
 
