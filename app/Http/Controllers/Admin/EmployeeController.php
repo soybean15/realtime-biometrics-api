@@ -102,5 +102,9 @@ class EmployeeController extends Controller
         return $this->employeeService->getAttendance($id);
     }
 
+    public function getAttendanceByCutOff(String $id){
+        return $this->employeeService->getAttendanceByCutOff($id);
+    }
+
 
 }

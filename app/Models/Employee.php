@@ -108,6 +108,7 @@ class Employee extends Model
 
     public function attendanceByCutOff()
     {
+        $cut_off='';
         $attendance = $this->attendance()->byCutOff()
             ->select(
                 DB::raw('DATE(timestamp) as date'),
@@ -118,10 +119,23 @@ class Employee extends Model
                 DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out')
             )
             ->groupBy('date')
-            ->get();
+            ->get()
+            ->each(function ($record) {
+                $day = Carbon::parse($record->date)->day;
+        
+            
+                $endOfMonth = Carbon::parse($record->date)->endOfMonth()->day;
+        
+                if ($day < 15) {
+                    $record->cut_off = '1-15';
+                } else {
+                    $record->cut_off = '16-' . $endOfMonth;
+                }
+            });
+    
         ;
 
-        return $attendance;
+        return ['attendance'=>$attendance,'cut_off'=>$cut_off ];
 
     }
 

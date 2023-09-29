@@ -83,6 +83,7 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
         Route::post('restore',[EmployeeController::class,'restore']);
         Route::post('search',[EmployeeController::class,'search']);
         Route::get('attendance/{id}',[EmployeeController::class, 'getAttendance']);
+        Route::get('attendance/cutoff/{id}',[EmployeeController::class, 'getAttendanceByCutOff']);
 
     });
 

@@ -237,6 +237,13 @@ class EmployeeService
 
     }
 
+    public function getAttendanceByCutOff($id){
+        $employee = Employee::find($id);
+
+        return response()->json( $employee->attendanceByCutOff()
+        );
+    }
+
 
 
 }
