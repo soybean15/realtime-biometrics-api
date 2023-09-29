@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 class Employee extends Model
 {
-    use HasFactory,SoftDeletes, ImageTrait,EmployeeTrait;
+    use HasFactory, SoftDeletes, ImageTrait, EmployeeTrait;
 
 
     protected $fillable = [
@@ -27,7 +29,7 @@ class Employee extends Model
         'address',
         'user_id',
         'biometrics_id'
-       
+
     ];
 
 
@@ -48,45 +50,53 @@ class Employee extends Model
         }
     }
 
-    public function getDeletedAtAttribute($value){
-        if($value){
+    public function getDeletedAtAttribute($value)
+    {
+        if ($value) {
             return Carbon::parse($value)->diffForHumans();
-        }else return null;
-       
+        } else
+            return null;
+
     }
 
-    public function getFullNameAttribute(){
+    public function getFullNameAttribute()
+    {
 
         $full_name = $this->firstname . ' ' . $this->lastname;
 
         //!empty($this->middlename) || 
-        if ($this->middlename != 'N/A' ) {
-            $full_name .= " " . strtoupper($this->middlename[0])  .'.';
+        if ($this->middlename != 'N/A') {
+            $full_name .= " " . strtoupper($this->middlename[0]) . '.';
         }
-        
+
         return $full_name;
-        
+
 
     }
 
-    public function departments(){
+    public function departments()
+    {
         return $this->belongsToMany(Department::class);
     }
-    public function positions(){
+    public function positions()
+    {
         return $this->belongsToMany(Position::class);
     }
 
-    public function attendance(){
+    public function attendance()
+    {
         return $this->hasMany(Attendance::class);
     }
 
-    public function dailyReport(){
+    public function dailyReport()
+    {
         return $this->hasMany(DailyReport::class);
     }
 
 
-    public function attendanceToday(){
-        return $this->attendance()->whereDate('created_at', now()->toDateString());
+    public function attendanceToday()
+    {
+        return $this->attendance()->whereDate('timestamp', now()->toDateString());
     }
 
     public function attendanceByMonth($year, $month)
@@ -96,7 +106,42 @@ class Employee extends Model
             ->get();
     }
 
-    public function user(){
+    public function attendanceByCutOff()
+    {
+        $cut_off='';
+        $attendance = $this->attendance()->byCutOff()
+            ->select(
+                DB::raw('DATE(timestamp) as date'),
+                DB::raw('COUNT(*) as count'),
+                DB::raw('MAX(CASE WHEN type = "Time in" THEN timestamp END) as time_in'),
+                DB::raw('MAX(CASE WHEN type = "Break out" THEN timestamp END) as break_out'),
+                DB::raw('MAX(CASE WHEN type = "Break in" THEN timestamp END) as break_in'),
+                DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out')
+            )
+            ->groupBy('date')
+            ->get()
+            ->each(function ($record) {
+                $day = Carbon::parse($record->date)->day;
+        
+            
+                $endOfMonth = Carbon::parse($record->date)->endOfMonth()->day;
+        
+                if ($day < 15) {
+                    $record->cut_off = '1-15';
+                } else {
+                    $record->cut_off = '16-' . $endOfMonth;
+                }
+            });
+    
+        ;
+
+        return ['attendance'=>$attendance,'cut_off'=>$cut_off ];
+
+    }
+
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
@@ -116,11 +161,12 @@ class Employee extends Model
         return $value ?? 'N/A';
     }
 
-    public function getMiddlenameAttribute($value){
+    public function getMiddlenameAttribute($value)
+    {
         return $value ?? 'N/A';
     }
 
- 
+
 
 
 }

@@ -213,13 +213,13 @@ class EmployeeService
         foreach ($attendance as $record) {
             $timestamp = \Carbon\Carbon::parse($record->timestamp);
             $transformedAttendance[] = [
-                'date' => $timestamp->format('Y-m-d'), // Format as "YYYY-MM-DD HH:MM:SS"
+                'date' => $timestamp->format('Y-m-d'), //YYYY-MM-DD HH:MM:SS"
                 'time' => $timestamp->format('H:i:s'),
                 'year' => $timestamp->year,  
                 'month' => $timestamp->month,             // Month (1 to 12)
                 'day' => $timestamp->day,                 // Day of the month
-                'duration'=>60,
-                'bgcolor'=> 'teal-2',
+                'duration'=>$record->duration(),
+                'bgcolor'=> 'blue-7',
                 'title'=>$record->type,
                 'details'=> 'Teaching Javascript 101',
               
@@ -235,6 +235,13 @@ class EmployeeService
         // Now, $currentYear and $currentMonth contain the desired values
 
 
+    }
+
+    public function getAttendanceByCutOff($id){
+        $employee = Employee::find($id);
+
+        return response()->json( $employee->attendanceByCutOff()
+        );
     }
 
 

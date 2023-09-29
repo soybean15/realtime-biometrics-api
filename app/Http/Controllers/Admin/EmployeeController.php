@@ -87,23 +87,23 @@ class EmployeeController extends Controller
 
 
     }
-
     public function restore(Request $request)
     {
         return $this->employeeService->restore($request['id']);
 
     }
-
     public function search(Request $request){
 
         return $this->employeeService->search($request['value']);
-
-
 
     }
 
     public function getAttendance(String $id){
         return $this->employeeService->getAttendance($id);
+    }
+
+    public function getAttendanceByCutOff(String $id){
+        return $this->employeeService->getAttendanceByCutOff($id);
     }
 
 

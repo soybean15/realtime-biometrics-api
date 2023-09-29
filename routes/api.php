@@ -7,6 +7,7 @@ use App\Http\Controllers\ZkTecoController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SettingsController;
 
+
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +83,7 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
         Route::post('restore',[EmployeeController::class,'restore']);
         Route::post('search',[EmployeeController::class,'search']);
         Route::get('attendance/{id}',[EmployeeController::class, 'getAttendance']);
+        Route::get('attendance/cutoff/{id}',[EmployeeController::class, 'getAttendanceByCutOff']);
 
     });
 
@@ -118,13 +120,13 @@ Route::post('/test', function (Request $request) {
     return response()->json(['message' => $message]);
 });
 
-Route::get('test',function(){
-    $settings = Setting::find(1);
+Route::get('test/{id}',function($id){
+    $attendance =  \App\Models\Attendance::find($id);
 
-    $isLive = $settings->data['live_update'];
 
     return response()->json([
-        $isLive
+      'attendance'=>$attendance,
+      'duration'=>$attendance->duration()
     ]);
 });
 
