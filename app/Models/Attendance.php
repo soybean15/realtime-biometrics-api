@@ -42,14 +42,16 @@ class Attendance extends Model
       $startDate = $currentDate->copy();
       $endDate = $currentDate->copy();
   
+   
+      
       if ($currentDate->day > 15) {
           // If it's after the 15th, get data from the current month
           $startDate->startOfMonth()->day(16);
           $endDate->endOfMonth();
       } else {
           // If it's on or before the 15th, get data from the previous month
-          $startDate->subMonth();
-          $endDate->subMonth()->endOfMonth()->day(15);
+          $startDate->startOfMonth();
+          $endDate->startOfMonth()->day(15);
       }
   
 
