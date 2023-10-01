@@ -7,11 +7,23 @@ use App\Models\Employee;
 
 
 
-Route::get('attendance/cutoff',function(){
+Route::get('attendance/data/{id}',function($id){
 
 
-    $employee = Employee::find(2);
+    $employee = Employee::find($id);
 
-    return $employee->attendanceByCutOff();
+    return $employee->unprocessedData();
+
+});
+
+
+Route::get('attendance/{id}',function($id){
+
+
+    $employee = Employee::find($id);
+
+
+
+    return $employee->summarizeDaily();
 
 });

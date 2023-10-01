@@ -110,6 +110,7 @@ class Employee extends Model
 
     public function attendanceByCutOff()
     {
+      //  return  $this->attendance()->byCutOff();
         $cut_off='';
         $attendance = $this->attendance()->byCutOff()
             ->select(
@@ -122,16 +123,16 @@ class Employee extends Model
             )
             ->groupBy('date')
             ->get()
-            ->each(function ($record) {
+            ->each(function ($record) use (&$cut_off) {
                 $day = Carbon::parse($record->date)->day;
         
             
                 $endOfMonth = Carbon::parse($record->date)->endOfMonth()->day;
         
                 if ($day < 15) {
-                    $record->cut_off = '1-15';
+                    $cut_off = '1-15';
                 } else {
-                    $record->cut_off = '16-' . $endOfMonth;
+                    $cut_off = '16-' . $endOfMonth;
                 }
             });
     
@@ -140,6 +141,9 @@ class Employee extends Model
         return ['attendance'=>$attendance,'cut_off'=>$cut_off ];
 
     }
+
+
+
 
 
     public function user()

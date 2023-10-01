@@ -9,8 +9,20 @@ class DailyReport extends Model
 {
     use HasFactory;
 
+    
+    protected $fillable = [
+        'employee_id',
+        'date',
+        'remarks',
+        'resolve'
+       
 
-    public function employee(){
+    ];
+
+    public function employee()
+    {
         return $this->belongsTo(Employee::class);
     }
+
+
 }

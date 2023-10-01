@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\Setting;
+
 use App\Models\ZkTecoDevice;
 
 trait RealtimeUpdateTrait
