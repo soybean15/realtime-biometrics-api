@@ -245,7 +245,13 @@ class EmployeeService
     }
 
 
-    public function generateReport(){
+    public function processDailyReport(){
+
+        $employees = Employee::all();
+
+        foreach($employees as $employee){
+            $employee->summarizeDaily();
+        }
         
 
     }

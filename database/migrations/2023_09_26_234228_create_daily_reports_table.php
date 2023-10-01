@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('daily_reports', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('employee_id')->unsigned();
-            $table->date('date');
-            $table->string('remarks');
+            $table->dateTime('date');
+            $table->json('remarks')->nullable();
+            $table->boolean('is_resolve')->default(false);
             $table->timestamps();
 
 

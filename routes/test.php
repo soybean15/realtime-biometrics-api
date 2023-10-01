@@ -7,10 +7,10 @@ use App\Models\Employee;
 
 
 
-Route::get('attendance',function(){
+Route::get('attendance/data/{id}',function($id){
 
 
-    $employee = Employee::find(2);
+    $employee = Employee::find($id);
 
     return $employee->unprocessedData();
 

@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Attendance;
+use App\Models\DailyReport;
 use App\Models\Employee;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -81,7 +82,8 @@ trait EmployeeTrait
 
         $unprocessedData = $this->attendance()->whereNotIn(DB::raw('DATE(timestamp)'), function ($query) {
             $query->select('date')
-                ->from('daily_reports');
+                ->from('daily_reports')
+                ->where('employee_id', $this->id);;
         })
 
             ->get()
@@ -98,75 +100,156 @@ trait EmployeeTrait
     {
         $attendance = $this->unprocessedData();
         $start = $this->getSetting('start_time'); //returns 08:00
-
+        $end = $this->getSetting('end_time'); //returns 08:00
         foreach ($attendance as $key => $value) {
 
-            $remark = [];
-            $isResolved = false;
-
+            $remarks = [];
+           
+            $hasTimeIn = false;
+            $hasTimeOut = false;
             foreach ($value as $item) {
-                switch ($item->type) {
-                    case 'Time in': {
 
+                $startCarbon = Carbon::createFromFormat('H:i', $start);
+                $endCarbon = Carbon::createFromFormat('H:i', $end);
+                $timestampCarbon = Carbon::parse($item['timestamp']);
+              //  $timestampCarbon = Carbon::parse('17:01');
+                switch ($item['type']) {
+                    case "Time in": {
+                            $hasTimeIn = true;
+                            $remarks[] = $this->processTimein($start, $item['timestamp'], $timestampCarbon, $startCarbon);
+                            break;
 
-                            // Create Carbon instances for the start time and timestamp
-                            $startCarbon = Carbon::createFromFormat('H:i', $start);
-                            $timestampCarbon = Carbon::parse($item['timestamp']);
-                            $lateThreshold = 3;
-
-
-                            $diff = $timestampCarbon->diffForHumans($startCarbon);
-                            $minutesDiff = \Carbon\CarbonInterval::minutes($diff)->totalMinutes;
-
-                            if ($timestampCarbon->format('H:i') > $startCarbon->format('H:i')) {
-                                // Check if timestamp is later than start time
-                                $differenceInHours = $timestampCarbon->diffInHours($startCarbon);
-
-                                if ($differenceInHours > $lateThreshold) {
-                                    // More than 3 hours late
-                                    $remark = "Half day";
-                                } else {
-                                  
-                                    $formattedDiff = "{$minutesDiff} minutes late";
-                                    $remark = [
-                                        'title'=>'Late',
-                                        'details'=>$formattedDiff
-                                    ];
-
-                                }
-                            } else {
-                                $formattedDiff = "{$minutesDiff} minutes early";
-                                 $remark = [
-                                        'title'=>'On time',
-                                        'details'=>$formattedDiff
-                                    ];
-                            }
-                            return response()->json([
-                                'raw_timestamp' => $item['timestamp'],
-                                'raw_start' => $start,
-                                'start' => $startCarbon->format('H:i'),
-                                'timestamp' => $timestampCarbon->format('H:i'),
-                                'remark' => $remark,
-                            ]);
-
-
-
+                            //return $hasTimeIn;
+                            //return
                         }
                     case 'Break in': {
-
+                            break;
                         }
                     case 'Break out': {
-
+                            break;
                         }
-                    case 'Time out': {
+                    case "Time out": {
+                        $hasTimeOut = true;
+                            if (!$hasTimeIn) {
+
+                                $remarks[] = [
+                                    'key' => 'no_time_in',
+                                    'title' => 'No Time In',
+                                    'details' => 'No Time in'
+                                ];
+
+
+                            } else {
+
+                                $remarks[] = $this->processTimeOut($timestampCarbon, $endCarbon);
+
+
+                            }
+
 
                         }
                 }
 
             }
+            $isResolved = true;
+            //check if user doest have time out
+            if($hasTimeIn && !$hasTimeOut){
+                $isResolved = false;
+                $remarks[]= [
+                    'key' => 'no_time_out',
+                    'title' => 'No Time out',
+                    'details' => 'No Time out'
+                ];
+            }
+             DailyReport::create([
+                'employee_id'=>$this->id,
+                'date'=>$key,
+                'remarks'=>json_encode($remarks),
+                'is_resolved'=>$isResolved
+            ]);
+
+            //return $isResolved;
+
 
         }
 
+
+    }
+
+    protected function processTimeOut($timestampCarbon, $endCarbon)
+    {
+
+        if ($timestampCarbon->format('H:i') < $endCarbon->format('H:i')) {
+
+            $diff = $timestampCarbon->diffForHumans($endCarbon);
+            $minutesDiff = \Carbon\CarbonInterval::minutes($diff)->totalMinutes;
+            $formattedDiff = "{$minutesDiff} minutes early";
+
+            return [
+                'key' => 'Early Out',
+                'title' => 'Early Out',
+                'details' => $formattedDiff
+            ];
+
+
+
+        } else {
+
+            return [
+                'key' => 'time_out',
+                'title' => 'Time out',
+                'details' => 'Time Out'
+            ];
+
+        }
+    }
+
+
+    protected function processTimein($start, $timestamp, $timestampCarbon, $startCarbon)
+    {
+
+        $lateThreshold = 3;
+
+
+        $diff = $timestampCarbon->diffForHumans($startCarbon);
+        $minutesDiff = \Carbon\CarbonInterval::minutes($diff)->totalMinutes;
+
+        if ($timestampCarbon->format('H:i') > $startCarbon->format('H:i')) {
+            // Check if timestamp is later than start time
+            $differenceInHours = $timestampCarbon->diffInHours($startCarbon);
+
+            if ($differenceInHours > $lateThreshold) {
+                // More than 3 hours late
+                return [
+                    'key' => 'half_day',
+                    'title' => 'Half Day',
+                    'details' => 'Half Day'
+                ];
+            } else {
+
+                $formattedDiff = "{$minutesDiff} minutes late";
+                return [
+                    'key' => 'late',
+                    'title' => 'Late',
+                    'details' => $formattedDiff
+                ];
+
+            }
+        } else {
+            $formattedDiff = "{$minutesDiff} minutes early";
+            return [
+                'key' => 'on_time',
+                'title' => 'On time',
+                'details' => $formattedDiff
+            ];
+        }
+        // return response()->json([
+        //     'raw_timestamp' => $timestamp,
+        //     'raw_start' => $start,
+        //     'start' => $startCarbon->format('H:i'),
+        //     'timestamp' => $timestampCarbon->format('H:i'),
+        //     'remark' => $remark,
+        // ]);
 
     }
 
