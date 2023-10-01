@@ -245,5 +245,10 @@ class EmployeeService
     }
 
 
+    public function generateReport(){
+        
+
+    }
+
 
 }
