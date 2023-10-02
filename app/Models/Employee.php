@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\HasAttendance;
 use App\Traits\ImageTrait;
 use App\Traits\EmployeeTrait;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class Employee extends Model
 {
-    use HasFactory, SoftDeletes, ImageTrait, EmployeeTrait;
+    use HasFactory, SoftDeletes, ImageTrait, EmployeeTrait,HasAttendance;
 
 
     protected $fillable = [
@@ -106,6 +106,7 @@ class Employee extends Model
         return $this->attendance()
             ->byMonth($year, $month)
             ->get();
+            
     }
 
     public function attendanceByCutOff()
@@ -134,6 +135,8 @@ class Employee extends Model
                 } else {
                     $cut_off = '16-' . $endOfMonth;
                 }
+
+                $record->daily = $this->dailyReport()->whereDate('date',$record['date'])->get();
             });
     
         ;

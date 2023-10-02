@@ -24,5 +24,10 @@ class DailyReport extends Model
         return $this->belongsTo(Employee::class);
     }
 
+    public function getRemarksAttribute($value)
+    {
+        return json_decode($value);
+    }
+
 
 }

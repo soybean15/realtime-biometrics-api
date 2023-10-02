@@ -222,6 +222,7 @@ class EmployeeService
                 'bgcolor'=> 'blue-7',
                 'title'=>$record->type,
                 'details'=> 'Teaching Javascript 101',
+                
               
             ];
         }
