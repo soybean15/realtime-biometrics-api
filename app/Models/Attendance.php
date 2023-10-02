@@ -34,32 +34,26 @@ class Attendance extends Model
 
     public function scopeByCutOff(Builder $query)
     {
-        // Set the timezone to your application's timezone
-        //    $timezone = config('app.timezone');
-        // $currentDate = Carbon::parse('2023-09-01');
+      
         $currentDate = Carbon::now();
-        // Create separate Carbon instances for start and end dates
+       
         $startDate = $currentDate->copy();
         $endDate = $currentDate->copy();
 
 
 
         if ($currentDate->day > 15) {
-            // If it's after the 15th, get data from the current month
+          
             $startDate->startOfMonth()->day(16);
             $endDate->endOfMonth();
         } else {
-            // If it's on or before the 15th, get data from the previous month
+            
             $startDate->startOfMonth();
             $endDate->startOfMonth()->day(15);
         }
 
 
-        // return response()->json([
-        //     'current' => $currentDate->toDateTimeString(),
-        //     'start' => $startDate->toDateTimeString(),
-        //     'end' => $endDate->toDateTimeString(),
-        // ]);
+       
         return $query->whereBetween('created_at', [$startDate, $endDate]);
     }
 
