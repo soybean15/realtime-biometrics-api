@@ -15,13 +15,22 @@ trait AttendanceType
         $attendance = $employee->attendanceToday()->get();
 
 
+        $start  = $this->carbonParse($this->getSetting('start_time'));
+
+       
+        $end  = $this->carbonParse($this->getSetting('end_time'));
+
+
       // return $time;
         if ($attendance->isEmpty()) {
+
+            if($time > $end) return 'Time out';
+            
             return "Time in"; 
         }
 
-        $breakStartTime = $this->carbonParse('12:00 PM');
-        $breakEndTime = $this->carbonParse('1:00 PM');
+        $breakStartTime = $start->addHours(3);
+        $breakEndTime = $breakStartTime->addHours(1);
         $attendanceDuringBreak = $attendance->filter(function ($record) use ($breakStartTime, $breakEndTime) {
             $recordTime = $this->carbonParse($record->timestamp);
             return $recordTime->between($breakStartTime, $breakEndTime);
@@ -33,7 +42,7 @@ trait AttendanceType
             }
             return 'Break out';
 
-        } elseif ($time >= $this->carbonParse($this->getSetting('end_time'))) {
+        } elseif ($time >= $end) {
             return "Time out"; // Punch-in time is after the end time, return "Time out"
         }else  return "Unknown";
 

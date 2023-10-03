@@ -17,7 +17,8 @@ class Attendance extends Model
         'employee_id',
         'timestamp',
         'state',
-        'type'
+        'type',
+
 
     ];
 

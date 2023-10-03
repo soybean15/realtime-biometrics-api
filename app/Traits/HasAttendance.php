@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Traits;
-
+use App\Models\DailyReport;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 trait HasAttendance
 {
 
+    
 
     public function unprocessedData()
     {
@@ -37,7 +40,7 @@ trait HasAttendance
         foreach ($attendance as $key => $value) {
 
             $remarks = [];
-           
+            $isResolved = true;
             $hasTimeIn = false;
             $hasTimeOut = false;
             foreach ($value as $item) {
@@ -64,7 +67,7 @@ trait HasAttendance
                     case "Time out": {
                         $hasTimeOut = true;
                             if (!$hasTimeIn) {
-
+                                $isResolved = false;
                                 $remarks[] = [
                                     'key' => 'no_time_in',
                                     'title' => 'No Time In',
@@ -84,7 +87,7 @@ trait HasAttendance
                 }
 
             }
-            $isResolved = true;
+           
             //check if user doest have time out
             if($hasTimeIn && !$hasTimeOut){
                 $isResolved = false;
@@ -95,24 +98,28 @@ trait HasAttendance
                 ];
             }
 
-            if(!$hasTimeIn && $hasTimeOut){
+            // if(!$hasTimeIn && $hasTimeOut){
+            //     $isResolved = false;
+            //     $remarks[]= [
+            //         'key' => 'no_time_in',
+            //         'title' => 'No Time in',
+            //         'details' => 'No Time in'
+            //     ];
+            // }
+
+
+            //to do, once I added calendar for active work hours
+            if (!$hasTimeIn || !$hasTimeOut) {
                 $isResolved = false;
-                $remarks[]= [
-                    'key' => 'no_time_in',
-                    'title' => 'No Time in',
-                    'details' => 'No Time in'
-                ];
             }
             return DailyReport::create([
                 'employee_id'=>$this->id,
                 'date'=>$key,
                 'remarks'=>json_encode($remarks),
-                'is_resolved'=>$isResolved
+                'is_resolve'=>$isResolved
             ]);
 
-            //return 'remarks';
-
-
+         
         }
 
 
@@ -128,8 +135,8 @@ trait HasAttendance
             $formattedDiff = "{$minutesDiff} minutes early";
 
             return [
-                'key' => 'Early Out',
-                'title' => 'Early Out',
+                'key' => 'undertime',
+                'title' => 'Undertime',
                 'details' => $formattedDiff
             ];
 
