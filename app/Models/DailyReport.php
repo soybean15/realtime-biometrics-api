@@ -14,7 +14,7 @@ class DailyReport extends Model
         'employee_id',
         'date',
         'remarks',
-        'resolve'
+        'is_resolve'
        
 
     ];

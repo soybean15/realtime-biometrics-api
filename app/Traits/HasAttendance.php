@@ -106,16 +106,20 @@ trait HasAttendance
                     'details' => 'No Time in'
                 ];
             }
+
+
+            //to do, once I added calendar for active work hours
+            if (!$hasTimeIn || !$hasTimeOut) {
+                $isResolved = false;
+            }
             return DailyReport::create([
                 'employee_id'=>$this->id,
                 'date'=>$key,
                 'remarks'=>json_encode($remarks),
-                'is_resolved'=>$isResolved
+                'is_resolve'=>$isResolved
             ]);
 
-            //return 'remarks';
-
-
+         
         }
 
 
