@@ -40,7 +40,7 @@ trait HasAttendance
         foreach ($attendance as $key => $value) {
 
             $remarks = [];
-           
+            $isResolved = true;
             $hasTimeIn = false;
             $hasTimeOut = false;
             foreach ($value as $item) {
@@ -67,7 +67,7 @@ trait HasAttendance
                     case "Time out": {
                         $hasTimeOut = true;
                             if (!$hasTimeIn) {
-
+                                $isResolved = false;
                                 $remarks[] = [
                                     'key' => 'no_time_in',
                                     'title' => 'No Time In',
@@ -87,7 +87,7 @@ trait HasAttendance
                 }
 
             }
-            $isResolved = true;
+           
             //check if user doest have time out
             if($hasTimeIn && !$hasTimeOut){
                 $isResolved = false;
@@ -98,14 +98,14 @@ trait HasAttendance
                 ];
             }
 
-            if(!$hasTimeIn && $hasTimeOut){
-                $isResolved = false;
-                $remarks[]= [
-                    'key' => 'no_time_in',
-                    'title' => 'No Time in',
-                    'details' => 'No Time in'
-                ];
-            }
+            // if(!$hasTimeIn && $hasTimeOut){
+            //     $isResolved = false;
+            //     $remarks[]= [
+            //         'key' => 'no_time_in',
+            //         'title' => 'No Time in',
+            //         'details' => 'No Time in'
+            //     ];
+            // }
 
 
             //to do, once I added calendar for active work hours
@@ -135,8 +135,8 @@ trait HasAttendance
             $formattedDiff = "{$minutesDiff} minutes early";
 
             return [
-                'key' => 'Early Out',
-                'title' => 'Early Out',
+                'key' => 'undertime',
+                'title' => 'Undertime',
                 'details' => $formattedDiff
             ];
 
