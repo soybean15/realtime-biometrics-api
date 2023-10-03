@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Traits;
-
+use App\Models\DailyReport;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 trait HasAttendance
 {
 
+    
 
     public function unprocessedData()
     {
