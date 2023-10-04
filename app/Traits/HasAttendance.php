@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Traits;
+
 use App\Models\DailyReport;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+
 trait HasAttendance
 {
 
-    
+
 
     public function unprocessedData()
     {
@@ -18,7 +20,8 @@ trait HasAttendance
         $unprocessedData = $this->attendance()->whereNotIn(DB::raw('DATE(timestamp)'), function ($query) {
             $query->select('date')
                 ->from('daily_reports')
-                ->where('employee_id', $this->id);;
+                ->where('employee_id', $this->id);
+            ;
         })
 
             ->get()
@@ -33,7 +36,7 @@ trait HasAttendance
 
     public function summarizeDaily()
     {
-    
+
         $attendance = $this->unprocessedData();
         $start = $this->getSetting('start_time'); //returns 08:00
         $end = $this->getSetting('end_time'); //returns 08:00
@@ -48,7 +51,7 @@ trait HasAttendance
                 $startCarbon = Carbon::createFromFormat('H:i', $start);
                 $endCarbon = Carbon::createFromFormat('H:i', $end);
                 $timestampCarbon = Carbon::parse($item['timestamp']);
-              //  $timestampCarbon = Carbon::parse('17:01');
+                //  $timestampCarbon = Carbon::parse('17:01');
                 switch ($item['type']) {
                     case "Time in": {
                             $hasTimeIn = true;
@@ -65,7 +68,7 @@ trait HasAttendance
                             break;
                         }
                     case "Time out": {
-                        $hasTimeOut = true;
+                            $hasTimeOut = true;
                             if (!$hasTimeIn) {
                                 $isResolved = false;
                                 $remarks[] = [
@@ -87,16 +90,30 @@ trait HasAttendance
                 }
 
             }
-           
+
             //check if user doest have time out
-            if($hasTimeIn && !$hasTimeOut){
-                $isResolved = false;
-                $remarks[]= [
-                    'key' => 'no_time_out',
-                    'title' => 'No Time out',
-                    'details' => 'No Time out'
-                ];
+            // Check if user has time in but no time out
+            if ($hasTimeIn && !$hasTimeOut) {
+                // Compare $timestampCarbon with the current date and time
+                $currentDateTime = Carbon::now();
+                if ($timestampCarbon->isPast()) {
+                    // If $timestampCarbon is in the past, add the 'No Time Out' remark
+                    $remarks[] = [
+                        'key' => 'no_time_out',
+                        'title' => 'No Time Out',
+                        'details' => 'No Time Out',
+                    ];
+                } else {
+                    // If $timestampCarbon is in the future, you can add a different remark or handle it as needed
+                    // For example, you could add a remark indicating that the time out is pending
+                    $remarks[] = [
+                        'key' => 'pending_time_out',
+                        'title' => 'Pending Time Out',
+                        'details' => 'Pending Time Out (Timestamp is in the future)',
+                    ];
+                }
             }
+
 
             // if(!$hasTimeIn && $hasTimeOut){
             //     $isResolved = false;
@@ -113,13 +130,13 @@ trait HasAttendance
                 $isResolved = false;
             }
             return DailyReport::create([
-                'employee_id'=>$this->id,
-                'date'=>$key,
-                'remarks'=>json_encode($remarks),
-                'is_resolve'=>$isResolved
+                'employee_id' => $this->id,
+                'date' => $key,
+                'remarks' => json_encode($remarks),
+                'is_resolve' => $isResolved
             ]);
 
-         
+
         }
 
 
