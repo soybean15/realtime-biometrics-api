@@ -84,11 +84,12 @@ class Attendance extends Model
                 $timestamp = $timeIn->format('Y-m-d') . ' ' . $endTimeString;
                 $timestamp = Carbon::parse($timestamp, 'UTC');
 
-                if ($timeIn < $timestamp) {
-                    $durationInMinutes = $timeIn->diffInMinutes($timestamp);
-                } else {
-                    $durationInMinutes = 0;
-                }
+                // if ($timeIn < $timestamp) {
+                //     $durationInMinutes = $timeIn->diffInMinutes($timestamp);
+                // } else {
+                //     $durationInMinutes = 0;
+                // }  
+                $durationInMinutes = 0;
 
             }
         }

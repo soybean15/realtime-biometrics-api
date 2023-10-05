@@ -106,5 +106,13 @@ class EmployeeController extends Controller
         return $this->employeeService->getAttendanceByCutOff($id);
     }
 
+    public function resolveAttendance(Request $request){
+
+        return response()->json([
+            $request->all()
+        ]);
+
+    }
+
 
 }
