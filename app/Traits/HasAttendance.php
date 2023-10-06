@@ -67,6 +67,7 @@ trait HasAttendance
                     case 'Break out': {
                             break;
                         }
+
                     case "Time out": {
                             $hasTimeOut = true;
                             if (!$hasTimeIn) {
@@ -79,12 +80,41 @@ trait HasAttendance
 
 
                             } else {
-
+                                $isResolved = true;
                                 $remarks[] = $this->processTimeOut($timestampCarbon, $endCarbon);
-
-
                             }
 
+                            //remove undertime if it exist
+                            foreach ($remarks as $_key => $remark) {
+                                if ($remark['key'] === 'undertime') {
+                                    unset($remarks[$_key]);
+                                }
+                            }
+                            break;
+                        }
+                    case 'Undertime': {
+                             //remove undertime if it exist
+                             foreach ($remarks as $_key => $remark) {
+                                if ($remark['key'] === 'undertime') {
+                                    unset($remarks[$_key]);
+                                 
+                                }
+                            }
+                            $isResolved = false;
+                            $hasTimeOut = true;
+                            $diff = $timestampCarbon->diffForHumans($endCarbon);
+                            $minutesDiff = \Carbon\CarbonInterval::minutes($diff)->totalMinutes;
+                            $formattedDiff = "{$minutesDiff} minutes early";
+
+
+                       
+                            $remarks[] = [
+                                'key' => 'undertime',
+                                'title' => 'Undertime',
+                                'details' => $formattedDiff
+                            ];
+
+                            break;
 
                         }
                 }

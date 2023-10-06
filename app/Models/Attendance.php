@@ -62,33 +62,52 @@ class Attendance extends Model
     public function duration()
     {
         $durationInMinutes = 0;
+
         if ($this->type == 'Time in' || $this->type == 'Break in') {
             $attendance = Attendance::whereDate('timestamp', '=', Carbon::parse($this->timestamp))->get();
-
+            $timeIn = Carbon::parse($this->timestamp, 'UTC');
+          
             foreach ($attendance as $record) {
-                $timeIn = Carbon::parse($this->timestamp, 'UTC');
+              
+                
                 $timeOut = Carbon::parse($record->timestamp, 'UTC');
+
+
                 if ($this->type == 'Time in' && $record->type == 'Break out') {
 
-                    $durationInMinutes = $timeIn->diffInMinutes($timeOut);
+                   $durationInMinutes = $timeIn->diffInMinutes($timeOut);
                     break;
                 }
+
+               
+
 
                 if ($this->type == 'Break in' && $record->type == 'Time out') {
 
                     $durationInMinutes = $timeIn->diffInMinutes($timeOut);
                     break;
                 }
+
+
+
+                if ($this->type == 'Time in' && $record->type == 'Undertime') {
+                    
+                    $durationInMinutes = $timeIn->diffInMinutes($timeOut);
+                    continue;
+                }
+                
+
                 $endTimeString = $this->getSetting('end_time');
 
                 $timestamp = $timeIn->format('Y-m-d') . ' ' . $endTimeString;
                 $timestamp = Carbon::parse($timestamp, 'UTC');
 
-                if ($timeIn < $timestamp) {
-                    $durationInMinutes = $timeIn->diffInMinutes($timestamp);
-                } else {
-                    $durationInMinutes = 0;
-                }
+                // if ($timeIn < $timestamp) {
+                //     $durationInMinutes = $timeIn->diffInMinutes($timestamp);
+                // } else {
+                //     $durationInMinutes = 0;
+                // }  
+                $durationInMinutes = 0;
 
             }
         }

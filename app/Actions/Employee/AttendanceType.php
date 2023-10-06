@@ -44,7 +44,11 @@ trait AttendanceType
 
         } elseif ($time >= $end) {
             return "Time out"; // Punch-in time is after the end time, return "Time out"
-        }else  return "Unknown";
+        }elseif ($time->diffInHours($start) < 5) {
+            return 'Undertime';
+        }else{
+            return 'Unknown';
+        }
 
 
     }

@@ -257,5 +257,16 @@ class EmployeeService
 
     }
 
+    public function resolveAttendance($data){
+
+        // Attendance::create([
+        //     'serial_number' => $data['uid'],
+        //     'employee_id' =>$data['employee_id'],
+        //     'timestamp' =>\Carbon\Carbon::parse($data['timestamp']) ,
+        //     'state' => $data['state'],
+        //     'type' =>$type 
+        // ]);
+    }
+
 
 }
