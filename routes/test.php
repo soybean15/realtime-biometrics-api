@@ -24,6 +24,6 @@ Route::get('attendance/{id}',function($id){
 
 
 
-    return $employee->dailyReport;
+    return $employee->unprocessedData();
 
 });

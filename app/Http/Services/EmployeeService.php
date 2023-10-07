@@ -5,12 +5,14 @@ namespace App\Http\Services;
 use App\Actions\Employee\CreateNewEmployee;
 use App\Actions\Employee\DeleteEmployee;
 use App\Models\Employee;
+use App\Traits\HasAttendance;
 use Illuminate\Support\Str;
 
 
 
 class EmployeeService
 {
+
 
 
     protected CreateNewEmployee $createNewEmployee;
@@ -258,6 +260,14 @@ class EmployeeService
     }
 
     public function resolveAttendance($data){
+
+
+        $employee = Employee::find($data['employee_id']);
+
+
+        $employee->resolveAttendance($data);
+
+        $employee->summarizeDaily();
 
         // Attendance::create([
         //     'serial_number' => $data['uid'],
