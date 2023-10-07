@@ -120,7 +120,8 @@ class Employee extends Model
                 DB::raw('MAX(CASE WHEN type = "Time in" THEN timestamp END) as time_in'),
                 DB::raw('MAX(CASE WHEN type = "Break out" THEN timestamp END) as break_out'),
                 DB::raw('MAX(CASE WHEN type = "Break in" THEN timestamp END) as break_in'),
-                DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out')
+                DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out'),
+                
             )
             ->groupBy('date')
             ->get()
@@ -137,6 +138,8 @@ class Employee extends Model
                 }
 
                 $record->daily = $this->dailyReport()->whereDate('date',$record['date'])->get();
+
+                
             });
     
         ;

@@ -100,7 +100,7 @@ trait HasAttendance
                                  
                                 }
                             }
-                            $isResolved = false;
+                            $isResolved = true;
                             $hasTimeOut = true;
                             $diff = $timestampCarbon->diffForHumans($endCarbon);
                             $minutesDiff = \Carbon\CarbonInterval::minutes($diff)->totalMinutes;
