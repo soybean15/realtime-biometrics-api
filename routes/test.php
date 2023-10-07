@@ -12,7 +12,7 @@ Route::get('attendance/data/{id}',function($id){
 
     $employee = Employee::find($id);
 
-    return $employee->unprocessedData();
+    return $employee->attendanceByCutOff();
 
 });
 
@@ -24,6 +24,6 @@ Route::get('attendance/{id}',function($id){
 
 
 
-    return $employee->dailyReport;
+    return $employee->unprocessedData();
 
 });

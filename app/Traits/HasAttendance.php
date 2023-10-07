@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Attendance;
 use App\Models\DailyReport;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -23,7 +24,7 @@ trait HasAttendance
                 ->where('employee_id', $this->id);
             ;
         })
-
+            ->orderBy('timestamp') // Add this line to order by timestamp
             ->get()
             ->groupBy(function ($date) {
                 return Carbon::parse($date->timestamp)->format('Y-m-d'); // Assuming you have Carbon imported
@@ -70,6 +71,8 @@ trait HasAttendance
 
                     case "Time out": {
                             $hasTimeOut = true;
+
+                            $this->removeDuplicateRemarks($remarks, ['undertime', 'no_time_in']);
                             if (!$hasTimeIn) {
                                 $isResolved = false;
                                 $remarks[] = [
@@ -81,42 +84,16 @@ trait HasAttendance
 
                             } else {
                                 $isResolved = true;
+
                                 $remarks[] = $this->processTimeOut($timestampCarbon, $endCarbon);
                             }
 
                             //remove undertime if it exist
-                            foreach ($remarks as $_key => $remark) {
-                                if ($remark['key'] === 'undertime') {
-                                    unset($remarks[$_key]);
-                                }
-                            }
-                            break;
-                        }
-                    case 'Undertime': {
-                             //remove undertime if it exist
-                             foreach ($remarks as $_key => $remark) {
-                                if ($remark['key'] === 'undertime') {
-                                    unset($remarks[$_key]);
-                                 
-                                }
-                            }
-                            $isResolved = false;
-                            $hasTimeOut = true;
-                            $diff = $timestampCarbon->diffForHumans($endCarbon);
-                            $minutesDiff = \Carbon\CarbonInterval::minutes($diff)->totalMinutes;
-                            $formattedDiff = "{$minutesDiff} minutes early";
 
 
-                       
-                            $remarks[] = [
-                                'key' => 'undertime',
-                                'title' => 'Undertime',
-                                'details' => $formattedDiff
-                            ];
-
-                            break;
 
                         }
+
                 }
 
             }
@@ -124,8 +101,7 @@ trait HasAttendance
             //check if user doest have time out
             // Check if user has time in but no time out
             if ($hasTimeIn && !$hasTimeOut) {
-                // Compare $timestampCarbon with the current date and time
-                $currentDateTime = Carbon::now();
+
                 if ($timestampCarbon->isPast()) {
                     // If $timestampCarbon is in the past, add the 'No Time Out' remark
                     $remarks[] = [
@@ -170,6 +146,18 @@ trait HasAttendance
         }
 
 
+    }
+
+
+    protected function removeDuplicateRemarks(&$remarks, $keys)
+    {
+        foreach ($remarks as $_key => $remark) {
+            foreach ($remarks as $_key => $remark) {
+                if (in_array($remark['key'], $keys)) {
+                    unset($remarks[$_key]);
+                }
+            }
+        }
     }
 
     protected function processTimeOut($timestampCarbon, $endCarbon)
@@ -246,6 +234,55 @@ trait HasAttendance
         //     'timestamp' => $timestampCarbon->format('H:i'),
         //     'remark' => $remark,
         // ]);
+
+    }
+
+
+
+
+
+
+
+    public function resolveAttendance($data)
+    {
+
+        $this->removeDailyReportByDate($data['timestamp']);
+
+    
+
+            $types = [
+                'no_time_in' => 'Time in',
+                'no_time_out' => 'Time out'
+            ];
+
+            $typeValue = $types[$data['type']] ?? 'Unknown';
+
+           
+
+
+            Attendance::create([
+                'serial_number' => 1,
+                'employee_id' => $this->id,
+                'timestamp' => Carbon::parse($data['timestamp']),
+                'state' => 1,
+                'type' => $typeValue
+            ]);
+            
+     
+
+
+
+
+
+
+    }
+
+    protected function removeDailyReportByDate($date)
+    {
+
+        DailyReport::where('employee_id', $this->id)
+        ->whereDate('date', Carbon::parse($date)->format('Y-m-d'))
+        ->delete();
 
     }
 

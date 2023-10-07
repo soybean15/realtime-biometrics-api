@@ -108,9 +108,12 @@ class EmployeeController extends Controller
 
     public function resolveAttendance(Request $request){
 
-        return response()->json([
-            $request->all()
-        ]);
+        return $this->employeeService->resolveAttendance($request->all());
+        
+
+        // return response()->json([
+        //     $request->all()
+        // ]);
 
     }
 
