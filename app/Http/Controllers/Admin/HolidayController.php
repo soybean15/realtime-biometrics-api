@@ -15,7 +15,10 @@ class HolidayController extends Controller
         ->orderBy('day')
         ->get()
         ->groupBy(function ($holiday) {
-            return $holiday->month . '-' . $holiday->day;
+            $currentYear = date('Y');
+            $month = str_pad($holiday->month, 2, '0', STR_PAD_LEFT);
+            $day = str_pad($holiday->day, 2, '0', STR_PAD_LEFT);
+            return $currentYear . '/' . $month . '/' . $day;
         });
 
         return response()->json([
