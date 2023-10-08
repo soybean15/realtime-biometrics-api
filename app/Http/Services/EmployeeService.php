@@ -5,7 +5,6 @@ namespace App\Http\Services;
 use App\Actions\Employee\CreateNewEmployee;
 use App\Actions\Employee\DeleteEmployee;
 use App\Models\Employee;
-use App\Traits\HasAttendance;
 use Illuminate\Support\Str;
 
 
@@ -277,6 +276,7 @@ class EmployeeService
         //     'type' =>$type 
         // ]);
     }
+
 
 
 }

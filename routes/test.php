@@ -1,5 +1,6 @@
 <?php
 use App\Models\Employee;
+use App\Models\Holiday;
 
 
 
@@ -26,4 +27,22 @@ Route::get('attendance/{id}',function($id){
 
     return $employee->unprocessedData();
 
+});
+
+
+Route::get('holiday',function(){
+
+    $holidays = Holiday::select('month', 'day', 'name', 'category')
+    ->orderBy('month')
+    ->orderBy('day')
+    ->get()
+    ->groupBy(function ($holiday) {
+        return $holiday->month . '-' . $holiday->day;
+    });
+
+
+    return $holidays;
+
+
+    
 });
