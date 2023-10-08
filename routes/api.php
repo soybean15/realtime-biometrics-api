@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ZkTecoController;
@@ -62,6 +63,15 @@ Route::group(['middleware'=>['auth:sanctum','isEnable']],function(){
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function () {
+
+
+    Route::prefix('holiday')->group(function(){
+
+        Route::get('/',[HolidayController::class,'index']);
+
+
+
+    });
    
     Route::prefix('user')->middleware( 'isAdmin')->group(function(){
 
