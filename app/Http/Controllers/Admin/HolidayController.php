@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\HolidayService;
 use App\Models\Holiday;
 use Illuminate\Http\Request;
 
 class HolidayController extends Controller
 {
     //
+    protected HolidayService $service;
+    public  function __construct(HolidayService $service){
+        $this->service = $service;
+
+    }
     public function index(){
         $holidays = Holiday::select('month', 'day', 'name', 'category')
         ->orderBy('month')
@@ -28,4 +34,11 @@ class HolidayController extends Controller
 
 
     }
+
+    public function store(Request $request){
+
+        return $this->service->store($request->all());
+    }
+
+
 }
