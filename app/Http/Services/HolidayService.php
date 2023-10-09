@@ -2,11 +2,39 @@
 
 namespace App\Http\Services;
 
-class HolidayService{
+use App\Models\Holiday;
+use Illuminate\Support\Facades\Validator;
+
+class HolidayService
+{
 
 
 
+    public function store($data)
+    {
 
-     
+
+   
+        Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'month' => ['required',],
+            'day' => ['required'],
+            'category' => ['required'],
+        ])->validate();
+
+        return Holiday::create([
+
+            'name'=>$data['name'],
+            'month'=>$data['month']['value'],
+            'day'=>$data['day'],
+            'category'=>$data['category']
+
+
+        ]);
+
+       
+    }
+
+
 
 }
