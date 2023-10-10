@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Traits\HasSettings;
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+
 class Attendance extends Model
 {
     use HasFactory, HasSettings;
@@ -53,8 +54,7 @@ class Attendance extends Model
             $endDate->startOfMonth()->day(15);
         }
 
-
-       
+ 
         return $query->whereBetween('created_at', [$startDate, $endDate]);
     }
 

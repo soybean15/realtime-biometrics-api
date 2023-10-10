@@ -248,32 +248,25 @@ trait HasAttendance
 
         $this->removeDailyReportByDate($data['timestamp']);
 
-    
-
-            $types = [
-                'no_time_in' => 'Time in',
-                'no_time_out' => 'Time out'
-            ];
-
-            $typeValue = $types[$data['type']] ?? 'Unknown';
-
-           
 
 
-            Attendance::create([
-                'serial_number' => 1,
-                'employee_id' => $this->id,
-                'timestamp' => Carbon::parse($data['timestamp']),
-                'state' => 1,
-                'type' => $typeValue
-            ]);
-            
-     
+        $types = [
+            'no_time_in' => 'Time in',
+            'no_time_out' => 'Time out'
+        ];
+
+        $typeValue = $types[$data['type']] ?? 'Unknown';
 
 
 
 
-
+        Attendance::create([
+            'serial_number' => 1,
+            'employee_id' => $this->id,
+            'timestamp' => Carbon::parse($data['timestamp']),
+            'state' => 1,
+            'type' => $typeValue
+        ]);
 
     }
 
@@ -281,8 +274,8 @@ trait HasAttendance
     {
 
         DailyReport::where('employee_id', $this->id)
-        ->whereDate('date', Carbon::parse($date)->format('Y-m-d'))
-        ->delete();
+            ->whereDate('date', Carbon::parse($date)->format('Y-m-d'))
+            ->delete();
 
     }
 
