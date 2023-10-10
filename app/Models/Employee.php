@@ -168,7 +168,7 @@ class Employee extends Model
                 // Date is missing, insert an object with null value
                 $status='';
                 if($this->isDateActive($dateStr)){
-                    $status="Absent";
+                    $status="No Attendance";
 
                 }else{
     
