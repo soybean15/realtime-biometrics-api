@@ -16,4 +16,9 @@ class Holiday extends Model
         'day',
         'category'
     ];
+
+    public function temporarySchedule(){
+
+        return $this->hasMany(HolidayTemp::class);
+    }
 }

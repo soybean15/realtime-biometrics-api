@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Holidays;
+use App\Models\Holiday;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -137,7 +137,7 @@ class DatabaseSeeder extends Seeder
             ],
         ];
         foreach ($attributesArray as $attributes) {
-            Holidays::create($attributes);
+            Holiday::create($attributes);
         }
         
 

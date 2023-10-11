@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\Holiday;
+use App\Models\HolidayTemp;
 use Illuminate\Support\Facades\Validator;
 
 class HolidayService
@@ -33,6 +34,18 @@ class HolidayService
         ]);
 
        
+    }
+
+    public function moveHoliday($data){
+
+
+        HolidayTemp::create([   
+            
+
+        ]);
+
+
+
     }
 
 
