@@ -144,22 +144,22 @@ class DatabaseSeeder extends Seeder
 
 
 
-        // \App\Models\User::factory(10)->create();
-        // \App\Models\Department::factory(20)->create();
-        // \App\Models\Position::factory(5)->create();
+        \App\Models\User::factory(10)->create();
+        \App\Models\Department::factory(20)->create();
+        \App\Models\Position::factory(5)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Marlon123',
-        //     'email' => 'marlonpadilla1593@gmail.com',
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Marlon123',
+            'email' => 'marlonpadilla1593@gmail.com',
+        ]);
 
 
 
-        // \App\Models\Employee::factory(100)->create();
+        \App\Models\Employee::factory(100)->create();
 
         
 

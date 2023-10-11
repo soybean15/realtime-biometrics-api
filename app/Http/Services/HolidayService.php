@@ -40,7 +40,8 @@ class HolidayService
 
 
         HolidayTemp::create([   
-            
+            'holiday_id'=>$data['id'],
+            'date'=>$data['date']
 
         ]);
 

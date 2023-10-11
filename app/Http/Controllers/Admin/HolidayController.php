@@ -16,7 +16,7 @@ class HolidayController extends Controller
 
     }
     public function index(){
-        $holidays = Holiday::select('month', 'day', 'name', 'category')
+        $holidays = Holiday::select('id','month', 'day', 'name', 'category')
         ->orderBy('month')
         ->orderBy('day')
         ->get()
@@ -40,5 +40,10 @@ class HolidayController extends Controller
         return $this->service->store($request->all());
     }
 
+    public function move(Request $request){
+
+        
+        return $this->service->moveHoliday($request->all());
+    }
 
 }
