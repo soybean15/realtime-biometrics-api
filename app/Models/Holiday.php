@@ -19,6 +19,6 @@ class Holiday extends Model
 
     public function temporarySchedule(){
 
-        return $this->hasMany(HolidayTemp::class);
+        return $this->hasOne(HolidayTemp::class);
     }
 }

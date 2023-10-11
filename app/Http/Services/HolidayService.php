@@ -38,12 +38,27 @@ class HolidayService
 
     public function moveHoliday($data){
 
+        $holidayTemp = HolidayTemp::find($data['id']);
 
-        HolidayTemp::create([   
-            'holiday_id'=>$data['id'],
-            'date'=>$data['date']
+        if(!$holidayTemp){
 
+            return HolidayTemp::create([   
+                'holiday_id'=>$data['id'],
+                'date'=>$data['date']
+    
+            ]);
+    
+        }
+
+
+        $holidayTemp->update([
+            'date' => $data['date']
         ]);
+    
+
+        return $holidayTemp;
+
+
 
 
 
