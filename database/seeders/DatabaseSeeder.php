@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Holidays;
+use App\Models\Holiday;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -137,29 +137,29 @@ class DatabaseSeeder extends Seeder
             ],
         ];
         foreach ($attributesArray as $attributes) {
-            Holidays::create($attributes);
+            Holiday::create($attributes);
         }
         
 
 
 
 
-        // \App\Models\User::factory(10)->create();
-        // \App\Models\Department::factory(20)->create();
-        // \App\Models\Position::factory(5)->create();
+        \App\Models\User::factory(10)->create();
+        \App\Models\Department::factory(20)->create();
+        \App\Models\Position::factory(5)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Marlon123',
-        //     'email' => 'marlonpadilla1593@gmail.com',
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Marlon123',
+            'email' => 'marlonpadilla1593@gmail.com',
+        ]);
 
 
 
-        // \App\Models\Employee::factory(100)->create();
+        \App\Models\Employee::factory(100)->create();
 
         
 

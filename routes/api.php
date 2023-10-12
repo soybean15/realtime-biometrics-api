@@ -70,6 +70,9 @@ Route::prefix('admin')->middleware(['auth:sanctum','isEnable'])->group(function 
         Route::get('/',[HolidayController::class,'index']);
 
         Route::post('/store',[HolidayController::class,'store']);
+           Route::post('/move',[HolidayController::class,'move']);
+
+
 
     });
    

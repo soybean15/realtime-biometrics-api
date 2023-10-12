@@ -16,4 +16,9 @@ class Holiday extends Model
         'day',
         'category'
     ];
+
+    public function holidayTemp(){
+
+        return $this->hasOne(HolidayTemp::class);
+    }
 }

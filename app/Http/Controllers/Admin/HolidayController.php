@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Services\HolidayService;
 use App\Models\Holiday;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class HolidayController extends Controller
 {
@@ -16,17 +17,35 @@ class HolidayController extends Controller
 
     }
     public function index(){
-        $holidays = Holiday::select('month', 'day', 'name', 'category')
+        $holidays = Holiday::select('id','month', 'day', 'name', 'category')
         ->orderBy('month')
         ->orderBy('day')
         ->get()
+        ->each(function($record){
+            $currentYear = date('Y');
+            $temp = $record->holidayTemp()//hasOne
+            ->whereYear('date',$currentYear)
+            ->get();
+
+            if(!$temp->isEmpty()){
+                $date = Carbon::parse($temp[0]->date);
+
+                //date is 2023-11-02
+    
+                $record->day = $date->day;
+                $record->month = $date->month;
+              
+            }
+
+        })
+
         ->groupBy(function ($holiday) {
             $currentYear = date('Y');
             $month = str_pad($holiday->month, 2, '0', STR_PAD_LEFT);
             $day = str_pad($holiday->day, 2, '0', STR_PAD_LEFT);
             return $currentYear . '/' . $month . '/' . $day;
         });
-
+     
         return response()->json([
             'holidays'=>$holidays
         ]);
@@ -40,5 +59,10 @@ class HolidayController extends Controller
         return $this->service->store($request->all());
     }
 
+    public function move(Request $request){
+
+
+        return $this->service->moveHoliday($request->all());
+    }
 
 }
