@@ -23,7 +23,7 @@ class HolidayController extends Controller
         ->get()
         ->each(function($record){
             $currentYear = date('Y');
-            $temp = $record->temporarySchedule()//hasOne
+            $temp = $record->holidayTemp()//hasOne
             ->whereYear('date',$currentYear)
             ->get();
 
@@ -32,7 +32,7 @@ class HolidayController extends Controller
 
                 //date is 2023-11-02
     
-                $record->day = 5;
+                $record->day = $date->day;
                 $record->month = $date->month;
               
             }
