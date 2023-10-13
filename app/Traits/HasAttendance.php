@@ -12,6 +12,24 @@ trait HasAttendance
 
 
 
+    public function getAttendanceSummary($start,$end,$month,$year){
+        
+        $startDate = "{$year}-{$month}-{$start}";
+    $endDay = $end; // Use the provided end day
+    // Check if the month is December to handle the next year
+    $nextYear = ($month == 12) ? $year + 1 : $year;
+    $nextMonth = ($month == 12) ? 1 : $month + 1;
+    $endDate = "{$nextYear}-{$nextMonth}-{$endDay}";
+
+    $report = $this->dailyReport()
+        ->whereBetween('date', [$startDate, $endDate])
+        ->get();
+
+
+
+        return $report;
+      
+    }
 
  
     public function attendanceByCutOff()

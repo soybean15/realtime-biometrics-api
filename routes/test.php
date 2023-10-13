@@ -29,6 +29,13 @@ Route::get('attendance/{id}',function($id){
 
 });
 
+Route::get('attendance/summary/{id}',function($id){
+    $employee = Employee::find($id);
+
+    return $employee->getAttendanceSummary(1,30,10,2023);
+
+});
+
 
 Route::get('holiday',function(){
 
