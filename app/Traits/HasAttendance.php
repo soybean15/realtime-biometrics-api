@@ -12,6 +12,73 @@ trait HasAttendance
 
 
 
+
+ 
+    public function attendanceByCutOff()
+    {
+        $attendance = $this->attendance()->byCutOff()
+            ->select(
+                DB::raw('DATE(timestamp) as date'),
+                DB::raw('COUNT(*) as count'),
+                DB::raw('MAX(CASE WHEN type = "Time in" THEN timestamp END) as time_in'),
+                DB::raw('MAX(CASE WHEN type = "Break out" THEN timestamp END) as break_out'),
+                DB::raw('MAX(CASE WHEN type = "Break in" THEN timestamp END) as break_in'),
+                DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out')
+            )
+            ->groupBy('date')
+            ->get()
+            ->each(function($record){
+                $record->daily = $this->dailyReport()->whereDate('date', $record['date'])->get();
+
+            });
+    
+        if ($attendance->isEmpty()) {
+            return [
+                'attendance' => $attendance,
+                'cut_off' => '',
+            ];
+        }
+    
+        $newData = [];
+        $newArray = [];
+    
+        // Index the attendance data by date
+        foreach ($attendance as $item) {
+            $newArray[$item->date] = $item;
+        }
+    
+        $startDate = Carbon::parse($attendance[0]->date);
+        $endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
+    
+        // Loop through the date range
+        $currentDate = $startDate->copy();
+        while ($currentDate <= $endDate) {
+            $dateStr = $currentDate->format('Y-m-d');
+    
+            if (array_key_exists($dateStr, $newArray)) {
+                // Date exists in the original data, add it as-is
+                $newData[] = $newArray[$dateStr];
+            } else {
+                // Date is missing, insert an object with null value
+                $status = $this->isDateActive($dateStr) ? 'No Attendance' : 'No Work Day';
+                $newData[] = [
+                    'date' => $dateStr,
+                    'time_in' => null,
+                    'break_out' => null,
+                    'break_in' => null,
+                    'time_out' => null,
+                    'status' => $status,
+                ];
+            }
+    
+            $currentDate->addDay();
+        }
+    
+        return [
+            'attendance' => $newData,
+            'cut_off' => $this->calculateCutOff($currentDate),
+        ];
+    }
     public function unprocessedData()
     {
 

@@ -23,8 +23,10 @@ trait AttendanceType
 
       // return $time;
         if ($attendance->isEmpty()) {
+            $afterBreak = $start->addHours(5);
+            
 
-            if($time > $end) return 'Time out';
+            if($time > $afterBreak) return 'Time out';
             
             return "Time in"; 
         }
