@@ -117,5 +117,14 @@ class EmployeeController extends Controller
 
     }
 
+    public function attendanceSummary(Request $request, String $id){
+
+
+        return response()->json([
+            'id'=>$id,
+            'request'=>$request->all()
+        ]);
+    }
+
 
 }
