@@ -14,6 +14,11 @@ trait HasAttendance
 
     public function getAttendanceSummary($start,$end,$month,$year){
         
+
+        $totalAttendance =0;
+        $late = 0;
+        $toResolve=0;
+
         $startDate = "{$year}-{$month}-{$start}";
     $endDay = $end; // Use the provided end day
     // Check if the month is December to handle the next year
@@ -23,17 +28,41 @@ trait HasAttendance
 
     $report = $this->dailyReport()
         ->whereBetween('date', [$startDate, $endDate])
-        ->get();
+        ->get()
+        ->each(function($record) use (&$totalAttendance, &$late, &$toResolve){
+            $totalAttendance++;
+            if(!$record->is_resolve){
+                $toResolve++;
+            }
+
+            foreach($record->remarks as $item){
+
+                switch($item->key){
+                    case 'late':{
+                        $late++;
+                    }
+                }
+
+            }
+
+        });
 
 
 
-        return $report;
+        return response()->json([
+            'late'=>$late,
+            'total_attendance'=>$totalAttendance,
+            'to_resolve'=>$toResolve
+        ]);
       
     }
 
  
     public function attendanceByCutOff()
     {
+
+
+        $cutOff = $this->calculateCutOff( Carbon::now());
         $attendance = $this->attendance()->byCutOff()
             ->select(
                 DB::raw('DATE(timestamp) as date'),
@@ -45,15 +74,17 @@ trait HasAttendance
             )
             ->groupBy('date')
             ->get()
-            ->each(function($record){
+            ->each(function($record) {
                 $record->daily = $this->dailyReport()->whereDate('date', $record['date'])->get();
 
             });
+
+            
     
         if ($attendance->isEmpty()) {
             return [
                 'attendance' => $attendance,
-                'cut_off' => '',
+                'cut_off' => $cutOff['start'] .'-'.$cutOff['end'],
             ];
         }
     
@@ -65,13 +96,13 @@ trait HasAttendance
             $newArray[$item->date] = $item;
         }
     
-        $startDate = Carbon::parse($attendance[0]->date);
+        $startDate = Carbon::parse($cutOff['startDate']);
         $endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
     
         // Loop through the date range
-        $currentDate = $startDate->copy();
-        while ($currentDate <= $endDate) {
-            $dateStr = $currentDate->format('Y-m-d');
+        $start = $startDate->copy();
+        while ($start <= $endDate) {
+            $dateStr = $start->format('Y-m-d');
     
             if (array_key_exists($dateStr, $newArray)) {
                 // Date exists in the original data, add it as-is
@@ -89,14 +120,32 @@ trait HasAttendance
                 ];
             }
     
-            $currentDate->addDay();
+            $start->addDay();
         }
     
         return [
             'attendance' => $newData,
-            'cut_off' => $this->calculateCutOff($currentDate),
+            'cut_off' => $cutOff['start'] .'-'.$cutOff['end'],
+            'attendance[0]->date'=>$attendance[0]->date
         ];
     }
+
+
+    private function calculateCutOff($currentDate)
+    {
+        $day = $currentDate->day;
+        $endOfMonth = $currentDate->endOfMonth()->day;
+    
+      
+    if ($day < 15) {
+        $currentDate->setDay(1); // Set the day to 1st day of the month
+        return ['start' => 1, 'end' => 15, 'startDate' => $currentDate->format('Y-m-d')];
+    } else {
+        $currentDate->setDay(16); // Set the day to 16th day of the month
+        return ['start' => 16, 'end' => $endOfMonth, 'startDate' => $currentDate->format('Y-m-d')];
+    }
+    }
+    
     public function unprocessedData()
     {
 
