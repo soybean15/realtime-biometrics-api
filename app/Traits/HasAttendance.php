@@ -14,6 +14,11 @@ trait HasAttendance
 
     public function getAttendanceSummary($start,$end,$month,$year){
         
+
+        $totalAttendance =0;
+        $late = 0;
+        $toResolve=0;
+
         $startDate = "{$year}-{$month}-{$start}";
     $endDay = $end; // Use the provided end day
     // Check if the month is December to handle the next year
@@ -23,11 +28,32 @@ trait HasAttendance
 
     $report = $this->dailyReport()
         ->whereBetween('date', [$startDate, $endDate])
-        ->get();
+        ->get()
+        ->each(function($record) use (&$totalAttendance, &$late, &$toResolve){
+            $totalAttendance++;
+            if(!$record->is_resolve){
+                $toResolve++;
+            }
+
+            foreach($record->remarks as $item){
+
+                switch($item->key){
+                    case 'late':{
+                        $late++;
+                    }
+                }
+
+            }
+
+        });
 
 
 
-        return $report;
+        return response()->json([
+            'late'=>$late,
+            'total_attendance'=>$totalAttendance,
+            'to_resolve'=>$toResolve
+        ]);
       
     }
 
@@ -48,7 +74,7 @@ trait HasAttendance
             )
             ->groupBy('date')
             ->get()
-            ->each(function($record){
+            ->each(function($record) {
                 $record->daily = $this->dailyReport()->whereDate('date', $record['date'])->get();
 
             });
