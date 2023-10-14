@@ -99,7 +99,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
         Route::get('attendance/{id}', [EmployeeController::class, 'getAttendance']);
         Route::get('attendance/cutoff/{id}', [EmployeeController::class, 'getAttendanceByCutOff']);
         Route::post('attendance/resolve', [EmployeeController::class, 'resolveAttendance']);
-        Route::post('attendance/summary/{id}', [EmployeeController::class, 'resolveAttendance']);
+        Route::post('attendance/summary/{id}', [EmployeeController::class, 'attendanceSummary']);
 
     });
 

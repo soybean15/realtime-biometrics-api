@@ -278,5 +278,20 @@ class EmployeeService
     }
 
 
+    public function attendanceSummary($data, $id){
+
+
+        $employee = Employee::find($id);
+
+        return $employee-> getAttendanceSummary(
+            $data['start'],
+            $data['end'],
+            $data['month'],
+            $data['year']);
+
+
+    }
+
+
 
 }
