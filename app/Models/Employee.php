@@ -111,18 +111,7 @@ class Employee extends Model
     }
 
     
-    private function calculateCutOff($currentDate)
-    {
-        $day = $currentDate->day;
-        $endOfMonth = $currentDate->endOfMonth()->day;
-    
-        if ($day < 15) {
-            return '1-15';
-        } else {
-            return "16-$endOfMonth";
-        }
-    }
-    
+   
 
 
     public function user()

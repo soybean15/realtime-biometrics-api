@@ -34,6 +34,9 @@ trait HasAttendance
  
     public function attendanceByCutOff()
     {
+
+
+        $cutOff = $this->calculateCutOff( Carbon::now());
         $attendance = $this->attendance()->byCutOff()
             ->select(
                 DB::raw('DATE(timestamp) as date'),
@@ -49,11 +52,13 @@ trait HasAttendance
                 $record->daily = $this->dailyReport()->whereDate('date', $record['date'])->get();
 
             });
+
+            
     
         if ($attendance->isEmpty()) {
             return [
                 'attendance' => $attendance,
-                'cut_off' => '',
+                'cut_off' => $cutOff['start'] .'-'.$cutOff['end'],
             ];
         }
     
@@ -65,13 +70,13 @@ trait HasAttendance
             $newArray[$item->date] = $item;
         }
     
-        $startDate = Carbon::parse($attendance[0]->date);
+        $startDate = Carbon::parse($cutOff['startDate']);
         $endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
     
         // Loop through the date range
-        $currentDate = $startDate->copy();
-        while ($currentDate <= $endDate) {
-            $dateStr = $currentDate->format('Y-m-d');
+        $start = $startDate->copy();
+        while ($start <= $endDate) {
+            $dateStr = $start->format('Y-m-d');
     
             if (array_key_exists($dateStr, $newArray)) {
                 // Date exists in the original data, add it as-is
@@ -89,14 +94,32 @@ trait HasAttendance
                 ];
             }
     
-            $currentDate->addDay();
+            $start->addDay();
         }
     
         return [
             'attendance' => $newData,
-            'cut_off' => $this->calculateCutOff($currentDate),
+            'cut_off' => $cutOff['start'] .'-'.$cutOff['end'],
+            'attendance[0]->date'=>$attendance[0]->date
         ];
     }
+
+
+    private function calculateCutOff($currentDate)
+    {
+        $day = $currentDate->day;
+        $endOfMonth = $currentDate->endOfMonth()->day;
+    
+      
+    if ($day < 15) {
+        $currentDate->setDay(1); // Set the day to 1st day of the month
+        return ['start' => 1, 'end' => 15, 'startDate' => $currentDate->format('Y-m-d')];
+    } else {
+        $currentDate->setDay(16); // Set the day to 16th day of the month
+        return ['start' => 16, 'end' => $endOfMonth, 'startDate' => $currentDate->format('Y-m-d')];
+    }
+    }
+    
     public function unprocessedData()
     {
 
