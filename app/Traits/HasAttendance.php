@@ -426,10 +426,6 @@ trait HasAttendance
 
 
 
-
-
-
-
     public function resolveAttendance($data)
     {
 
