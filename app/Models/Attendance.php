@@ -51,7 +51,7 @@ class Attendance extends Model
         } else {
             
             $startDate->startOfMonth();
-            $endDate->startOfMonth()->day(15);
+            $endDate->startOfMonth()->day(16);
         }
 
  
@@ -90,7 +90,7 @@ class Attendance extends Model
 
 
 
-                if ($this->type == 'Time in' && $record->type == 'Undertime') {
+                if ($this->type == 'Time in' && $record->type == 'Time out') {
                     
                     $durationInMinutes = $timeIn->diffInMinutes($timeOut);
                     continue;
