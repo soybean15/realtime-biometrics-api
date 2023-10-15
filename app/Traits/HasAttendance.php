@@ -18,22 +18,35 @@ trait HasAttendance
     {
 
 
+
         $totalAttendance = 0;
         $attended = 0;
         $late = 0;
         $toResolve = 0;
 
         $startDate = "{$year}-{$month}-{$start}";
-        $endDay = $end; // Use the provided end day
-        // Check if the month is December to handle the next year
-        $nextYear = ($month == 12) ? $year + 1 : $year;
-        $nextMonth = ($month == 12) ? 1 : $month + 1;
-        $endDate = "{$nextYear}-{$nextMonth}-{$endDay}";
+        // $endDay = $end; // Use the provided end day
+        // // Check if the month is December to handle the next year
+        // $nextYear = ($month == 12) ? $year + 1 : $year;
+        // $nextMonth = ($month == 12) ? 1 : $month + 1;
+        $endDate = "{$year}-{$month}-{$end}";
+
+
+
+        // return response()->json([
+        //     'start'=>$start,
+        //     'end'=>$end,
+        //     'month'=>$month,
+        //     'year'=>$year,
+        //     'start_date'=>$startDate,
+        //     'endDate'=>$endDate
+            
+        // ]);
 
         $this->dailyReport()
             ->whereBetween('date', [$startDate, $endDate])
             ->get()
-            ->each(function ($record) use (&$totalAttendance, &$late, &$toResolve, $attended) {
+            ->each(function ($record) use (&$totalAttendance, &$late, &$toResolve, &$attended) {
                 $attended++;
                 if (!$record->is_resolve) {
                     $toResolve++;
@@ -51,7 +64,7 @@ trait HasAttendance
 
             });
 
-        $this->getWorkingDays($start, $end, function ($dateStr) use (&$totalAttendance) {
+       $test = $this->getWorkingDays(Carbon::parse($startDate),Carbon::parse( $endDate), function ($dateStr) use (&$totalAttendance) {
 
             if($this->isDateActive($dateStr)){
                 $totalAttendance++;
@@ -65,9 +78,12 @@ trait HasAttendance
 
         return response()->json([
             'late' => $late,
-            'attendend'=>$attended,
+            'attended'=>$attended,
             'total_attendance' => $totalAttendance,
-            'to_resolve' => $toResolve
+            'to_resolve' => $toResolve,
+            'endDate'=>$endDate,
+            'startDate'=>$startDate,
+            'test'=>$test
         ]);
 
     }
@@ -145,6 +161,7 @@ trait HasAttendance
         return [
             'attendance' => $newData,
             'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],
+            'end_date'=>$attendance[count($attendance) - 1]->date
 
 
         ];
@@ -161,6 +178,8 @@ trait HasAttendance
 
             $start->addDay();
         }
+
+        return $test;
 
     }
 
