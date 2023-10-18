@@ -21,6 +21,7 @@ trait HasAttendance
 
         $totalAttendance = 0;
         $attended = 0;
+        $absent=0;
         $late = 0;
         $toResolve = 0;
 
@@ -46,11 +47,13 @@ trait HasAttendance
         $this->dailyReport()
             ->whereBetween('date', [$startDate, $endDate])
             ->get()
-            ->each(function ($record) use (&$totalAttendance, &$late, &$toResolve, &$attended) {
-                $attended++;
+            ->each(function ($record) use (&$totalAttendance, &$late, &$toResolve, &$attended,&$absent) {
+               
                 if (!$record->is_resolve) {
                     $toResolve++;
                 }
+                $attended++;
+              
 
                 foreach ($record->remarks as $item) {
 
@@ -64,7 +67,7 @@ trait HasAttendance
 
             });
 
-       $test = $this->getWorkingDays(Carbon::parse($startDate),Carbon::parse( $endDate), function ($dateStr) use (&$totalAttendance) {
+       $test = $this->getWorkingDays(Carbon::parse($startDate), Carbon::now(), function ($dateStr) use (&$totalAttendance) {
 
             if($this->isDateActive($dateStr)){
                 $totalAttendance++;
@@ -81,7 +84,7 @@ trait HasAttendance
             'attended'=>$attended,
             'total_attendance' => $totalAttendance,
             'to_resolve' => $toResolve,
-            'endDate'=>$endDate,
+            'absent'=>$absent,
             'startDate'=>$startDate,
             'test'=>$test
         ]);
@@ -110,36 +113,40 @@ trait HasAttendance
 
             });
 
+        $newArray = [];//map attendance to new array
+
+        if (!$attendance->isEmpty()) {
+            // return [
+            //     'attendance' => $attendance,
+            //     'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],
+            // ];
 
 
-        if ($attendance->isEmpty()) {
-            return [
-                'attendance' => $attendance,
-                'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],
-            ];
+              // Index the attendance data by date
+            foreach ($attendance as $item) {
+                $newArray[$item->date] = $item;
+            }
         }
-        $newArray = [];
-        // Index the attendance data by date
-        foreach ($attendance as $item) {
-            $newArray[$item->date] = $item;
-        }
+       
+      
+       
 
         $startDate = Carbon::parse($cutOff['startDate']);
-        $endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
-
+        // $endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
+       
         // Loop through the date range
         $start = $startDate->copy();
 
 
 
-        $newData = [];
+
+        $newData = [];//storage of final output
 
 
-        $this->getWorkingDays($start, $endDate, function ($dateStr) use (&$newArray, &$newData) {
+        $this->getWorkingDays($start, Carbon::now(), function ($dateStr) use (&$newArray, &$newData) {
 
 
-
-            if (array_key_exists($dateStr, $newArray)) {
+            if ( sizeof($newArray)>0 && array_key_exists($dateStr, $newArray) ) {
                 // Date exists in the original data, add it as-is
                 $newData[] = $newArray[$dateStr];
             } else {
@@ -160,8 +167,8 @@ trait HasAttendance
 
         return [
             'attendance' => $newData,
-            'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],
-            'end_date'=>$attendance[count($attendance) - 1]->date
+            'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],  
+            'start'=>$start
 
 
         ];
@@ -192,10 +199,23 @@ trait HasAttendance
 
         if ($day <= 15) {
             $currentDate->setDay(1); // Set the day to 1st day of the month
-            return ['start' => 1, 'end' => 15, 'startDate' => $currentDate->format('Y-m-d')];
+          
+
+            return [
+            'start' => 1, 
+            'end' => 15, 'startDate' =>
+             $currentDate->format('Y-m-d'),
+            ];
+            
         } else {
             $currentDate->setDay(16); // Set the day to 16th day of the month
-            return ['start' => 16, 'end' => $endOfMonth, 'startDate' => $currentDate->format('Y-m-d')];
+            $endDate = $currentDate->copy();
+            return [
+                'start' => 16, 
+                'end' => $endOfMonth, 
+                'startDate' => $currentDate->format('Y-m-d'),
+              
+            ];
         }
     }
 
