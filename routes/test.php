@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\PDFController;
 use App\Models\Employee;
 use App\Models\Holiday;
 
@@ -53,3 +54,5 @@ Route::get('holiday',function(){
 
     
 });
+
+Route::get('pdf',[PDFController::class,'generatePDF']);

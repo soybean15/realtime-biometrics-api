@@ -12,6 +12,7 @@ trait WorkDayChecker{
         $carbonDate = Carbon::parse($date);
         $holidays = Holiday::where('day', $carbonDate->day)
         ->where('month', $carbonDate->month)
+        ->whereIn('category', ['Regular Holidays', 'Special (Non-Working) Holidays'])
         ->get();
 
 
