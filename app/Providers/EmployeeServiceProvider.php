@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Actions\Employee\DeleteEmployee;
 use App\Http\Managers\EmployeeManager;
 use Illuminate\Support\ServiceProvider;
-use App\Http\Services\EmployeeService;
 use App\Actions\Employee\CreateNewEmployee;
 
 class EmployeeServiceProvider extends ServiceProvider

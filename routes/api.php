@@ -5,11 +5,9 @@ use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ZkTecoController;
-use App\Http\Controllers\Controller;
+
 use App\Http\Controllers\SettingsController;
 
-
-use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;

@@ -240,11 +240,18 @@ class EmployeeManager{
 
     }
 
-    public function getAttendanceByCutOff($id){
+    public function getAttendanceByCutOff($id,$callback=null){
         $employee = Employee::find($id);
 
-        return response()->json( $employee->attendanceByCutOff()
-        );
+        $data = $employee->attendanceByCutOff();
+
+       
+        if($callback){
+
+            return $callback($data);
+        }
+
+      //  return response()->json( $data);
     }
 
 
@@ -294,6 +301,7 @@ class EmployeeManager{
     }
 
 
+  
 
 
 

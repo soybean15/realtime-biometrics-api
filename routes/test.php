@@ -1,5 +1,6 @@
 <?php
-use App\Http\Controllers\PDFController;
+use App\Http\Controllers\Admin\EmployeeController;
+
 use App\Models\Employee;
 use App\Models\Holiday;
 
@@ -55,4 +56,4 @@ Route::get('holiday',function(){
     
 });
 
-Route::get('pdf',[PDFController::class,'generatePDF']);
+Route::get('pdf/{method}/{id}',[EmployeeController::class,'getAttendanceByCutOffPDF']);

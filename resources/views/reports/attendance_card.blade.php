@@ -7,6 +7,7 @@
 </head>
 <body>
     Test
-    
+
+   {{$data['cut_off']}}
 </body>
 </html>

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Managers\EmployeeManager;
-use App\Http\Services\manager;
+use App\Http\Services\DomPDFService;
+
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
@@ -127,6 +128,23 @@ class EmployeeController extends Controller
         //     'id'=>$id,
         //     'request'=>$request->all()
         // ]);
+    }
+
+
+    public function getAttendanceByCutOffPDF(String $method, String $id){
+
+        return $this->manager->getAttendanceByCutOff($id,function($data) use (&$method){
+            $pdf= DomPDFService::generate('reports.attendance_card',$data);
+
+            return $pdf->stream();
+            // if ($method =='stream'){
+             
+            // }else{
+            //     $pdf->download();
+            // }
+
+
+        });
     }
 
 
