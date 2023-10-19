@@ -7,23 +7,10 @@ use Barryvdh\DomPDF\Facade\Pdf as PDF;
 class DomPDFService{
 
 
-
-    protected array $data;
-    protected string $view;
-
     protected static $pdf;
-    // public function __construct( array $data, String $view){
-
-    //     $this->data = $data;
-    //     $this->view = $view;
-
-    // }
-
 
     public static function generate( String $view,array $data){
 
-        // self::$data = $data;
-        // self::$view = $view;
         self::$pdf = PDF::loadView($view, ['data' => $data]);
 
         return new self();
@@ -32,22 +19,14 @@ class DomPDFService{
     }
 
 
-
     public function stream() {
-       
-       
+        
        // Load the data into a view
        
        // Generate the PDF
         return self::$pdf->stream();
 
 
-      // return 'test';
-
-       // Set the response headers for PDF download
-    //    return response($pdfData)
-    //        ->header('Content-Type', 'application/pdf')
-    //        ->header('Content-Disposition', 'attachment; filename="pdf_file.pdf"');
     }    
 
 
@@ -59,8 +38,6 @@ class DomPDFService{
        return self::$pdf->download();
 
         // Set the response headers for PDF download
-        return response($pdfData)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="pdf_file.pdf"');
+
     }
 }
