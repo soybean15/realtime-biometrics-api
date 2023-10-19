@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\HolidayService;
+use App\Http\Managers\HolidayManager;
 use App\Models\Holiday;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -11,9 +11,9 @@ use Illuminate\Support\Carbon;
 class HolidayController extends Controller
 {
     //
-    protected HolidayService $service;
-    public  function __construct(HolidayService $service){
-        $this->service = $service;
+    protected HolidayManager $manager;
+    public  function __construct(HolidayManager $manager){
+        $this->manager = $manager;
 
     }
     public function index(){
@@ -56,13 +56,13 @@ class HolidayController extends Controller
 
     public function store(Request $request){
 
-        return $this->service->store($request->all());
+        return $this->manager->store($request->all());
     }
 
     public function move(Request $request){
 
 
-        return $this->service->moveHoliday($request->all());
+        return $this->manager->moveHoliday($request->all());
     }
 
 }

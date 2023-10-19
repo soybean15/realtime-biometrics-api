@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\EmployeeService;
+use App\Http\Managers\EmployeeManager;
+use App\Http\Services\manager;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
@@ -13,11 +14,11 @@ class EmployeeController extends Controller
 {
     //
 
-    protected EmployeeService $employeeService;
+    protected EmployeeManager $manager;
 
-    public function __construct(EmployeeService $employeeService)
+    public function __construct(EmployeeManager $manager)
     {
-        $this->employeeService = $employeeService;
+        $this->manager = $manager;
     }
 
 
@@ -36,32 +37,32 @@ class EmployeeController extends Controller
     public function get(string $id)
     {
 
-        return $this->employeeService->getEmployee($id);
+        return $this->manager->getEmployee($id);
 
     }
 
     public function filter(Request $request){
-        return $this->employeeService->filter($request['attribute'], $request['id']);
+        return $this->manager->filter($request['attribute'], $request['id']);
     }
 
     public function store(Request $request)
     {
 
 
-        return $this->employeeService->store($request->all(), $request->file('image'));
+        return $this->manager->store($request->all(), $request->file('image'));
 
     }
 
     public function update(Request $request)
     {
 
-        return $this->employeeService->update([$request['attribute'] => $request['value']], $request['id']);
+        return $this->manager->update([$request['attribute'] => $request['value']], $request['id']);
     }
 
     public function delete(Request $request)
     {
 
-        return $this->employeeService->delete($request['id']);
+        return $this->manager->delete($request['id']);
 
     }
 
@@ -81,7 +82,7 @@ class EmployeeController extends Controller
             ],412);
         }
 
-        return $this->employeeService->upload($request['id'], $request->file('image'));
+        return $this->manager->upload($request['id'], $request->file('image'));
 
 
 
@@ -89,26 +90,26 @@ class EmployeeController extends Controller
     }
     public function restore(Request $request)
     {
-        return $this->employeeService->restore($request['id']);
+        return $this->manager->restore($request['id']);
 
     }
     public function search(Request $request){
 
-        return $this->employeeService->search($request['value']);
+        return $this->manager->search($request['value']);
 
     }
 
     public function getAttendance(String $id){
-        return $this->employeeService->getAttendance($id);
+        return $this->manager->getAttendance($id);
     }
 
     public function getAttendanceByCutOff(String $id){
-        return $this->employeeService->getAttendanceByCutOff($id);
+        return $this->manager->getAttendanceByCutOff($id);
     }
 
     public function resolveAttendance(Request $request){
 
-        return $this->employeeService->resolveAttendance($request->all());
+        return $this->manager->resolveAttendance($request->all());
         
 
         // return response()->json([
@@ -120,7 +121,7 @@ class EmployeeController extends Controller
     public function attendanceSummary(Request $request, String $id){
 
 
-        return $this->employeeService->attendanceSummary($request->all(),$id);
+        return $this->manager->attendanceSummary($request->all(),$id);
 
         // return response()->json([
         //     'id'=>$id,

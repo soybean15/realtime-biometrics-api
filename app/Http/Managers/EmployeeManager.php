@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Http\Managers;
+
+
 
 use App\Actions\Employee\CreateNewEmployee;
 use App\Actions\Employee\DeleteEmployee;
 use App\Models\Employee;
 use Illuminate\Support\Str;
 
-
-
-class EmployeeService
-{
+class EmployeeManager{
 
 
 
@@ -22,6 +21,8 @@ class EmployeeService
         $this->createNewEmployee = $createNewEmployee;
         $this->deleteEmployee = $deleteEmployee;
     }
+
+
 
 
     public function getEmployee($id)
@@ -291,6 +292,8 @@ class EmployeeService
 
 
     }
+
+
 
 
 
