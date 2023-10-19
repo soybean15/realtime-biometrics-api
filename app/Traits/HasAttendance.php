@@ -168,8 +168,7 @@ trait HasAttendance
         return [
             'attendance' => $newData,
             'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],  
-            'start'=>$start
-
+            'month' => $start->format('F')
 
         ];
     }

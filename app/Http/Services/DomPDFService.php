@@ -39,15 +39,15 @@ class DomPDFService{
        // Load the data into a view
        
        // Generate the PDF
-       $pdfData = self::$pdf->stream();
+        return self::$pdf->stream();
 
 
-      return $pdfData;
+      // return 'test';
 
        // Set the response headers for PDF download
-       return response($pdfData)
-           ->header('Content-Type', 'application/pdf')
-           ->header('Content-Disposition', 'attachment; filename="pdf_file.pdf"');
+    //    return response($pdfData)
+    //        ->header('Content-Type', 'application/pdf')
+    //        ->header('Content-Disposition', 'attachment; filename="pdf_file.pdf"');
     }    
 
 
