@@ -245,10 +245,11 @@ class EmployeeManager{
 
         $data = $employee->attendanceByCutOff();
 
-       
-        if($callback){
 
-            return $callback($data);
+
+        if($callback){
+       
+            return $callback(['data'=>$data, 'employee'=> $employee]);
         }
 
         return response()->json( $data);
