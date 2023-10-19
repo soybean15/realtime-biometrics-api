@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Http\Managers;
 
 use App\Models\Holiday;
 use App\Models\HolidayTemp;
 use Illuminate\Support\Facades\Validator;
+class HolidayManager{
 
-class HolidayService
-{
 
 
 
@@ -67,6 +66,5 @@ class HolidayService
         );
     }
     
-
 
 }

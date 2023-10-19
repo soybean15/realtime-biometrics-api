@@ -5,11 +5,9 @@ use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ZkTecoController;
-use App\Http\Controllers\Controller;
+
 use App\Http\Controllers\SettingsController;
 
-
-use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
@@ -100,6 +98,8 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
         Route::get('attendance/cutoff/{id}', [EmployeeController::class, 'getAttendanceByCutOff']);
         Route::post('attendance/resolve', [EmployeeController::class, 'resolveAttendance']);
         Route::post('attendance/summary/{id}', [EmployeeController::class, 'attendanceSummary']);
+        
+        Route::get('pdf/{method}/{id}',[EmployeeController::class,'getAttendanceByCutOffPDF']);
 
     });
 

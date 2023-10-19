@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Http\Services\HolidayService;
+use App\Http\Managers\HolidayManager;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
 class HolidayServiceProvider extends ServiceProvider
@@ -13,8 +13,8 @@ class HolidayServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
-        $this->app->singleton(HolidayService::class, function (Application $app) {
-            return new HolidayService();
+        $this->app->singleton(HolidayManager::class, function (Application $app) {
+            return new HolidayManager();
         });
    
     }

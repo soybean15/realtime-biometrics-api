@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Services\EmployeeService;
+use App\Http\Managers\EmployeeManager;
+
 use App\Http\Services\ZkTecoService;
 use Illuminate\Console\Command;
 
@@ -15,12 +16,12 @@ class GenerateReport extends Command
      */
     protected $signature = 'generate:report';
 
-    protected EmployeeService $employeeService;
+    protected EmployeeManager $manager;
 
-    public function __construct(EmployeeService $employeeService)
+    public function __construct(EmployeeManager $manager)
     {
         parent::__construct();
-        $this->employeeService = $employeeService;
+        $this->manager = $manager;
 
     }
 
@@ -36,7 +37,7 @@ class GenerateReport extends Command
      */
     public function handle()
     {
-        $this->employeeService->processDailyReport();
+        $this->manager->processDailyReport();
 
         $this->info('report Processed');
 

@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Http\Managers;
+
+
 
 use App\Actions\Employee\CreateNewEmployee;
 use App\Actions\Employee\DeleteEmployee;
 use App\Models\Employee;
 use Illuminate\Support\Str;
 
-
-
-class EmployeeService
-{
+class EmployeeManager{
 
 
 
@@ -22,6 +21,8 @@ class EmployeeService
         $this->createNewEmployee = $createNewEmployee;
         $this->deleteEmployee = $deleteEmployee;
     }
+
+
 
 
     public function getEmployee($id)
@@ -239,11 +240,18 @@ class EmployeeService
 
     }
 
-    public function getAttendanceByCutOff($id){
+    public function getAttendanceByCutOff($id,$callback=null){
         $employee = Employee::find($id);
 
-        return response()->json( $employee->attendanceByCutOff()
-        );
+        $data = $employee->attendanceByCutOff();
+
+       
+        if($callback){
+
+            return $callback($data);
+        }
+
+        return response()->json( $data);
     }
 
 
@@ -291,6 +299,9 @@ class EmployeeService
 
 
     }
+
+
+  
 
 
 
