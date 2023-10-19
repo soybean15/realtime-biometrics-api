@@ -136,14 +136,14 @@ class EmployeeController extends Controller
         return $this->manager->getAttendanceByCutOff($id,function($data) use (&$method){
             $pdf= DomPDFService::generate('reports.attendance_card',$data);
 
-
+            return  $pdf->download();
             
-            return $pdf->stream();
-            // if ($method =='stream'){
-             
-            // }else{
-            //     $pdf->download();
-            // }
+          //  return $pdf->stream();
+            if ($method =='stream'){
+                return $pdf->stream();
+            }else{
+               return  $pdf->download();
+            }
 
 
         });

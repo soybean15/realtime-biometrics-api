@@ -56,7 +56,7 @@ class DomPDFService{
     public function download() {
 
         // Generate the PDF
-        $pdfData = self::$pdf->download();
+       return self::$pdf->download();
 
         // Set the response headers for PDF download
         return response($pdfData)
