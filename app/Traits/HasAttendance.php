@@ -96,7 +96,7 @@ trait HasAttendance
     {
 
 
-        $cutOff = $this->calculateCutOff(Carbon::now());
+        $cutOff = $this->calculateCutOff($date);
         $attendance = $this->attendance()->byCutOff($date)
             ->select(
                 DB::raw('DATE(timestamp) as date'),
@@ -131,11 +131,11 @@ trait HasAttendance
       
        
 
-        $startDate = Carbon::parse($cutOff['startDate']);
-        // $endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
-       
+        $startDate = $cutOff['startDate'];
+         //$endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
+        $endDate = $cutOff['endDate'];
         // Loop through the date range
-        $start = $startDate->copy();
+      
 
 
 
@@ -143,7 +143,7 @@ trait HasAttendance
         $newData = [];//storage of final output
 
 
-        $this->getWorkingDays($start, Carbon::now(), function ($dateStr) use (&$newArray, &$newData) {
+        $this->getWorkingDays($cutOff['startDate'],  $cutOff['endDate'], function ($dateStr) use (&$newArray, &$newData) {
 
 
             if ( sizeof($newArray)>0 && array_key_exists($dateStr, $newArray) ) {
@@ -168,7 +168,12 @@ trait HasAttendance
         return [
             'attendance' => $newData,
             'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],  
-            'month' => $start->format('F')
+            'month' => $cutOff['startDate']->format('F') ,
+           
+            'date'=>$date,
+            'cut_off_array'=>$cutOff,
+            'start'=>$startDate,
+            'end'=>$endDate
             
 
         ];
@@ -200,21 +205,26 @@ trait HasAttendance
 
         if ($day <= 15) {
             $currentDate->setDay(1); // Set the day to 1st day of the month
-          
+         
+            $endDate = $currentDate->copy();
+            $endDate->setDay(15);
 
             return [
             'start' => 1, 
-            'end' => 15, 'startDate' =>
-             $currentDate->format('Y-m-d'),
+            'end' => 15, 
+            'startDate' =>$currentDate,
+             'endDate'=> $endDate,
             ];
             
         } else {
             $currentDate->setDay(16); // Set the day to 16th day of the month
-            $endDate = $currentDate->copy();
+             $endDate = $currentDate->copy();
+             $endDate->setDay($endOfMonth);
             return [
                 'start' => 16, 
                 'end' => $endOfMonth, 
-                'startDate' => $currentDate->format('Y-m-d'),
+                'startDate' => $currentDate,
+                'endDate'=> $endDate,
               
             ];
         }

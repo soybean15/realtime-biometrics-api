@@ -246,7 +246,10 @@ class EmployeeManager{
 
         if ($date === null) {
             $date = Carbon::now();
+        }else{
+            $date = Carbon::parse($date);
         }
+
 
         $data = $employee->attendanceByCutOff($date);
 
