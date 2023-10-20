@@ -169,6 +169,7 @@ trait HasAttendance
             'attendance' => $newData,
             'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],  
             'month' => $start->format('F')
+            
 
         ];
     }
@@ -245,6 +246,7 @@ trait HasAttendance
     public function summarizeDaily()
     {
 
+        $this->removeDailyReportByDate(Carbon::now()->toDateTimeString());
         $attendance = $this->unprocessedData();
         $start = $this->getSetting('start_time'); //returns 08:00
         $end = $this->getSetting('end_time'); //returns 08:00
