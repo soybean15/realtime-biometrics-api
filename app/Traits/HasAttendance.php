@@ -92,12 +92,12 @@ trait HasAttendance
     }
 
 
-    public function attendanceByCutOff()
+    public function attendanceByCutOff($date)
     {
 
 
         $cutOff = $this->calculateCutOff(Carbon::now());
-        $attendance = $this->attendance()->byCutOff()
+        $attendance = $this->attendance()->byCutOff($date)
             ->select(
                 DB::raw('DATE(timestamp) as date'),
                 DB::raw('COUNT(*) as count'),
@@ -169,6 +169,7 @@ trait HasAttendance
             'attendance' => $newData,
             'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],  
             'month' => $start->format('F')
+            
 
         ];
     }
@@ -192,6 +193,7 @@ trait HasAttendance
 
     private function calculateCutOff($currentDate)
     {
+     //   $currentDate = Carbon::parse($date);
         $day = $currentDate->day;
         $endOfMonth = $currentDate->endOfMonth()->day;
 
@@ -244,6 +246,7 @@ trait HasAttendance
     public function summarizeDaily()
     {
 
+        $this->removeDailyReportByDate(Carbon::now()->toDateTimeString());
         $attendance = $this->unprocessedData();
         $start = $this->getSetting('start_time'); //returns 08:00
         $end = $this->getSetting('end_time'); //returns 08:00

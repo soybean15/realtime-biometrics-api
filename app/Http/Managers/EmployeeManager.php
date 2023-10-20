@@ -7,6 +7,7 @@ namespace App\Http\Managers;
 use App\Actions\Employee\CreateNewEmployee;
 use App\Actions\Employee\DeleteEmployee;
 use App\Models\Employee;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class EmployeeManager{
@@ -213,7 +214,7 @@ class EmployeeManager{
 
 
         foreach ($attendance as $record) {
-            $timestamp = \Carbon\Carbon::parse($record->timestamp);
+            $timestamp = Carbon::parse($record->timestamp);
             $transformedAttendance[] = [
                 'date' => $timestamp->format('Y-m-d'), //YYYY-MM-DD HH:MM:SS"
                 'time' => $timestamp->format('H:i:s'),
@@ -240,10 +241,14 @@ class EmployeeManager{
 
     }
 
-    public function getAttendanceByCutOff($id,$callback=null){
+    public function getAttendanceByCutOff($id,$date = null,$callback=null){
         $employee = Employee::find($id);
 
-        $data = $employee->attendanceByCutOff();
+        if ($date === null) {
+            $date = Carbon::now();
+        }
+
+        $data = $employee->attendanceByCutOff($date);
 
 
 
