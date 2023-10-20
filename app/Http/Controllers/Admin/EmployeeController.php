@@ -101,11 +101,11 @@ class EmployeeController extends Controller
     }
 
     public function getAttendance(String $id){
-        return $this->manager->getAttendance($id);
+        return $this->manager->getAttendance($id,);
     }
 
-    public function getAttendanceByCutOff(String $id){
-        return $this->manager->getAttendanceByCutOff($id);
+    public function getAttendanceByCutOff(Request $request,String $id){
+        return $this->manager->getAttendanceByCutOff($id,$request['date']);
     }
 
     public function resolveAttendance(Request $request){
