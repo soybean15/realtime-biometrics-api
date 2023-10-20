@@ -34,17 +34,17 @@ class Attendance extends Model
 
     }
 
-    public function scopeByCutOff(Builder $query)
+    public function scopeByCutOff(Builder $query ,$date)
     {
       
-        $currentDate = Carbon::now();
+       // $currentDate = Carbon::now();
        
-        $startDate = $currentDate->copy();
-        $endDate = $currentDate->copy();
+        $startDate = $date->copy();
+        $endDate = $date->copy();
 
 
 
-        if ($currentDate->day > 15) {
+        if ($date->day > 15) {
           
             $startDate->startOfMonth()->day(16);
             $endDate->endOfMonth();
