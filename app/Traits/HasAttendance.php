@@ -146,6 +146,9 @@ trait HasAttendance
         $this->getWorkingDays($cutOff['startDate'],  $cutOff['endDate'], function ($dateStr) use (&$newArray, &$newData) {
 
 
+            if($dateStr == Carbon::now()){
+                return;
+            }
             if ( sizeof($newArray)>0 && array_key_exists($dateStr, $newArray) ) {
                 // Date exists in the original data, add it as-is
                 $newData[] = $newArray[$dateStr];
@@ -182,16 +185,19 @@ trait HasAttendance
     private function getWorkingDays($start, $end, $callback)
     {
 
-        $test = 0;
+      
         while ($start <= $end) {
-            $test++;
+          
             $dateStr = $start->format('Y-m-d');
             $callback($dateStr);
 
+            if ($start->isSameDay(Carbon::now())) {
+                break;
+            }
             $start->addDay();
         }
 
-        return $test;
+        
 
     }
 
