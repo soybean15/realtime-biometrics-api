@@ -4,9 +4,10 @@ namespace App\Providers;
 
 use App\Actions\Employee\DeleteEmployee;
 use App\Http\Managers\EmployeeManager;
+use App\Http\Managers\ReportManager;
 use Illuminate\Support\ServiceProvider;
 use App\Actions\Employee\CreateNewEmployee;
-
+use Illuminate\Contracts\Foundation\Application;
 class EmployeeServiceProvider extends ServiceProvider
 {
     /**
@@ -27,6 +28,11 @@ class EmployeeServiceProvider extends ServiceProvider
         $this->app->bind(EmployeeManager::class, function ($app) {
             return new EmployeeManager($app->make(CreateNewEmployee::class),$app->make(DeleteEmployee::class));
         });
+
+        $this->app->singleton(ReportManager::class, function (Application $app) {
+            return new ReportManager();
+        });
+   
     }
 
     /**
