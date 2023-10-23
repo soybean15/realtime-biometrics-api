@@ -12,4 +12,18 @@ class Department extends Model
     public function employees(){
         $this->belongsToMany(Employee::class);
     }
+
+    protected $fillable = [
+            'name'
+    ];
+
+    public function index(){
+        $departments = Department::all();
+
+        return response()-> json([
+            'departments' => $departments
+        ]);
+    }
+
+    
 }
