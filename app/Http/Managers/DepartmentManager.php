@@ -34,6 +34,8 @@ class DepartmentManager{
         $attribute = $data['attribute'];
         $newValue = $data['value'];
 
+        
+
         try {
 
             $validator = Validator::make($data, [

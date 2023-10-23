@@ -48,7 +48,7 @@ class CheckAttendance extends Command
 
         $data = [
             'uid' => '12345',            // Replace with a valid serial_number
-            'id' =>1,          // Replace with a valid employee_id
+            'id' =>3,          // Replace with a valid employee_id
             'timestamp' => '17:02:00', // Replace with a valid timestamp
             'state' => 'present',        // Replace with a valid state
             'type' => 'Time out',        // Replace with a valid type
