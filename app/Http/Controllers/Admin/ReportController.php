@@ -20,7 +20,7 @@ class ReportController extends Controller
 
     public function index(){
 
-     $reports = $this->manager->reportByDate();
+     $reports = $this->manager->index();
 
 
      return response()->json([
@@ -28,4 +28,13 @@ class ReportController extends Controller
         'reports'=>$reports
      ]);
     }
+
+    public function getReportByDate(Request $request){
+
+        $this->manager->getReportByDate($request['date']);
+
+
+
+    }
+
 }
