@@ -23,11 +23,7 @@ class ReportController extends Controller
      $reports = $this->manager->getReportByDate();
 
 
-     return response()->json([
-
-        'reports'=>$reports,
-        'date'=>Carbon::now()->format('Y-m-d'),
-     ]);
+     return response()->json($reports);
     }
 
     public function getReportByDate(Request $request){

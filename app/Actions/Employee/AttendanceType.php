@@ -33,7 +33,7 @@ trait AttendanceType
 
         $breakStartTime = $start->addHours(3);
         $breakEndTime = $breakStartTime->copy();
-         $breakEndTime->addHours(2);
+        $breakEndTime->addHours(2);
         $attendanceDuringBreak = $attendance->filter(function ($record) use ($breakStartTime, $breakEndTime) {
             $recordTime = $this->carbonParse($record->timestamp);
             return $recordTime->between($breakStartTime, $breakEndTime);

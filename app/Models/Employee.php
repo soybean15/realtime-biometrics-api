@@ -141,6 +141,11 @@ class Employee extends Model
     }
 
 
+    public function count(){
+        return $this->withTrashed()->count();
+    }
+
+
 
 
 }
