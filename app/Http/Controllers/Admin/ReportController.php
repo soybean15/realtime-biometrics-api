@@ -20,12 +20,13 @@ class ReportController extends Controller
 
     public function index(){
 
-     $reports = $this->manager->index();
+     $reports = $this->manager->getReportByDate();
 
 
      return response()->json([
 
-        'reports'=>$reports
+        'reports'=>$reports,
+        'date'=>Carbon::now()->format('Y-m-d'),
      ]);
     }
 

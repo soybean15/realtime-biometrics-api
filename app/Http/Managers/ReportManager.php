@@ -10,25 +10,36 @@ class ReportManager{
 
 
 
-    public function index(){
+    // public function index(){
 
         
-        $report  = Employee::with(['attendanceToday'])
-        ->whereHas('attendanceToday')
-        ->get();
+    //     $report  = Employee::with(['attendanceToday'])
+    //     ->whereHas('attendanceToday')
+    //     ->get();
 
-        return $report;
+    //     return $report;
 
-    }
+    // }
 
-    public function getReportByDate($date){
+    public function getReportByDate($date=null){
+        if($date==null){
 
-        $date = Carbon::parse($date);
+            $date = Carbon::now();
 
+        }else{
+            $date = Carbon::parse($date);
 
-        $report = Employee::whereDate('timestamp',$date)      
-        ->with('attendance')
-        ->whereHas('attendance')
+        }
+
+     
+
+        $report = Employee::with(['attendance'=>function ($query) use ($date){
+            $query->whereDate('timestamp', $date);
+        }]) 
+        ->whereHas('attendance',function($query) use ($date){
+            $query->whereDate('timestamp', $date);
+        })
+       
         ->get();
 
         return $report;
