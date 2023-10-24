@@ -19,8 +19,10 @@ class DepartmentController extends Controller
 
     public function index(){
         
+        $departments = Department::all();
+
         return response()->json([
-            'departments'=> Department::all()
+            'departments'=> $departments
         ]);
     }
 
