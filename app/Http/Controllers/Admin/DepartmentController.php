@@ -34,11 +34,7 @@ class DepartmentController extends Controller
     }
  
     public function update(Request $request){
-        return $this->manager->update(
-            [
-                'attribute'=>$request['attribute'],
-                'value'=>$request['value']
-            ], 
+        return $this->manager->update($request->all(), 
             $request['id']
         );
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Managers;
 
 use App\Models\Department;
+use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -30,29 +31,18 @@ class DepartmentManager{
         $department = Department::find($id);
 
 
-
-        $attribute = $data['attribute'];
-        $newValue = $data['value'];
-
-        
-
+        Validator::make($data, [
+            'name' =>['required', 'string', 'max:255'],
+        ])->validate();
+    
+    
         try {
-
-            $validator = Validator::make($data, [
-                'value' => $this->validate($attribute),
-            ]);
-
-            if ($validator->fails()) {
-
-                throw new \Exception($validator->errors(), 422);
-              
-            }
-
+     
             if ($department) {
 
 
 
-                $department[$attribute] = $newValue;
+                $department['name'] = $data['name'];
 
                 $department->save();
 
