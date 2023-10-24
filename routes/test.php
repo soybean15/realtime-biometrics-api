@@ -70,3 +70,11 @@ Route::get('holiday/check',function(){
 
 
 });
+
+Route::get('schedule/check',function(){
+
+    $manager = new ReportManager();
+
+    return $manager->isLate('2023-10-23 08:02:00');
+
+});

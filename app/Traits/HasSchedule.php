@@ -16,14 +16,20 @@ trait HasSchedule{
         $startTime = Carbon::parse($start);
         $actualTime = Carbon::parse($time);
     
-        // Compare the actual time with the start time
-        if ($actualTime->greaterThan($startTime)) {
-            // Employee is late
-            return true;
-        } else {
-            // Employee is not late
-            return false;
-        }
+
+
+        return $actualTime->format('His.u') > $startTime->format('His.u');
+        // return response()->json([
+        //     'result'=> $actualTime->format('His.u') > $startTime->format('His.u'),
+        //     'startTime'=>$startTime,
+        //     'actualTime'=>$actualTime->toTimeString(),
+        //     'time'=>$time,
+        //     'start'=>$start
+
+        // ]);
+    
+      
+
     }
     
 }

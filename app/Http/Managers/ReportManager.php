@@ -93,7 +93,7 @@ class ReportManager
 
         return [
             'reports'=>$report,
-            'lates'=>$lates,  
+          
             'date'=>$date->format('Y-m-d'),
                 $summary
         ];
@@ -114,6 +114,7 @@ class ReportManager
             'total'=>$count,
             'present'=>$presents,
             'absents'=>$absents,
+            'lates'=>$lates,
             'late_percentage'=>$latePercentage,
             'present_percentage'=>$presentPercentage
         ];

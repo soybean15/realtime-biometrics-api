@@ -67,7 +67,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
 
     Route::prefix('report')->group(function () {
 
-        Route::get('/',[ReportController::class,'index']);
+        Route::post('/',[ReportController::class,'getReportByDate']);
 
     });
 

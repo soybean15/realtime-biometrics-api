@@ -18,26 +18,6 @@ class ReportController extends Controller
 
     }
 
-    public function index(){
-
-
-         
-        $lastActive = Carbon::parse(Carbon::now());
-        //this line gets the previous working day for comparison
-        while (true) {        
-            $lastActive->subDay();
-            if ($this->manager->isDateActive($lastActive)) {
-                break;
-            }
-        }
-
-        return response()->json([
-            'active'=> $this->manager->getReportByDate(),
-            'previous'=>  $this->manager->getReportByDate($lastActive),
-
-        ]) ;
-       
-    }
 
     public function getReportByDate(Request $request){
       
@@ -51,12 +31,16 @@ class ReportController extends Controller
             }
         }
 
-
         return response()->json([
-            'active'=> $this->manager->getReportByDate($request['date']),
+            'active'=> $this->manager->getReportByDate($request['date']),//<-this method have some heavy process
             'previous'=>  $this->manager->getReportByDate($lastActive),
 
         ]) ;
+
+        // return response()->json([
+        //      $this->manager->getReportByDate($request['date']),//<-this method have some heavy process
+        // ]) ;
+       
        
 
 
