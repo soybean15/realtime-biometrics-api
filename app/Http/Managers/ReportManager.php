@@ -5,11 +5,12 @@ namespace App\Http\Managers;
 
 use App\Models\Employee;
 use App\Traits\HasSchedule;
+use App\Traits\WorkDayChecker;
 use Carbon\Carbon;
 
 class ReportManager
 {
-    use HasSchedule;
+    use HasSchedule,WorkDayChecker;
 
 
 
@@ -92,8 +93,8 @@ class ReportManager
 
         return [
             'reports'=>$report,
-            'lates'=>$lates,  
-            'date'=>Carbon::now()->format('Y-m-d'),
+          
+            'date'=>$date->format('Y-m-d'),
                 $summary
         ];
 
@@ -104,14 +105,16 @@ class ReportManager
         $count = Employee::withTrashed()->count();
         $absents = $count - $presents;
 
-        $presentPercentage = ($presents / $count) * 100;
+
+        $presentPercentage = $count ==0 ? $count : ($presents / $count) * 100;
     
-        $latePercentage = ($lates / $presents) *100;
+        $latePercentage =$presents==0? $presents: ($lates / $presents) *100;
 
         return [
             'total'=>$count,
             'present'=>$presents,
             'absents'=>$absents,
+            'lates'=>$lates,
             'late_percentage'=>$latePercentage,
             'present_percentage'=>$presentPercentage
         ];

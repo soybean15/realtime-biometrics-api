@@ -67,7 +67,7 @@ trait HasAttendance
 
             });
 
-       $test = $this->getWorkingDays(Carbon::parse($startDate), Carbon::now(), function ($dateStr) use (&$totalAttendance) {
+     $this->getWorkingDays(Carbon::parse($startDate), Carbon::now(), function ($dateStr) use (&$totalAttendance) {
 
             if($this->isDateActive($dateStr)){
                 $totalAttendance++;
@@ -86,7 +86,7 @@ trait HasAttendance
             'to_resolve' => $toResolve,
             'absent'=>$absent,
             'startDate'=>$startDate,
-            'test'=>$test
+           
         ]);
 
     }
