@@ -17,8 +17,8 @@ return new class extends Migration
             $table->bigInteger('department_id')->unsigned();
             $table->timestamps();
 
-            $table->foreign('employee_id')->references('id')->on('employees');
-            $table->foreign('department_id')->references('id')->on('departments');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('NO ACTION');;
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('NO ACTION');;
 
         });
     }
