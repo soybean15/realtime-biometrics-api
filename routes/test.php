@@ -2,6 +2,7 @@
 use App\Http\Controllers\Admin\EmployeeController;
 
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Managers\ReportManager;
 use App\Models\Employee;
 use App\Models\Holiday;
 
@@ -60,3 +61,12 @@ Route::get('holiday',function(){
 Route::get('pdf/{method}/{id}',[EmployeeController::class,'getAttendanceByCutOffPDF']);
 
 Route::get('report/today',[ReportController::class,'index']);
+
+Route::get('holiday/check',function(){
+
+    $manager = new ReportManager();
+
+    return $manager->isDateActive('2023-11-04');
+
+
+});

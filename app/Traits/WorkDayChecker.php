@@ -2,24 +2,51 @@
 
 
 namespace App\Traits;
-use Carbon\Carbon;
+
+use App\Models\HolidayTemp;
+
 use App\Models\Holiday;
+use Illuminate\Support\Carbon;
 
-trait WorkDayChecker{
+trait WorkDayChecker
+{
 
 
-    public function isDateActive($date){
-        $carbonDate = Carbon::parse($date);
+    public function isDateActive($date)
+    {
+
+        if ($date instanceof Carbon) {
+            $carbonDate = $date;
+        } else {
+            $carbonDate = Carbon::parse($date);
+        }
+
+
+
+    
+
+
         $holidays = Holiday::where('day', $carbonDate->day)
-        ->where('month', $carbonDate->month)
-        ->whereIn('category', ['Regular Holidays', 'Special (Non-Working) Holidays'])
-        ->get();
+            ->where('month', $carbonDate->month)
+            ->whereIn('category', ['Regular Holidays', 'Special (Non-Working) Holidays'])
+            ->doesntHave('holidayTemp')
+            ->get();
+
+            $temp = HolidayTemp::where('date', $carbonDate)->get();
 
 
         $isWeekend = in_array($carbonDate->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY]);
 
-     
-        return !($isWeekend || !$holidays->isEmpty());
+
+         return !($isWeekend || !$holidays->isEmpty() || !$temp->isEmpty());
+
+        // return response()->json([
+        //     'date' => $carbonDate,
+        //     'raw_date' => $date,
+        //     'holiday' => $holidays,
+        //     'day'=>$carbonDate->day,
+        //     'month'
+        // ]);
 
 
 
