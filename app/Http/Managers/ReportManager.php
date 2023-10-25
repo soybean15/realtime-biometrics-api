@@ -126,6 +126,11 @@ class ReportManager
 
         $data = $callback();
 
+        $totalLates=0;
+        $totalAttendance = 0;
+
+
+
         $report = Employee::with(['attendance'=>function($query) use ($data){
             $query->select(
                 'employee_id',
@@ -139,18 +144,36 @@ class ReportManager
             ->whereBetween('timestamp', [$data['start'], $data['end']])
             ->groupBy('employee_id', 'date');
                   
-        }])->get();
+        }])->get()
+        ->each(function($employee) use (&$totalLates,&$totalAttendance,$data){
+
+            foreach($employee->attendance as $attendance){
+
+                if($attendance->time_in){
+
+                    if($this->isLate($attendance->time_in)) {
+                    $totalLates++;
+                    $employee->lates++;
+
+                    }
+
+                }
+            }
+            $employee->attended =sizeof($employee->attendance);
+
+            $this->getWorkingDays($data['start'],$data['end'],function(){
+
+            });
+
+        });
 
 
-
-
-
-
-
-
-
-        return  $report ;
+        return  [
+            'reports'=>$report,
+            'total_lates'=>$totalLates,
+            ] ;
 
 
     }
+
 }

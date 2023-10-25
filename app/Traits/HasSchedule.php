@@ -4,7 +4,7 @@ namespace App\Traits;
 use \Carbon\Carbon;
 trait HasSchedule{
 
-    use HasSettings;
+    use HasSettings,WorkDayChecker;
 
 
 
@@ -28,7 +28,29 @@ trait HasSchedule{
 
         // ]);
     
+
+    }
+
+ 
+    private function getWorkingDays($start, $end, $callback)
+    {
+
       
+        $total=0;
+        while ($start <= $end) {
+          
+            $dateStr = $start->format('Y-m-d');
+            $total=$callback($dateStr);
+
+            if ($start->isSameDay(Carbon::now())) {
+                break;
+            }
+            $start->addDay();
+        }
+
+        return $total;
+
+        
 
     }
     

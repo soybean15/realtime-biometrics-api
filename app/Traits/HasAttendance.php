@@ -10,7 +10,7 @@ use Carbon\Carbon;
 trait HasAttendance
 {
 
-    use WorkDayChecker;
+    use WorkDayChecker,HasSchedule;
 
 
 
@@ -182,24 +182,7 @@ trait HasAttendance
         ];
     }
 
-    private function getWorkingDays($start, $end, $callback)
-    {
-
-      
-        while ($start <= $end) {
-          
-            $dateStr = $start->format('Y-m-d');
-            $callback($dateStr);
-
-            if ($start->isSameDay(Carbon::now())) {
-                break;
-            }
-            $start->addDay();
-        }
-
-        
-
-    }
+   
 
 
     private function calculateCutOff($currentDate)
