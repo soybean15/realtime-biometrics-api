@@ -19,7 +19,7 @@ class DepartmentController extends Controller
 
     public function index(){
         
-        $departments = Department::all();
+        $departments = Department::paginate(10);
 
         return response()->json([
             'departments'=> $departments

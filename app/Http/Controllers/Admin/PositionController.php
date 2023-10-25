@@ -21,7 +21,7 @@ class PositionController extends Controller
     public function index(){
 
         return response()->json([
-            'positions'=> Position::paginate(5)
+            'positions'=> Position::paginate(1)
         ]);
     }
 
