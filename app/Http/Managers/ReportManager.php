@@ -7,7 +7,7 @@ use App\Models\Employee;
 use App\Traits\HasSchedule;
 use App\Traits\WorkDayChecker;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\DB;
 class ReportManager
 {
     use HasSchedule,WorkDayChecker;
@@ -100,7 +100,7 @@ class ReportManager
 
     }
 
-    protected function computeAttendance($presents,$lates){
+    protected function computeAttendance ($presents,$lates){
 
         $count = Employee::withTrashed()->count();
         $absents = $count - $presents;
@@ -118,6 +118,38 @@ class ReportManager
             'late_percentage'=>$latePercentage,
             'present_percentage'=>$presentPercentage
         ];
+
+
+    }
+
+    public function getReport($callback) {
+
+        $data = $callback();
+
+        $report = Employee::with(['attendance'=>function($query) use ($data){
+            $query->select(
+                'employee_id',
+                DB::raw('DATE(timestamp) as date'),
+                DB::raw('COUNT(*) as count'),
+                DB::raw('MAX(CASE WHEN type = "Time in" THEN timestamp END) as time_in'),
+                DB::raw('MAX(CASE WHEN type = "Break out" THEN timestamp END) as break_out'),
+                DB::raw('MAX(CASE WHEN type = "Break in" THEN timestamp END) as break_in'),
+                DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out')
+            )
+            ->whereBetween('timestamp', [$data['start'], $data['end']])
+            ->groupBy('employee_id', 'date');
+                  
+        }])->get();
+
+
+
+
+
+
+
+
+
+        return  $report ;
 
 
     }

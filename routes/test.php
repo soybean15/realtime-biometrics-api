@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Managers\ReportManager;
 use App\Models\Employee;
 use App\Models\Holiday;
+use Illuminate\Support\Carbon;
 
 
 
@@ -76,5 +77,24 @@ Route::get('schedule/check',function(){
     $manager = new ReportManager();
 
     return $manager->isLate('2023-10-23 08:02:00');
+
+});
+
+Route::get('reports',function(){
+
+    $manager = new ReportManager();
+    $date = '2023-10-23';
+
+    return $manager->getReport(function () use ($date) {
+        $date = Carbon::parse($date);
+        $start = $date->copy()->firstOfMonth(); // get the 1st day of the month
+        $end = $date->copy()->lastOfMonth(); // get the last day of the month
+
+        return [
+            'start'=>$start,
+            'end'=>$end
+        ];
+
+    });
 
 });

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\HasSettings;
+use App\Traits\HasReport;use App\Traits\HasSettings;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
