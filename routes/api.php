@@ -125,6 +125,11 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
     Route::prefix('position')->group(function () {
 
         Route::get('/', [PositionController::class, 'index']);
+        Route::post('/add', [PositionController::class, 'store']);
+        Route::get('search', [PositionController::class, 'search']);
+        Route::post('edit', [PositionController::class, 'update']);
+        Route::post('delete', [PositionController::class, 'destroy']);
+
 
     });
 
