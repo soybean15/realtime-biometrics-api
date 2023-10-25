@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasAttendance;
+
 use App\Traits\ImageTrait;
 use App\Traits\EmployeeTrait;
 use DateTime;
