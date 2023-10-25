@@ -185,39 +185,7 @@ trait HasAttendance
    
 
 
-    private function calculateCutOff($currentDate)
-    {
-     //   $currentDate = Carbon::parse($date);
-        $day = $currentDate->day;
-        $endOfMonth = $currentDate->endOfMonth()->day;
-
-
-        if ($day <= 15) {
-            $currentDate->setDay(1); // Set the day to 1st day of the month
-         
-            $endDate = $currentDate->copy();
-            $endDate->setDay(15);
-
-            return [
-            'start' => 1, 
-            'end' => 15, 
-            'startDate' =>$currentDate,
-             'endDate'=> $endDate,
-            ];
-            
-        } else {
-            $currentDate->setDay(16); // Set the day to 16th day of the month
-             $endDate = $currentDate->copy();
-             $endDate->setDay($endOfMonth);
-            return [
-                'start' => 16, 
-                'end' => $endOfMonth, 
-                'startDate' => $currentDate,
-                'endDate'=> $endDate,
-              
-            ];
-        }
-    }
+  
 
     public function unprocessedData()
     {

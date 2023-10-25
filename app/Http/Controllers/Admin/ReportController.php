@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Managers\ReportManager;
 use Illuminate\Http\Request;
-use \Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 class ReportController extends Controller
 {
@@ -44,6 +44,27 @@ class ReportController extends Controller
        
 
 
+
+    }
+
+    public function getReportByCutoff(Request $request){
+
+        $date = $request['date']==null ? Carbon::now() :  $request['date'];
+
+        
+      
+        return $this->manager->getReport(function () use ($date) {
+            $date= $this->manager->calculateCutOff($date);
+
+            $start = $date['startDate'];
+            $end= $date ['endDate'];
+    
+            return [
+                'start'=>$start,
+                'end'=>$end
+            ];
+    
+        });
 
     }
 

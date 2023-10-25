@@ -68,6 +68,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
     Route::prefix('report')->group(function () {
 
         Route::post('/',[ReportController::class,'getReportByDate']);
+        Route::post ('cut-off',[ReportController::class,'getReportByCutoff']);
 
     });
 

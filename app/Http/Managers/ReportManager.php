@@ -8,9 +8,10 @@ use App\Traits\HasSchedule;
 use App\Traits\WorkDayChecker;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+
 class ReportManager
 {
-    use HasSchedule,WorkDayChecker;
+    use HasSchedule, WorkDayChecker;
 
 
 
@@ -44,7 +45,7 @@ class ReportManager
         $paginationData = $report->items();
         $lates = 0;
 
-       
+
         foreach ($paginationData as $record) {
 
 
@@ -52,7 +53,7 @@ class ReportManager
                 switch ($attendance->type) {
                     case 'Time in': {
                             if (!$record->time_in) {
-                                if($this->isLate($attendance->timestamp)) {
+                                if ($this->isLate($attendance->timestamp)) {
                                     $record->late = true;
                                     $lates++;
                                 }
@@ -92,86 +93,114 @@ class ReportManager
 
 
         return [
-            'reports'=>$report,
-          
-            'date'=>$date->format('Y-m-d'),
-                $summary
+            'reports' => $report,
+
+            'date' => $date->format('Y-m-d'),
+            $summary
         ];
 
     }
 
-    protected function computeAttendance ($presents,$lates){
+    protected function computeAttendance($presents, $lates)
+    {
 
         $count = Employee::withTrashed()->count();
         $absents = $count - $presents;
 
 
-        $presentPercentage = $count ==0 ? $count : ($presents / $count) * 100;
-    
-        $latePercentage =$presents==0? $presents: ($lates / $presents) *100;
+        $presentPercentage = $count == 0 ? $count : ($presents / $count) * 100;
+
+        $latePercentage = $presents == 0 ? $presents : ($lates / $presents) * 100;
 
         return [
-            'total'=>$count,
-            'present'=>$presents,
-            'absents'=>$absents,
-            'lates'=>$lates,
-            'late_percentage'=>$latePercentage,
-            'present_percentage'=>$presentPercentage
+            'total' => $count,
+            'present' => $presents,
+            'absents' => $absents,
+            'lates' => $lates,
+            'late_percentage' => $latePercentage,
+            'present_percentage' => $presentPercentage
         ];
 
 
     }
 
-    public function getReport($callback) {
-
+    public function getReport($callback)
+    {
+        
+        $start = microtime(true);
         $data = $callback();
 
-        $totalLates=0;
+        $startDate = $data['start']->copy();
+        $endDate = $data['end']->copy();
+        $totalLates = 0;
         $totalAttendance = 0;
-
-
-
-        $report = Employee::with(['attendance'=>function($query) use ($data){
-            $query->select(
-                'employee_id',
-                DB::raw('DATE(timestamp) as date'),
-                DB::raw('COUNT(*) as count'),
-                DB::raw('MAX(CASE WHEN type = "Time in" THEN timestamp END) as time_in'),
-                DB::raw('MAX(CASE WHEN type = "Break out" THEN timestamp END) as break_out'),
-                DB::raw('MAX(CASE WHEN type = "Break in" THEN timestamp END) as break_in'),
-                DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out')
-            )
-            ->whereBetween('timestamp', [$data['start'], $data['end']])
-            ->groupBy('employee_id', 'date');
-                  
-        }])->get()
-        ->each(function($employee) use (&$totalLates,&$totalAttendance,$data){
-
-            foreach($employee->attendance as $attendance){
-
-                if($attendance->time_in){
-
-                    if($this->isLate($attendance->time_in)) {
-                    $totalLates++;
-                    $employee->lates++;
-
-                    }
-
-                }
+        $totalWorkingDays = $this->getWorkingDays($startDate, $endDate, function ($dateStr)  {
+          
+            if ($this->isDateActive($dateStr)) {
+                return 1;
             }
-            $employee->attended =sizeof($employee->attendance);
 
-            $this->getWorkingDays($data['start'],$data['end'],function(){
-
-            });
+            return 0;
+           
 
         });
 
+        $report = Employee::with([
+            'attendance' => function ($query) use ($data) {
+                $query->select(
+                    'employee_id',
+                    DB::raw('DATE(timestamp) as date'),
+                    DB::raw('COUNT(*) as count'),
+                    DB::raw('MAX(CASE WHEN type = "Time in" THEN timestamp END) as time_in'),
+                    DB::raw('MAX(CASE WHEN type = "Break out" THEN timestamp END) as break_out'),
+                    DB::raw('MAX(CASE WHEN type = "Break in" THEN timestamp END) as break_in'),
+                    DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out')
+                )
+                    ->whereBetween('timestamp', [$data['start'], $data['end']])
+                    ->groupBy('employee_id', 'date');
 
-        return  [
-            'reports'=>$report,
-            'total_lates'=>$totalLates,
-            ] ;
+            }
+        ])->get()
+            ->each(function ($employee) use (&$totalLates, &$totalAttendance, $totalWorkingDays) {
+
+                foreach ($employee->attendance as $attendance) {
+
+                    if ($attendance->time_in) {
+
+                        if ($this->isLate($attendance->time_in)) {
+                            $totalLates++;
+                            $employee->lates++;
+
+                        }
+
+                    }
+                }
+                $employee->attended = sizeof($employee->attendance);
+                $employee->total = $totalWorkingDays;
+
+                //if removed the copy then speed change drastically from 4.6 seconds to 322.0651149749756
+              
+                $employee->absents =  $employee->total - $employee->attended;
+
+                $employee->late_percentage =   $employee->attended == 0 ? $employee->attended  : ($employee->lates  / $employee->attended ) * 100;
+  
+                $totalAttendance +=   $employee->attended;
+
+                unset($employee->attendance);
+                
+
+            });
+
+            $end = microtime(true);
+            $executionTime = ($end - $start) * 1000; // in milliseconds
+        return [
+            'reports' => $report,
+            'total_lates' => $totalLates,
+            'dates'=>$data,
+            'total_attendance'=>$totalAttendance,
+            'speed'=>$executionTime,
+            'working_days'=>$totalWorkingDays
+        ];
 
 
     }
