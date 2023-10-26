@@ -68,4 +68,24 @@ class ReportController extends Controller
 
     }
 
+    public function getReportByMonth(Request $request){
+
+        $date = $request['date']==null ? Carbon::now() :  Carbon::parse($request['date']);
+
+
+        return $this->manager->getReport(function () use ($date) {
+            
+            $start = $date->copy()->firstOfMonth(); 
+            $end = $date->copy()->lastOfMonth(); 
+    
+            return [
+                'start'=>$start,
+                'end'=>$end
+            ];
+    
+        });
+
+
+    }
+
 }

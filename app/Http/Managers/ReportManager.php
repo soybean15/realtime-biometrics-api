@@ -134,6 +134,8 @@ class ReportManager
         $endDate = $data['end']->copy();
         $totalLates = 0;
         $totalAttendance = 0;
+        $totalAbsents=0;
+        
         $totalWorkingDays = $this->getWorkingDays($startDate, $endDate, function ($dateStr)  {
           
             if ($this->isDateActive($dateStr)) {
@@ -142,7 +144,6 @@ class ReportManager
 
             return 0;
            
-
         });
 
         $report = Employee::with([
@@ -161,8 +162,7 @@ class ReportManager
 
             }
         ])->get()
-            ->each(function ($employee) use (&$totalLates, &$totalAttendance, $totalWorkingDays) {
-
+            ->each(function ($employee) use (&$totalLates, &$totalAttendance, $totalWorkingDays,&$totalAbsents) {
                 foreach ($employee->attendance as $attendance) {
 
                     if ($attendance->time_in) {
@@ -177,29 +177,39 @@ class ReportManager
                 }
                 $employee->attended = sizeof($employee->attendance);
                 $employee->total = $totalWorkingDays;
-
-                //if removed the copy then speed change drastically from 4.6 seconds to 322.0651149749756
-              
+  
                 $employee->absents =  $employee->total - $employee->attended;
+                $totalAbsents +=  $employee->absents;
 
                 $employee->late_percentage =   $employee->attended == 0 ? $employee->attended  : ($employee->lates  / $employee->attended ) * 100;
   
                 $totalAttendance +=   $employee->attended;
 
-                unset($employee->attendance);
-                
+                unset($employee->attendance);             
 
             });
 
+            $total_employee = sizeof($report);
+            $employee_workdays= $total_employee *$totalWorkingDays;
+            $absentee_rate =( $totalAbsents /$employee_workdays) *100;
+
+
+
+         
             $end = microtime(true);
-            $executionTime = ($end - $start) * 1000; // in milliseconds
+            $executionTime = ($end - $start) * 1000; 
+
         return [
             'reports' => $report,
             'total_lates' => $totalLates,
             'dates'=>$data,
             'total_attendance'=>$totalAttendance,
             'speed'=>$executionTime,
-            'working_days'=>$totalWorkingDays
+            'working_days'=>$totalWorkingDays,
+            'total_absents'=> $totalAbsents,
+            'total_employee'=> sizeof($report),
+            'employee_workdays'=>$employee_workdays,
+            'absentee_rate'=>$absentee_rate
         ];
 
 
