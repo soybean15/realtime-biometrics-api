@@ -69,6 +69,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
 
         Route::post('/',[ReportController::class,'getReportByDate']);
         Route::post ('cut-off',[ReportController::class,'getReportByCutoff']);
+        Route::post('month',[ReportController::class,'getReportByMonth']);
 
     });
 
@@ -106,7 +107,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
         Route::post('attendance/cutoff/{id}', [EmployeeController::class, 'getAttendanceByCutOff']);
         Route::post('attendance/resolve', [EmployeeController::class, 'resolveAttendance']);
         Route::post('attendance/summary/{id}', [EmployeeController::class, 'attendanceSummary']);
-        
+      
         Route::get('pdf/{method}/{id}',[EmployeeController::class,'getAttendanceByCutOffPDF']);
 
     });
@@ -118,7 +119,8 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
         Route::post('/delete', [DepartmentController::class, 'destroy']);
         Route::post('/update', [DepartmentController::class, 'update']);
         Route::get('search/', [DepartmentController::class, 'search']);
-
+        Route::get('/get', [DepartmentController::class, 'getDepartments']);
+    
 
     });
 
@@ -129,6 +131,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
         Route::get('search', [PositionController::class, 'search']);
         Route::post('edit', [PositionController::class, 'update']);
         Route::post('delete', [PositionController::class, 'destroy']);
+        Route::get('/get', [PositionController::class, 'getPositions']);
 
 
     });
