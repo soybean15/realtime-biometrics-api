@@ -30,6 +30,8 @@ class ReportManager
     {
         $date = $date ? Carbon::parse($date) : Carbon::now();
 
+        $lates = 0;
+
         $report = Employee::with([
             'attendance' => function ($query) use ($date) {
                 $query->whereDate('timestamp', $date);
@@ -39,14 +41,8 @@ class ReportManager
                 $query->whereDate('timestamp', $date);
             })
 
-            ->paginate(20);
-
-
-        $paginationData = $report->items();
-        $lates = 0;
-
-
-        foreach ($paginationData as $record) {
+          ->get()
+          ->each(function ($record) use (&$lates){
 
 
             foreach ($record->attendance as $attendance) {
@@ -82,12 +78,24 @@ class ReportManager
             }
             unset($record->attendance);
 
+          });
 
 
-        }
+        // $paginationData = $report->items();
+        //
+
+
+        // foreach ($paginationData as $record) {
+
+
+          
+
+
+
+        // }
 
         $summary = $this->computeAttendance(
-            sizeof($paginationData),
+            sizeof($report),
             $lates
         );
 
