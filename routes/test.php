@@ -2,6 +2,7 @@
 use App\Http\Controllers\Admin\EmployeeController;
 
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Managers\DashboardManager;
 use App\Http\Managers\ReportManager;
 use App\Models\Employee;
 use App\Models\Holiday;
@@ -93,6 +94,21 @@ Route::get('reports',function(){
         return [
             'start'=>$start,
             'end'=>$end
+        ];
+
+    });
+
+});
+
+Route::get('dashboard',function(){
+    $manager = new DashboardManager();
+
+    return $manager->attendanceRate(function (){
+
+
+        return [
+            'year'=>2023,
+            'month'=>10
         ];
 
     });
