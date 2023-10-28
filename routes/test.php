@@ -2,6 +2,7 @@
 use App\Http\Controllers\Admin\EmployeeController;
 
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Managers\DashboardManager;
 use App\Http\Managers\ReportManager;
 use App\Models\Employee;
 use App\Models\Holiday;
@@ -93,6 +94,26 @@ Route::get('reports',function(){
         return [
             'start'=>$start,
             'end'=>$end
+        ];
+
+    });
+
+});
+
+Route::get('dashboard',function(){
+    $manager = new DashboardManager();
+
+    return $manager->attendanceRate( 2023,10,function ($year,$month){
+
+        $date = Carbon::create($year,$month,1);
+
+
+
+
+        return [
+            'start'=>$date,
+            'end'=>$date->copy()->lastOfMonth(),
+            'date'=> $date->format('Y-m-d')
         ];
 
     });

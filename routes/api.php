@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\PositionController;
@@ -63,6 +64,13 @@ Route::group(['middleware' => ['auth:sanctum', 'isEnable']], function () {
 });
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function () {
+
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', [DashboardController::class,'index']);
+        Route::get('summary',[DashboardController::class,'summary']);
+
+
+    });
 
 
     Route::prefix('report')->group(function () {
