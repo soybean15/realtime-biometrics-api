@@ -103,12 +103,17 @@ Route::get('reports',function(){
 Route::get('dashboard',function(){
     $manager = new DashboardManager();
 
-    return $manager->attendanceRate(function (){
+    return $manager->attendanceRate( 2023,10,function ($year,$month){
+
+        $date = Carbon::create($year,$month,1);
+
+
 
 
         return [
-            'year'=>2023,
-            'month'=>10
+            'start'=>$date,
+            'end'=>$date->copy()->lastOfMonth(),
+            'date'=> $date->format('Y-m-d')
         ];
 
     });

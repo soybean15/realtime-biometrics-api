@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Managers\DashboardManager;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
@@ -16,5 +17,26 @@ class DashboardController extends Controller
 
     public function index() {
         return $this->manager->index();
+    }
+
+    public function summary(){
+        $date = Carbon::now();
+        $year = $date->year;
+        $month = $date->month;
+
+        return $this->manager->attendanceRate($year,$month,function($year, $month){
+            $date = Carbon::create($year,$month,1);
+
+
+
+
+            return [
+                'start'=>$date,
+                'end'=>$date->copy()->lastOfMonth(),
+                'date'=> $date->format('Y-m-d')
+            ];
+
+
+        });
     }
 }
