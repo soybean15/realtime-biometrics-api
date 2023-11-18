@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('daily_reports', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('employee_id')->unsigned();
-            $table->dateTime('date');
-            $table->json('remarks')->nullable();
-            $table->boolean('is_resolve')->default(false);
+            $table->date('date');
+            $table->boolean('late')->default(false);
+            $table->boolean('no_time_in')->default(false);
+            $table->boolean('no_time_out')->default(false);
+            $table->boolean('half_day_in')->default(false);
+            $table->boolean('half_day_out')->default(false);
             $table->timestamps();
 
 

@@ -47,7 +47,7 @@ class EmployeeManager{
 
         $employees = Employee::whereHas($attribute, function ($query) use ($attribute, $id) {
             $query->where(Str::singular($attribute) . '_id', $id);
-        })->paginate(20);
+        })->get();
 
         $employees->load(['departments', 'positions', 'user']);
 
@@ -186,7 +186,7 @@ class EmployeeManager{
                     ->orWhere('middlename', 'LIKE', "%$value%")
                     ->orWhere('employee_id', $value)
                     ->orWhere('biometrics_id', $value);
-            })->paginate(20);
+            })->get();
 
             return response()->json([
                 'employees' => $employees

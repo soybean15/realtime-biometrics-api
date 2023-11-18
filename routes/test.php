@@ -31,7 +31,7 @@ Route::get('attendance/{id}',function($id){
 
 
 
-    return $employee->unprocessedData();
+    return $employee->summarizeDaily();
 
 });
 

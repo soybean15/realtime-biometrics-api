@@ -49,7 +49,7 @@ trait AttendanceType
             return "Time out"; // Punch-in time is after the end time, return "Time out"
         
         }else{
-            return 'Unknown';
+            return 'Invalid';
         }
 
 

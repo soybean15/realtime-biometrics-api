@@ -27,7 +27,7 @@ class DepartmentController extends Controller
     }
 
     public function getDepartments(){
-        $departments = Department::paginate(10);
+        $departments = Department::all();
 
         return response()->json([
             'departments'=> $departments
