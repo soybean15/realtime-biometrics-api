@@ -55,16 +55,10 @@ trait HasAttendance
                 $attended++;
 
 
-                foreach ($record->remarks as $item) {
-
-                    switch ($item->key) {
-                        case 'late': {
-                                $late++;
-                            }
-                    }
-
+                
+                if($record->late){
+                    $late++;
                 }
-
             });
 
         $this->getWorkingDays(Carbon::parse($startDate), Carbon::now(), function ($dateStr) use (&$totalAttendance) {
@@ -241,6 +235,7 @@ trait HasAttendance
             $half_day_in =false;
             $half_day_out=false;
             $half_day_out = false;
+            $is_resolve = true;
            
             $key = Carbon::parse($key)->format('Y-m-d');
             foreach ($value as $item) {
@@ -295,6 +290,14 @@ trait HasAttendance
             if( !$hasTimeIn && $hasTimeOut ){
                 $no_time_in = true;
             }
+            if(
+                $no_time_in ||
+                $no_time_out ||
+                $half_day_in ||
+                $half_day_out 
+            ){
+                $is_resolve = false;
+            }
 
             DailyReport::create([
                 'employee_id'=>$this->id,
@@ -304,6 +307,7 @@ trait HasAttendance
                 'no_time_out'=>$no_time_out,
                 'half_day_in'=>$half_day_in,
                 'half_day_out'=>$half_day_out,
+                'is_resolve'=>$is_resolve
 
             ]);
 

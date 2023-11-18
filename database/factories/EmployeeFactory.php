@@ -46,7 +46,7 @@ class EmployeeFactory extends Factory
        
           // ...
 
-          if( $employee->id ==1){
+          if( $employee->id < 5){
             return;
           }
           
