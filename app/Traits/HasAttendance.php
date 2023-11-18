@@ -4,13 +4,13 @@ namespace App\Traits;
 
 use App\Models\Attendance;
 use App\Models\DailyReport;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 trait HasAttendance
 {
 
-    use WorkDayChecker,HasSchedule;
+    use WorkDayChecker, HasSchedule;
 
 
 
@@ -21,7 +21,7 @@ trait HasAttendance
 
         $totalAttendance = 0;
         $attended = 0;
-        $absent=0;
+        $absent = 0;
         $late = 0;
         $toResolve = 0;
 
@@ -41,19 +41,19 @@ trait HasAttendance
         //     'year'=>$year,
         //     'start_date'=>$startDate,
         //     'endDate'=>$endDate
-            
+
         // ]);
 
         $this->dailyReport()
             ->whereBetween('date', [$startDate, $endDate])
             ->get()
-            ->each(function ($record) use (&$totalAttendance, &$late, &$toResolve, &$attended,&$absent) {
-               
+            ->each(function ($record) use (&$totalAttendance, &$late, &$toResolve, &$attended, &$absent) {
+
                 if (!$record->is_resolve) {
                     $toResolve++;
                 }
                 $attended++;
-              
+
 
                 foreach ($record->remarks as $item) {
 
@@ -67,9 +67,9 @@ trait HasAttendance
 
             });
 
-     $this->getWorkingDays(Carbon::parse($startDate), Carbon::now(), function ($dateStr) use (&$totalAttendance) {
+        $this->getWorkingDays(Carbon::parse($startDate), Carbon::now(), function ($dateStr) use (&$totalAttendance) {
 
-            if($this->isDateActive($dateStr)){
+            if ($this->isDateActive($dateStr)) {
                 $totalAttendance++;
             }
 
@@ -81,12 +81,12 @@ trait HasAttendance
 
         return response()->json([
             'late' => $late,
-            'attended'=>$attended,
+            'attended' => $attended,
             'total_attendance' => $totalAttendance,
             'to_resolve' => $toResolve,
-            'absent'=>$absent,
-            'startDate'=>$startDate,
-           
+            'absent' => $absent,
+            'startDate' => $startDate,
+
         ]);
 
     }
@@ -113,7 +113,7 @@ trait HasAttendance
 
             });
 
-        $newArray = [];//map attendance to new array
+        $newArray = []; //map attendance to new array
 
         if (!$attendance->isEmpty()) {
             // return [
@@ -122,34 +122,34 @@ trait HasAttendance
             // ];
 
 
-              // Index the attendance data by date
+            // Index the attendance data by date
             foreach ($attendance as $item) {
                 $newArray[$item->date] = $item;
             }
         }
-       
-      
-       
+
+
+
 
         $startDate = $cutOff['startDate'];
-         //$endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
+        //$endDate = Carbon::parse($attendance[count($attendance) - 1]->date);
         $endDate = $cutOff['endDate'];
         // Loop through the date range
-      
 
 
 
 
-        $newData = [];//storage of final output
+
+        $newData = []; //storage of final output
 
 
-        $this->getWorkingDays($cutOff['startDate'],  $cutOff['endDate'], function ($dateStr) use (&$newArray, &$newData) {
+        $this->getWorkingDays($cutOff['startDate'], $cutOff['endDate'], function ($dateStr) use (&$newArray, &$newData) {
 
 
-            if($dateStr == Carbon::now()){
+            if ($dateStr == Carbon::now()) {
                 return;
             }
-            if ( sizeof($newArray)>0 && array_key_exists($dateStr, $newArray) ) {
+            if (sizeof($newArray) > 0 && array_key_exists($dateStr, $newArray)) {
                 // Date exists in the original data, add it as-is
                 $newData[] = $newArray[$dateStr];
             } else {
@@ -170,156 +170,146 @@ trait HasAttendance
 
         return [
             'attendance' => $newData,
-            'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],  
-            'month' => $cutOff['startDate']->format('F') ,
-           
-            'date'=>$date,
-            'cut_off_array'=>$cutOff,
-            'start'=>$startDate,
-            'end'=>$endDate
-            
+            'cut_off' => $cutOff['start'] . '-' . $cutOff['end'],
+            'month' => $cutOff['startDate']->format('F'),
+
+            'date' => $date,
+            'cut_off_array' => $cutOff,
+            'start' => $startDate,
+            'end' => $endDate
+
 
         ];
     }
 
-   
 
 
-  
+
+
 
     public function unprocessedData()
     {
 
         // Get the unprocessed data by comparing timestamps with daily_report.date
 
-
-        $unprocessedData = $this->attendance()->whereNotIn(DB::raw('DATE(timestamp)'), function ($query) {
-            $query->select('date')
+        $unprocessedData = $this->attendance()
+        ->whereNotExists(function ($query) {
+            $query->select(DB::raw(1))
                 ->from('daily_reports')
-                ->where('employee_id', $this->id);
-            ;
+                ->where('employee_id', $this->id)
+                ->whereDate('date', '=', DB::raw('DATE(attendances.timestamp)'));
         })
-            ->orderBy('timestamp') // Add this line to order by timestamp
-            ->get()
-            ->groupBy(function ($date) {
-                return Carbon::parse($date->timestamp)->format('Y-m-d'); // Assuming you have Carbon imported
-            });
+        ->orderBy('timestamp')
+        ->get()
+        ->groupBy(function ($date) {
+            return Carbon::parse($date->timestamp)->format('Y-m-d');
+        });
 
 
         return $unprocessedData;
+
+        return [
+           
+            'attendance'=>$unprocessedData,
+            'report'=>$this->dailyReport
+        ];
 
     }
 
     public function summarizeDaily()
     {
 
-        $this->removeDailyReportByDate(Carbon::now()->toDateTimeString());
+       $this->removeDailyReportByDate(Carbon::now()->toDateTimeString());
         $attendance = $this->unprocessedData();
-        $start = $this->getSetting('start_time'); //returns 08:00
-        $end = $this->getSetting('end_time'); //returns 08:00
-        foreach ($attendance as $key => $value) {
 
-            $remarks = [];
-            $isResolved = true;
-            $hasTimeIn = false;
-            $hasTimeOut = false;
+        $_start = $this->getSetting('start_time'); //returns 08:00
+        $_end = $this->getSetting('end_time'); //returns 08:00
+        //return $attendance;
+        $start = Carbon::parse(  $_start);
+        $end =Carbon::parse( $_end);
+
+     //   return $attendance;
+  
+    
+
+        foreach ($attendance as $key => $value) {
+            $late= false;
+            $hasTimeIn= false;
+            $hasTimeOut= false;
+            $no_time_in = false;
+            $no_time_out = false;
+            $half_day_in =false;
+            $half_day_out=false;
+            $half_day_out = false;
+           
+            $key = Carbon::parse($key)->format('Y-m-d');
             foreach ($value as $item) {
 
-                $startCarbon = Carbon::createFromFormat('H:i', $start);
-                $endCarbon = Carbon::createFromFormat('H:i', $end);
-                $timestampCarbon = Carbon::parse($item['timestamp']);
-                //  $timestampCarbon = Carbon::parse('17:01');
-                switch ($item['type']) {
-                    case "Time in": {
-                            $hasTimeIn = true;
-                            $remarks[] = $this->processTimein($start, $item['timestamp'], $timestampCarbon, $startCarbon);
-                            break;
-
-                            //return $hasTimeIn;
-                            //return
-                        }
-                    case 'Break in': {
+                
+                $timeStamp = Carbon::parse($item->timestamp);
+             
+                switch ($item->type) {
+    
+                    case 'Time in':{
+                        $hasTimeIn = true;
+                        $halfdayThreshold = 3;
+                        if ($timeStamp->diffInHours($start) >= $halfdayThreshold) {
+                            $half_day_in = true;
                             break;
                         }
-                    case 'Break out': {
+            
+                        if($timeStamp >$start){
+                         
+                            $late = true;
+                        }
+                      
+                        break;
+                    }
+                    case 'Break out':{
+                        break;
+                    }
+                    case 'Break in':{
+                        break;
+                    }
+                    case 'Time out':{
+
+                        $hasTimeOut = true;
+                        $halfdayThreshold = 3;
+                        if ($timeStamp->diffInHours($end) >= $halfdayThreshold) {
+                            $half_day_out = true;
                             break;
                         }
-
-                    case "Time out": {
-                            $hasTimeOut = true;
-
-                            $this->removeDuplicateRemarks($remarks, ['undertime', 'no_time_in']);
-                            if (!$hasTimeIn) {
-                                $isResolved = false;
-                                $remarks[] = [
-                                    'key' => 'no_time_in',
-                                    'title' => 'No Time In',
-                                    'details' => 'No Time in'
-                                ];
-
-
-                            } else {
-                                $isResolved = true;
-
-                                $remarks[] = $this->processTimeOut($timestampCarbon, $endCarbon);
-                            }
-
-                            //remove undertime if it exist
-
-
-
-                        }
-
+                       
+                      
+                        break;
+                    }
+    
                 }
+    
 
             }
 
-            //check if user doest have time out
-            // Check if user has time in but no time out
-            if ($hasTimeIn && !$hasTimeOut) {
-
-                if ($timestampCarbon->isPast()) {
-                    // If $timestampCarbon is in the past, add the 'No Time Out' remark
-                    $remarks[] = [
-                        'key' => 'no_time_out',
-                        'title' => 'No Time Out',
-                        'details' => 'No Time Out',
-                    ];
-                } else {
-                    // If $timestampCarbon is in the future, you can add a different remark or handle it as needed
-                    // For example, you could add a remark indicating that the time out is pending
-                    $remarks[] = [
-                        'key' => 'pending_time_out',
-                        'title' => 'Pending Time Out',
-                        'details' => 'Pending Time Out (Timestamp is in the future)',
-                    ];
-                }
+            if( $hasTimeIn && !$hasTimeOut ){
+                $no_time_out = true;
+            }
+            if( !$hasTimeIn && $hasTimeOut ){
+                $no_time_in = true;
             }
 
+            DailyReport::create([
+                'employee_id'=>$this->id,
+                'date'=>$key,
+                'late'=>$late,
+                'no_time_in'=>$no_time_in,
+                'no_time_out'=>$no_time_out,
+                'half_day_in'=>$half_day_in,
+                'half_day_out'=>$half_day_out,
 
-            // if(!$hasTimeIn && $hasTimeOut){
-            //     $isResolved = false;
-            //     $remarks[]= [
-            //         'key' => 'no_time_in',
-            //         'title' => 'No Time in',
-            //         'details' => 'No Time in'
-            //     ];
-            // }
-
-
-            //to do, once I added calendar for active work hours
-            if (!$hasTimeIn || !$hasTimeOut) {
-                $isResolved = false;
-            }
-            return DailyReport::create([
-                'employee_id' => $this->id,
-                'date' => $key,
-                'remarks' => json_encode($remarks),
-                'is_resolve' => $isResolved
             ]);
 
-
+           
         }
+
 
 
     }
@@ -336,83 +326,6 @@ trait HasAttendance
         }
     }
 
-    protected function processTimeOut($timestampCarbon, $endCarbon)
-    {
-
-        if ($timestampCarbon->format('H:i') < $endCarbon->format('H:i')) {
-
-            $diff = $timestampCarbon->diffForHumans($endCarbon);
-            $minutesDiff = \Carbon\CarbonInterval::minutes($diff)->totalMinutes;
-            $formattedDiff = "{$minutesDiff} minutes early";
-
-            return [
-                'key' => 'undertime',
-                'title' => 'Undertime',
-                'details' => $formattedDiff
-            ];
-
-
-
-        } else {
-
-            return [
-                'key' => 'time_out',
-                'title' => 'Time out',
-                'details' => 'Time Out'
-            ];
-
-        }
-    }
-
-
-    protected function processTimein($start, $timestamp, $timestampCarbon, $startCarbon)
-    {
-
-        $lateThreshold = 3;
-
-
-        $diff = $timestampCarbon->diffForHumans($startCarbon);
-        $minutesDiff = \Carbon\CarbonInterval::minutes($diff)->totalMinutes;
-
-        if ($timestampCarbon->format('H:i') > $startCarbon->format('H:i')) {
-            // Check if timestamp is later than start time
-            $differenceInHours = $timestampCarbon->diffInHours($startCarbon);
-
-            if ($differenceInHours > $lateThreshold) {
-                // More than 3 hours late
-                return [
-                    'key' => 'half_day',
-                    'title' => 'Half Day',
-                    'details' => 'Half Day'
-                ];
-            } else {
-
-                $formattedDiff = "{$minutesDiff} minutes late";
-                return [
-                    'key' => 'late',
-                    'title' => 'Late',
-                    'details' => $formattedDiff
-                ];
-
-            }
-        } else {
-            $formattedDiff = "{$minutesDiff} minutes early";
-            return [
-                'key' => 'on_time',
-                'title' => 'On time',
-                'details' => $formattedDiff
-            ];
-        }
-        // return response()->json([
-        //     'raw_timestamp' => $timestamp,
-        //     'raw_start' => $start,
-        //     'start' => $startCarbon->format('H:i'),
-        //     'timestamp' => $timestampCarbon->format('H:i'),
-        //     'remark' => $remark,
-        // ]);
-
-    }
-
 
 
     public function resolveAttendance($data)
@@ -424,11 +337,24 @@ trait HasAttendance
 
         $types = [
             'no_time_in' => 'Time in',
-            'no_time_out' => 'Time out'
+            'half_day_in' => 'Time in',
+            'half_day_out' => 'Time out',
+            'no_time_out' => 'Time out',
+
         ];
 
-        $typeValue = $types[$data['type']] ?? 'Unknown';
+        $typeValue = $types[$data['type']] ?? 'Invalid';
 
+        if ($typeValue == 'Time in') {
+            $attendance = Attendance::where('employee_id', $this->id)
+                ->whereDate('timestamp', Carbon::parse($data['timestamp']))
+                ->where('type', $typeValue)
+                ->first(); // Retrieve the first matching record
+
+            if ($attendance) {
+                $attendance->delete(); // Delete the record if found
+            }
+        }
 
 
 

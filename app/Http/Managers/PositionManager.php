@@ -26,7 +26,7 @@ class PositionManager{
 
     public function search (String $val =''){
 
-        $positions = Position::where('name', 'LIKE', "$val%")->paginate(10);
+        $positions = Position::where('name', 'LIKE', "$val%")->get();
 
       
         return response()->json([

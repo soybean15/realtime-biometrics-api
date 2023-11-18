@@ -28,7 +28,7 @@ class PositionController extends Controller
     public function getPositions(){
 
         return response()->json([
-            'positions'=> Position::paginate(10)
+            'positions'=> Position::all()
         ]);
     }
 

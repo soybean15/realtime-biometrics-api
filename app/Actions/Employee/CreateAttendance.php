@@ -23,13 +23,17 @@ class CreateAttendance
             $time = \Carbon\Carbon::parse($data['timestamp']);
            // $time = $carbonDateTime->format('h:i A');
             $type =  $this->getType($employee ,$time);
-             Attendance::create([
-                'serial_number' => $data['uid'],
-                'employee_id' => $employee->id,
-                'timestamp' =>\Carbon\Carbon::parse($data['timestamp']) ,
-                'state' => $data['state'],
-                'type' =>$type 
-            ]);
+            if($type != 'Invalid'){
+                Attendance::create([
+                    'serial_number' => $data['uid'],
+                    'employee_id' => $employee->id,
+                    'timestamp' =>\Carbon\Carbon::parse($data['timestamp']) ,
+                    'state' => $data['state'],
+                    'type' =>$type 
+                ]);
+
+            }
+            
 
             return $type;
     

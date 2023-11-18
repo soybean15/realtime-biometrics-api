@@ -25,8 +25,8 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        $employees = Employee::with(['departments', 'positions', 'user','attendanceToday'])->orderBy('created_at', 'desc')->paginate(20);
-        $trashed = Employee::onlyTrashed()->paginate(10);
+        $employees = Employee::with(['departments', 'positions', 'user','attendanceToday'])->orderBy('created_at', 'desc')->get();
+        $trashed = Employee::onlyTrashed()->get();
 
 
         return response()->json([

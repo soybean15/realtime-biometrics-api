@@ -13,10 +13,11 @@ class DailyReport extends Model
     protected $fillable = [
         'employee_id',
         'date',
-        'remarks',
-        'is_resolve'
-       
-
+        'late',
+        'no_time_in',
+        'no_time_out',
+        'half_day_in',
+        'half_day_out',
     ];
 
     public function employee()
