@@ -157,7 +157,8 @@ class DashboardManager
 
         return response()->json([
             'data'=> $data,
-            'speed'=>$executionTime
+            'speed'=>$executionTime,
+            'date'=>$date
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,7 @@ class DailyReport extends Model
         'no_time_out',
         'half_day_in',
         'half_day_out',
+        'is_resolve'
     ];
 
     public function employee()
@@ -29,6 +31,15 @@ class DailyReport extends Model
     {
         return json_decode($value);
     }
+
+    public function scopeAttendanceDescrepancy(Builder $query){
+        $query->where(function ($query) {
+            $query->where('is_resolve', false)
+                  ->orWhere('late', true);
+        });
+    }
+
+  
 
 
 }

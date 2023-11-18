@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Managers\DashboardManager;
+use App\Models\DailyReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -38,5 +39,12 @@ class DashboardController extends Controller
 
 
         });
+    }
+
+    public  function getAttendanceDescrepancy(){
+        $descrepancy = DailyReport::with('employee')->attendanceDescrepancy()->get();
+
+
+        return response()->json($descrepancy);
     }
 }

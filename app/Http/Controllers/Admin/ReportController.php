@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Managers\ReportManager;
+use App\Models\DailyReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -87,5 +88,7 @@ class ReportController extends Controller
 
 
     }
+
+
 
 }

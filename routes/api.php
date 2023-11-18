@@ -68,6 +68,8 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [DashboardController::class,'index']);
         Route::get('summary',[DashboardController::class,'summary']);
+        Route::get('descrepancy',[DashboardController::class,'getAttendanceDescrepancy']);
+
 
 
     });

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->boolean('no_time_out')->default(false);
             $table->boolean('half_day_in')->default(false);
             $table->boolean('half_day_out')->default(false);
+            $table->boolean('is_resolve')->default(false);
             $table->timestamps();
 
 
