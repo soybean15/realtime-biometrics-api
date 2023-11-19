@@ -202,11 +202,11 @@ trait HasAttendance
 
         return $unprocessedData;
 
-        return [
+        // return [
            
-            'attendance'=>$unprocessedData,
-            'report'=>$this->dailyReport
-        ];
+        //     'attendance'=>$unprocessedData,
+        //     'report'=>$this->dailyReport
+        // ];
 
     }
 
@@ -218,11 +218,11 @@ trait HasAttendance
 
         $_start = $this->getSetting('start_time'); //returns 08:00
         $_end = $this->getSetting('end_time'); //returns 08:00
-        //return $attendance;
+       // return $attendance;
         $start = Carbon::parse(  $_start);
         $end =Carbon::parse( $_end);
 
-     //   return $attendance;
+      //  return $attendance;
   
     
 
@@ -278,6 +278,9 @@ trait HasAttendance
                       
                         break;
                     }
+                    case 'Invalid':{
+                        break;
+                    }
     
                 }
     
@@ -312,7 +315,19 @@ trait HasAttendance
             ]);
 
            
-        }
+        }  
+
+    //    return [
+    //         'employee_id'=>$this->id,
+    //         'date'=>$key,
+    //         'late'=>$late,
+    //         'no_time_in'=>$no_time_in,
+    //         'no_time_out'=>$no_time_out,
+    //         'half_day_in'=>$half_day_in,
+    //         'half_day_out'=>$half_day_out,
+    //         'is_resolve'=>$is_resolve
+
+    //    ];
 
 
 
@@ -335,10 +350,11 @@ trait HasAttendance
     public function resolveAttendance($data)
     {
 
-        $this->removeDailyReportByDate($data['timestamp']);
+       // $this->removeDailyReportByDate($data['timestamp']);
 
 
-
+        $dailyReports = DailyReport::find($data['id']);
+        $dailyReports->delete();
         $types = [
             'no_time_in' => 'Time in',
             'half_day_in' => 'Time in',
@@ -370,14 +386,35 @@ trait HasAttendance
             'type' => $typeValue
         ]);
 
+
+
+        DailyReport::create([
+            'employee_id'=>$data['employee_id'],
+            'date'=>$data['timestamp'],
+            'late'=>false,
+            'no_time_in'=>false,
+            'no_time_out'=>false,
+            'half_day_in'=>false,
+            'half_day_out'=>false,
+            'is_resolve'=>true
+
+        ]);
+
+        
+
+
     }
 
     protected function removeDailyReportByDate($date)
     {
+        $dailyReports = DailyReport::where('employee_id', $this->id)
+        ->whereDate('date', Carbon::parse($date)->format('Y-m-d'))
+        ->get();
 
-        DailyReport::where('employee_id', $this->id)
-            ->whereDate('date', Carbon::parse($date)->format('Y-m-d'))
-            ->delete();
+    // Loop through each daily report and delete
+    foreach ($dailyReports as $dailyReport) {
+        $dailyReport->delete();
+    }
 
     }
 

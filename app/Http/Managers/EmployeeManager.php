@@ -283,7 +283,7 @@ class EmployeeManager{
 
         $employee->resolveAttendance($data);
 
-        $employee->summarizeDaily();
+      //  $employee->summarizeDaily();
 
         // Attendance::create([
         //     'serial_number' => $data['uid'],
