@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('employee_id')->unsigned();
-
-    
             $table->string('serial_number');
             $table->string('state');
             $table->timestamp('timestamp');
