@@ -3,6 +3,7 @@ use App\Http\Controllers\Admin\EmployeeController;
 
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Managers\DashboardManager;
+use App\Http\Managers\EmployeeManager;
 use App\Http\Managers\ReportManager;
 use App\Models\Employee;
 use App\Models\Holiday;
@@ -117,5 +118,14 @@ Route::get('dashboard',function(){
         ];
 
     });
+
+});
+
+Route::get('pdf',function(){
+
+
+   
+
+
 
 });
