@@ -42,7 +42,7 @@ class AttendanceMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mails.attencance',
+            view: 'mails.attendance',
         );
     }
 
@@ -55,7 +55,7 @@ class AttendanceMail extends Mailable
     {
         return [
 
-            Attachment::fromData(fn () => $this->data['pdf'], 'Report.pdf')
+            Attachment::fromData(fn () => $this->data['pdf'], 'Attendance.pdf')
             ->withMime('application/pdf'),
         ];
     }

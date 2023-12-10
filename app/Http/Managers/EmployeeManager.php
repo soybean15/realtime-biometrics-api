@@ -328,7 +328,7 @@ class EmployeeManager{
                 
               //  return $pdf->stream();       
 
-              Mail::to($employee->email)->send(new AttendanceMail(['pdf'=>$pdf->download()]));
+              Mail::to($employee->email)->send(new AttendanceMail(['pdf'=>$pdf->output()]));
                   
                 
             });

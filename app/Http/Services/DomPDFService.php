@@ -40,4 +40,13 @@ class DomPDFService{
         // Set the response headers for PDF download
 
     }
+    public function output() {
+
+        // Generate the PDF
+       return self::$pdf->output();
+
+        // Set the response headers for PDF download
+
+    }
+
 }
