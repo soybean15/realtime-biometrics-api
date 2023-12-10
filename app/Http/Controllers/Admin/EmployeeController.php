@@ -149,5 +149,12 @@ class EmployeeController extends Controller
         });
     }
 
+    public function generatePDF(){
+
+
+        $this->manager->generateAttendancePDF();
+
+    }
+
 
 }

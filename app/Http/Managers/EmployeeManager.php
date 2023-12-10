@@ -6,10 +6,12 @@ namespace App\Http\Managers;
 
 use App\Actions\Employee\CreateNewEmployee;
 use App\Actions\Employee\DeleteEmployee;
+use App\Mail\AttendanceMail;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-
+use App\Http\Services\DomPDFService;
+use Illuminate\Support\Facades\Mail;
 class EmployeeManager{
 
 
@@ -309,6 +311,34 @@ class EmployeeManager{
 
     }
 
+
+    public function generateAttendancePDF(){
+
+
+        $employees = Employee::all();
+
+
+        foreach($employees as $employee){
+
+
+            $employee->getAttendanceByCutOff(null,function($data) use (&$method, $employee){
+                $pdf= DomPDFService::generate('reports.attendance_card',$data);
+    
+               // return  $pdf->download();
+                
+              //  return $pdf->stream();       
+
+              Mail::to($employee->email)->send(new AttendanceMail(['pdf'=>$pdf->download()]));
+                  
+                
+            });
+
+
+
+
+        }
+
+    }
 
   
 

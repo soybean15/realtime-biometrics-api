@@ -119,6 +119,8 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'isEnable'])->group(function
         Route::post('attendance/summary/{id}', [EmployeeController::class, 'attendanceSummary']);
       
         Route::get('pdf/{method}/{id}',[EmployeeController::class,'getAttendanceByCutOffPDF']);
+        Route::get('pdf/all',[EmployeeController::class,'generatePDF']);
+
 
     });
 

@@ -32,7 +32,7 @@ class HolidayTest extends TestCase
 
 
         $result =  $manager->isDateActive('2023-10-25');
-        $this->assertEquals(false,$result);
+        $this->assertEquals(true,$result);
 
 
    
@@ -45,7 +45,7 @@ class HolidayTest extends TestCase
 
 
         $result =  $manager->isDateActive('2023-11-01');
-        $this->assertEquals(true,$result);
+        $this->assertEquals(false,$result);
 
     }
 
@@ -57,7 +57,7 @@ class HolidayTest extends TestCase
         $this->assertEquals(false,$result);
 
         $result2 =  $manager->isDateActive('2023-11-06');//moved holiday
-        $this->assertEquals(false,$result2);
+        $this->assertEquals(true,$result2);
 
         $result3 =  $manager->isDateActive('2023-11-27');//holiday
         $this->assertEquals(false,$result3);

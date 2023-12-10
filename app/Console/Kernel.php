@@ -21,9 +21,9 @@ class Kernel extends ConsoleKernel
     {
  
        // $schedule->command('generate:report')->dailyAt('22:00');
-        // $schedule->command('get:config')->everySecond();
+     //    $schedule->command('get:config')->everySecond();
       
-        // $schedule->command('check:attendance')->everySecond();
+         //$schedule->command('check:attendance')->everySecond();
         
      
        

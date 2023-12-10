@@ -418,4 +418,33 @@ trait HasAttendance
 
     }
 
+
+
+
+    public function getAttendanceByCutOff($date = null,$callback=null){
+        //$employee = Employee::find($id);
+
+        if ($date === null) {
+            $date = Carbon::now();
+        }else{
+            $date = Carbon::parse($date);
+        }
+
+
+        $data = $this->attendanceByCutOff($date);
+
+
+
+        if($callback){
+       
+            return $callback(['data'=>$data, 'employee'=> $this]);
+        }
+
+        return response()->json( $data);
+    }
+
+
+
+
+
 }
