@@ -24,7 +24,7 @@ class CreateAttendance
            // $time = $carbonDateTime->format('h:i A');
             $type =  $this->getType($employee ,$time);
             if($type != 'Invalid'){
-                Attendance::create([
+              return  Attendance::create([
                     'serial_number' => $data['uid'],
                     'employee_id' => $employee->id,
                     'timestamp' =>\Carbon\Carbon::parse($data['timestamp']) ,
@@ -35,7 +35,7 @@ class CreateAttendance
             }
             
 
-            return $type;
+            //return $employee;
     
 
 

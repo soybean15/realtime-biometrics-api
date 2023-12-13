@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Actions\Employee\CreateAttendance;
 use App\Http\Services\ZkTecoService;
 
+use App\Models\Attendance;
 use App\Traits\HasSettings;
 use Illuminate\Console\Command;
 
@@ -46,52 +47,54 @@ class CheckAttendance extends Command
 
         //* * * * * cd   /home/soybean15/capstone/marlon/api && php artisan schedule:run >> /dev/null 2>&1
 
-        $data = [
-            'uid' => '12345',            // Replace with a valid serial_number
-            'id' =>1,          // Replace with a valid employee_id
-            'timestamp' => '08:01:00', // Replace with a valid timestamp
-            'state' => 'present',        // Replace with a valid state
-            'type' => 'Time out',        // Replace with a valid type
-        ];
+    //     $data = [
+    //         'uid' => '12345',            // Replace with a valid serial_number
+    //         'id' =>1,          // Replace with a valid employee_id
+    //         'timestamp' => '08:01:00', // Replace with a valid timestamp
+    //         'state' => 'present',        // Replace with a valid state
+    //         'type' => 'Time out',        // Replace with a valid type
+    //     ];
 
-        $createAttendance = new CreateAttendance();
-          $type=  $createAttendance->execute($data);
-     $this->info('attendamce added ' .$type);
+    //     $createAttendance = new CreateAttendance();
+    //       $type=  $createAttendance->execute($data);
+    //  $this->info('attendamce added ' .$type);
 
 
-        // try {
-        //     // Your code here
+    
+        try {
+            // Your code here
 
-        //     $attendance = $this->zk->getAttendance();
+            $attendance = $this->zk->getAttendance();
 
-        //     if ($attendance) {
-        //         foreach ($attendance as $item) {
+            if ($attendance) {
+                foreach ($attendance as $item) {
 
-        //             $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
+                    $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
 
-        //             // If a record does not exist, insert a new one
-        //             if (!$existingAttendance) {
+                    // If a record does not exist, insert a new one
+                   if (!$existingAttendance) {
 
-        //                 $createAttendance = new CreateAttendance();
+                        $createAttendance = new CreateAttendance();
 
-        //                 $_attendance = $createAttendance->execute($item);
+                        $_attendance = $createAttendance->execute($item);
 
-        //                 $_attendance->load('employee.positions', 'employee.departments');
+                        $_attendance->load('employee.positions', 'employee.departments');
 
-        //                 if ($this->getSetting('live_update')) {
-        //                     broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
-        //                 }
-        //             }
-        //         }
-        //     }
+                        if ($this->getSetting('live_update')) {
+                            broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
+                        }
+                      
+                    }
+                }
+            }
 
-        //     $this->info('Attendance Created' . $this->getSetting('live_update'));
+            $this->info('Attendance Created' . $this->getSetting('live_update'));
 
-        // } catch (\Exception $e) {
-        //     // Handle the exception here
-        //     \Log::error('Error in schedule: ' . $e->getMessage());
-        //     // You can also send an email, log the error, or take other actions as needed.
-        // }
+        } catch (\Exception $e) {
+            // Handle the exception here
+            \Log::error('Error in schedule: ' . $e->getMessage());
+            // You can also send an email, log the error, or take other actions as needed.
+        }
 
     }
 }
