@@ -20,10 +20,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
  
-       // $schedule->command('generate:report')->dailyAt('22:00');
-     //    $schedule->command('get:config')->everySecond();
+       $schedule->command('generate:report')->dailyAt('22:00');
+        $schedule->command('get:config')->everySecond();
       
-         //$schedule->command('check:attendance')->everySecond();
+         $schedule->command('check:attendance')->everySecond();
         
      
        

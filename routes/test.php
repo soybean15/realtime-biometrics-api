@@ -1,10 +1,13 @@
 <?php
+use App\Actions\Employee\CreateAttendance;
 use App\Http\Controllers\Admin\EmployeeController;
 
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Managers\DashboardManager;
 use App\Http\Managers\EmployeeManager;
 use App\Http\Managers\ReportManager;
+use App\Http\Services\ZkTecoService;
+use App\Models\Attendance;
 use App\Models\Employee;
 use App\Models\Holiday;
 use Illuminate\Support\Carbon;
@@ -121,10 +124,51 @@ Route::get('dashboard',function(){
 
 });
 
-Route::get('pdf',function(){
+Route::get('zk',function(){
+
+    $service = new ZkTecoService();
+
+   // return $service->getAttendance();
+    try {
+        // Your code here
+
+        $attendance =$service->getAttendance();
+
+        if ($attendance) {
+            foreach ($attendance as $item) {
+
+                $existingAttendance = Attendance::where('serial_number', $item['uid'])->first();
 
 
-   
+                $createAttendance = new CreateAttendance();
+
+              
+                // If a record does not exist, insert a new one
+               if (!$existingAttendance) {
+
+
+                $_attendance = $createAttendance->execute($item);
+ // $_attendance->load('employee.positions', 'employee.departments');
+                    // if ($this->getSetting('live_update')) {
+                    //   //  broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
+                    // }
+                  
+                }
+            }
+        }
+
+
+        return $attendance;
+     //   $this->info('Attendance Created' . $this->getSetting('live_update'));
+
+    } catch (\Exception $e) {
+        // Handle the exception here
+
+        return $e->getMessage();
+      //  \Log::error('Error in schedule: ' . $e->getMessage());
+        // You can also send an email, log the error, or take other actions as needed.
+    }
+
 
 
 
