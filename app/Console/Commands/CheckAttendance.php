@@ -93,6 +93,7 @@ class CheckAttendance extends Command
         } catch (\Exception $e) {
             // Handle the exception here
             \Log::error('Error in schedule: ' . $e->getMessage());
+          
             // You can also send an email, log the error, or take other actions as needed.
         }
 
