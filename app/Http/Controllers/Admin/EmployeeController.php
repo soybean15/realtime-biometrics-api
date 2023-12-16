@@ -131,19 +131,21 @@ class EmployeeController extends Controller
     }
 
 
-    public function getAttendanceByCutOffPDF(String $method, String $id){
+    public function getAttendanceByCutOffPDF(String $date, String $id){
 
-        return $this->manager->getAttendanceByCutOff($id,null,function($data) use (&$method){
+       // return $date;
+
+        return $this->manager->getAttendanceByCutOff($id,$date=='null'?null:$date,function($data) use (&$method){
             $pdf= DomPDFService::generate('reports.attendance_card',$data);
 
            // return  $pdf->download();
             
-          //  return $pdf->stream();
-            if ($method =='stream'){
-                return $pdf->stream();
-            }else{
-               return  $pdf->download();
-            }
+            return $pdf->stream();
+            // if ($method =='stream'){
+            //     return $pdf->stream();
+            // }else{
+            //    return  $pdf->download();
+            // }
 
 
         });

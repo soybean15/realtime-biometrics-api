@@ -37,15 +37,16 @@ class ReportManager
                 $query->whereDate('timestamp', $date);
             }
         ])
-            ->whereHas('attendance', function ($query) use ($date) {
-                $query->whereDate('timestamp', $date);
-            })
+            // ->whereHas('attendance', function ($query) use ($date) {
+            //     $query->whereDate('timestamp', $date);
+            // })
 
           ->get()
           ->each(function ($record) use (&$lates){
 
 
             foreach ($record->attendance as $attendance) {
+               
                 switch ($attendance->type) {
                     case 'Time in': {
                             if (!$record->time_in) {
@@ -85,14 +86,19 @@ class ReportManager
         //
 
 
-        // foreach ($paginationData as $record) {
+        $absents = [];
+        foreach ($report as $record) {
 
 
-          
+          if(!$record->time_out ){
+
+            $absents[]=$record;
+            
+          }
 
 
 
-        // }
+        }
 
         $summary = $this->computeAttendance(
             sizeof($report),
@@ -102,6 +108,7 @@ class ReportManager
 
         return [
             'reports' => $report,
+            'absent_employee'=>$absents,
 
             'date' => $date->format('Y-m-d'),
             $summary
@@ -165,7 +172,8 @@ class ReportManager
                     DB::raw('MAX(CASE WHEN type = "Break in" THEN timestamp END) as break_in'),
                     DB::raw('MAX(CASE WHEN type = "Time out" THEN timestamp END) as time_out')
                 )
-                    ->whereBetween('timestamp', [$data['start'], $data['end']])
+                   ->whereBetween('timestamp', [$data['start'], $data['end']])
+                   
                     ->groupBy('employee_id', 'date');
 
             }
@@ -199,7 +207,7 @@ class ReportManager
 
             $total_employee = sizeof($report);
             $employee_workdays= $total_employee *$totalWorkingDays;
-            $absentee_rate =( $totalAbsents /$employee_workdays) *100;
+            $absentee_rate =( $totalAbsents /($employee_workdays==0?1:$employee_workdays)) *100;
 
 
 

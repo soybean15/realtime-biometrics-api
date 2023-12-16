@@ -146,6 +146,7 @@ trait HasAttendance
             if (sizeof($newArray) > 0 && array_key_exists($dateStr, $newArray)) {
                 // Date exists in the original data, add it as-is
                 $newData[] = $newArray[$dateStr];
+             
             } else {
                 // Date is missing, insert an object with null value
                 $status = $this->isDateActive($dateStr) ? 'No Attendance' : 'No Work Day';
@@ -156,6 +157,7 @@ trait HasAttendance
                     'break_in' => null,
                     'time_out' => null,
                     'status' => $status,
+                  
                 ];
             }
 
@@ -170,7 +172,8 @@ trait HasAttendance
             'date' => $date,
             'cut_off_array' => $cutOff,
             'start' => $startDate,
-            'end' => $endDate
+            'end' => $endDate,
+            'new'=>$attendance
 
 
         ];
