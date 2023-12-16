@@ -57,7 +57,8 @@ class ReportController extends Controller
         return $this->manager->getReport(function () use ($date) {
             $date= $this->manager->calculateCutOff($date);
 
-            $start = $date['startDate'];
+            $start = $date['startDate']->subDays(1);
+            //$date->setDay(16);
             $end= $date ['endDate'];
     
             return [

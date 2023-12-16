@@ -38,56 +38,56 @@ class EmployeeFactory extends Factory
         ];
     }
 
-    // public function configure(): static
-    // {
-    //     // return $this->afterCreating(function (Employee $employee) {
-    //     //   $employee->departments()->attach( mt_rand(1, 20));
-    //     //   $employee->positions()->attach( mt_rand(1, 5));
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Employee $employee) {
+          $employee->departments()->attach( mt_rand(1, 20));
+          $employee->positions()->attach( mt_rand(1, 5));
        
-    //     //   // ...
+          // ...
 
-    //     //   if( $employee->id < 5){
-    //     //     return;
-    //     //   }
+          if( $employee->id < 5){
+            return;
+          }
           
-    //     //   Attendance::create([
-    //     //       'serial_number' => fake()->uuid(),
-    //     //       'employee_id' => $employee->id,
-    //     //       'timestamp' => Carbon::now()->setTime(8, 0), // Set the time to 8:00
-    //     //       'state' => 1,
-    //     //       'type' => 'Time in'
-    //     //   ]);
+          Attendance::create([
+              'serial_number' => fake()->uuid(),
+              'employee_id' => $employee->id,
+              'timestamp' => Carbon::now()->setTime(8, 0), // Set the time to 8:00
+              'state' => 1,
+              'type' => 'Time in'
+          ]);
           
-    //     //   Attendance::create([
-    //     //       'serial_number' => fake()->uuid(),
-    //     //       'employee_id' => $employee->id,
-    //     //       'timestamp' => Carbon::now()->setTime(12, 0), // Set the time to 12:00
-    //     //       'state' => 1,
-    //     //       'type' => 'Break out'
-    //     //   ]);
+          Attendance::create([
+              'serial_number' => fake()->uuid(),
+              'employee_id' => $employee->id,
+              'timestamp' => Carbon::now()->setTime(12, 0), // Set the time to 12:00
+              'state' => 1,
+              'type' => 'Break out'
+          ]);
           
-    //     //   Attendance::create([
-    //     //       'serial_number' => fake()->uuid(),
-    //     //       'employee_id' => $employee->id,
-    //     //       'timestamp' => Carbon::now()->setTime(13, 0), // Set the time to 13:00
-    //     //       'state' => 1,
-    //     //       'type' => 'Break in'
-    //     //   ]);
+          Attendance::create([
+              'serial_number' => fake()->uuid(),
+              'employee_id' => $employee->id,
+              'timestamp' => Carbon::now()->setTime(13, 0), // Set the time to 13:00
+              'state' => 1,
+              'type' => 'Break in'
+          ]);
           
-    //     //   Attendance::create([
-    //     //       'serial_number' => fake()->uuid(),
-    //     //       'employee_id' => $employee->id,
-    //     //       'timestamp' => Carbon::now()->setTime(17, 0), // Set the time to 17:00
-    //     //       'state' => 1,
-    //     //       'type' => 'Time out'
-    //     //   ]);
+          Attendance::create([
+              'serial_number' => fake()->uuid(),
+              'employee_id' => $employee->id,
+              'timestamp' => Carbon::now()->setTime(17, 0), // Set the time to 17:00
+              'state' => 1,
+              'type' => 'Time out'
+          ]);
           
-
-
 
 
 
+
+
           
-    //     // });
-    // }
+        });
+    }
 }

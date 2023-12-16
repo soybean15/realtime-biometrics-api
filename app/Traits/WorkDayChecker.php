@@ -36,7 +36,7 @@ trait WorkDayChecker
 
 
         $isWeekend = in_array($carbonDate->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY]);
-
+   //  return !( !$holidays->isEmpty() || !$temp->isEmpty());
 
          return !($isWeekend || !$holidays->isEmpty() || !$temp->isEmpty());
 
