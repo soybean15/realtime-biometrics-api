@@ -16,10 +16,10 @@ class ZkTecoService
     use RealtimeUpdateTrait,HasSettings;
     protected PingDevice $pingDevice;
 
-    public function __construct()
+    public function __construct( PingDevice $pingDevice)
     {
 
-        //$this->pingDevice = $pingDevice;
+        $this->pingDevice = $pingDevice;
 
     }
 

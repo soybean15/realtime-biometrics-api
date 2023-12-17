@@ -20,11 +20,18 @@ class CreateAttendance
                 abort(404, 'Employee not found');
             }
 
+         
+            
             $time = \Carbon\Carbon::parse($data['timestamp']);
-           // $time = $carbonDateTime->format('h:i A');
+         //  $time = $carbonDateTime->format('h:i A'); for testing
+
+          // return $this->getType($employee ,$time);for testing
+           $type= $this->getType($employee ,$time);
+
+
             $type =  $this->getType($employee ,$time);
             if($type != 'Invalid'){
-              return  Attendance::create([
+               return  Attendance::create([
                     'serial_number' => $data['uid'],
                     'employee_id' => $employee->id,
                     'timestamp' =>\Carbon\Carbon::parse($data['timestamp']) ,
@@ -35,7 +42,7 @@ class CreateAttendance
             }
             
 
-            //return $employee;
+          //  return $employee;
     
 
 

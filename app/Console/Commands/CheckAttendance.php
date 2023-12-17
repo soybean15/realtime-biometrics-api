@@ -7,6 +7,7 @@ use App\Http\Services\ZkTecoService;
 
 use App\Models\Attendance;
 use App\Traits\HasSettings;
+use App\Traits\HasSchedule;
 use Illuminate\Console\Command;
 
 class CheckAttendance extends Command
@@ -17,7 +18,7 @@ class CheckAttendance extends Command
      * @var string
      */
 
-    use HasSettings;
+    use HasSettings,HasSchedule;
     protected $signature = 'check:attendance';
     protected ZkTecoService $zk;
 
@@ -81,6 +82,7 @@ class CheckAttendance extends Command
                         $_attendance->load('employee.positions', 'employee.departments');
 
                         if ($this->getSetting('live_update')) {
+                           
                             broadcast(new \App\Events\GetAttendance($_attendance))->toOthers();
                         }
                       
