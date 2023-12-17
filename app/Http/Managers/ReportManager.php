@@ -31,6 +31,7 @@ class ReportManager
         $date = $date ? Carbon::parse($date) : Carbon::now();
 
         $lates = 0;
+        $late_employee=[];
 
         $report = Employee::with([
             'attendance' => function ($query) use ($date) {
@@ -42,7 +43,7 @@ class ReportManager
             // })
 
           ->get()
-          ->each(function ($record) use (&$lates){
+          ->each(function ($record) use (&$lates,&$late_employee){
 
 
             foreach ($record->attendance as $attendance) {
@@ -51,6 +52,8 @@ class ReportManager
                     case 'Time in': {
                             if (!$record->time_in) {
                                 if ($this->isLate($attendance->timestamp)) {
+                                    $late_employee[]=$record;
+
                                     $record->late = true;
                                     $lates++;
                                 }
@@ -109,7 +112,7 @@ class ReportManager
         return [
             'reports' => $report,
             'absent_employee'=>$absents,
-
+            'late_employee'=>$late_employee,
             'date' => $date->format('Y-m-d'),
             $summary
         ];
