@@ -38,7 +38,7 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
 
-        if($user->email == 'marlonpadilla1593@gmail.com'){
+        if($user->email ==env('SUPERADMIN')){
             $user->roles()->attach(1);//super admin
         }else{
             $user->roles()->attach(2);//user
